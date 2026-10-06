@@ -39,7 +39,8 @@ algorithmic details, additional experiments — is referred to as the **extended
 - Whole sentences, paragraphs, sections, floats and table rows that were left out are **not** marked
   (they are in the extended report); the marked PDF would otherwise be as long as the original.
 - Layout-only adaptations to the template are not marked either: float placement options, table
-  captions above tables, the numbered display in Proposition 2, row spacing in Eq. (4), and table widths.
+  captions above tables, the numbered display in the stability proposition, row spacing in the
+  objective equation and in the tables, and the scaling of the Beijing table to the text width.
 
 `tools/check_verbatim.py` enforces this: with every `\rev{cc}{old}{new}` replaced by `old`, all body text
 must match the original token for token.

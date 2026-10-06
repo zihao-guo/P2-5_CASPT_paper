@@ -118,8 +118,12 @@
 \newtheorem{deploymentrule}[proposition]{Rule}
 \DeclareMathAlphabet{\pazocal}{OMS}{zplm}{m}{n}
 % The original manuscript uses natbib (authoryear), where \cite is the narrative
-% form ("Mandl (1980)"). Keep that behaviour so the original sentences read the same.
+% form ("Mandl (1980)"). Keep that behaviour so the original sentences read the same;
+% \citealp/\citealt keep biblatex's plain form ("Mandl, 1980").
+\let\CASPTplaincite\cite
 \let\cite\citet
+\renewrobustcmd*{\citealp}{\CASPTplaincite}
+\renewrobustcmd*{\citealt}{\CASPTplaincite}
 % Keyword separator of the original (Elsevier) manuscript.
 \providecommand{\sep}{\unskip; }
 
@@ -237,6 +241,7 @@ As illustrated in Fig.~\ref{fig:rollFramework}, our methodology follows a predic
 \begin{figure}[htbp]
 \centering
 \includegraphics[width=0.62\textwidth]{Fig/Framework/rollFramework.png}
+\vspace{4pt} % Adjust the spacing as needed
 \caption{\label{fig:rollFramework}Proactive Line Redesign Framework.}
 \end{figure}
 
@@ -309,15 +314,15 @@ J\!\bigl(\pazocal{E}^{(k)},\pazocal{E}^{(k+n)}\bigr) \;\ge\; J\!\bigl(\pazocal{E
 We formulate our public transport network adaptation problem as a three-objective optimization, as expressed in~\eqref{eq:multi_objective}. The first objective, $Z_1$, minimizes passenger travel time deterioration, where $q_k$ represents the travel demand flow. The second objective $Z_2$ minimizes operational costs through total vehicle-hours\rev{cc}{}{, where $\hat{t}^\ell$ is the predicted one-way travel time of line~$\ell$ (in-vehicle plus dwell times) under link times~$\hat t_{ij}$}. \begin{equation}
 \label{eq:multi_objective}
 \min_{\pazocal{G}_{\text{PT}}^{\text{adpt}}} \begin{pmatrix} Z_1 \\ Z_2 \\ Z_3 \end{pmatrix} = \begin{pmatrix}
-\underbrace{\sum_{k \in \pazocal{K}} q_k \cdot \max(\hat{t}_k - t_k^0, 0)}_{\text{Passenger travel time deterioration}} \\[3ex]
-\underbrace{\sum_{\ell \in \pazocal{L}} n^\ell \cdot 2\hat{t}^\ell}_{\text{Total vehicle-hours (operating cost)}} \\[3ex]
+\underbrace{\sum_{k \in \pazocal{K}} q_k \cdot \max(\hat{t}_k - t_k^0, 0)}_{\text{Passenger travel time deterioration}} \\[2.5ex]
+\underbrace{\sum_{\ell \in \pazocal{L}} n^\ell \cdot 2\hat{t}^\ell}_{\text{Total vehicle-hours (operating cost)}} \\[2.5ex]
 \underbrace{1 - \frac{\sum_{\ell \in \pazocal{L}} \sum_{(i,j) \in \pazocal{E}} \min(e_{ij}^\ell, e_{ij}^{\ell, 0})}{\sum_{\ell \in \pazocal{L}} \sum_{(i,j) \in \pazocal{E}} \max(e_{ij}^\ell, e_{ij}^{\ell, 0})}}_{\text{Line dissimilarity}}
 \end{pmatrix}
 \end{equation} In~\eqref{eq:multi_objective}, $e_{ij}^{\ell, 0}$ and $e_{ij}^\ell$ denote whether line $\ell$ uses substrate link $(i, j)$ in the original and the redesigned network, respectively. \rev{cc}{}{The design is further subject to line-structure constraints (each active line is a simple path between two distinct terminals, enforced through flow-balance, degree and Miller--Tucker--Zemlin subtour-elimination constraints) and to a global fleet budget $\sum_{\ell\in\pazocal{L}} n^\ell \le V_{\max}$; the complete formulation is given in the extended report~\citep{guo2026extended}.}
 
 \section{Solution Algorithm}\label{sec:alg}
 
-Given the tri-objective nature of the problem and the nonconvex trade-offs, we adopt \rev{cc}{an NSGA-III}{a Non-dominated Sorting Genetic Algorithm~III (NSGA-III)} framework \rev{cc}{(Algorithm~\ref{alg:NSGA3})}{\citep{deb2014nsga3}} to approximate the Pareto front. \rev{cc}{As illustrated in Fig.~\ref{fig:nsgaFramework}, we}{We} adopt a \textbf{design--evaluation decomposition} for computational tractability. The evolutionary search operates on network design variables (line topologies $e_{ij}^\ell$ and fleet allocations $n^\ell$). The crossover exchanges complete lines between parents as the primary recombination mechanism; any subsequent modifications are limited to feasibility restoration. With probability $P_m$, a mutation perturbs a single line $\ell$ via local structural modifications, including node insertion, node deletion, or segment reconnection.
+Given the tri-objective nature of the problem and the nonconvex trade-offs, we adopt \rev{cc}{an NSGA-III}{a Non-dominated Sorting Genetic Algorithm~III (NSGA-III)} framework \rev{cc}{(Algorithm~\ref{alg:NSGA3})}{\citep{deb2014nsga3}} to approximate the Pareto front. \rev{cc}{As illustrated in Fig.~\ref{fig:nsgaFramework}, we}{We} adopt a \textbf{design--evaluation decomposition} for computational tractability. The evolutionary search operates on network design variables (line topologies $e_{ij}^\ell$ and fleet allocations $n^\ell$). The crossover exchanges complete lines between parents as the primary recombination mechanism; any subsequent modifications are limited to feasibility restoration. With probability $P_m$, a mutation perturbs a single line $\ell$ via local structural modifications, including node insertion, node deletion, or segment reconnection. \rev{cc}{}{At initialization, candidate networks are screened so that the origin and destination of every OD pair are connected; full feasibility is subsequently evaluated together with the objectives.}
 
 For each individual, the algorithm first constructs a comprehensive virtual-node graph $\pazocal G'$ that integrates in-vehicle travel times and waiting times $w^\ell$, the latter being derived from the allocated vehicle units $n^\ell$\rev{cc}{ ($\S$~\ref{sec:virtual_nodes})}{}. To evaluate the travel-time deterioration $Z_1$, the algorithm solves a shortest-path problem (Dijkstra) for every OD pair $(o_k, d_k) \in \pazocal K$ on $\pazocal G'$. The resulting shortest path yields the predicted OD travel time $\hat t_k$. Specifically, $Z_3$ is quantified using a line-specific Jaccard similarity, where each network element is defined as a triplet $(\min(i,j), \max(i,j), \ell)$. \rev{cc}{}{Parameter values, the pseudo-code, the repair operators and a comparison with other multi-objective algorithms are reported in the extended report~\citep{guo2026extended}.}
 
@@ -368,6 +373,9 @@ in~\eqref{eq:multi_objective}:
     \item \textbf{Line Overlap (LO):} Jaccard-based percentage overlap~\eqref{eq:jaccard} between the edge sets of the original and adaptive PT networks.
 \end{itemize}
 
+\rev{cc}{}{All reported metrics are computed under the realized link travel times, for both the original and the adaptive network (so $t_k^0$ in~\eqref{eq:avgTTI} is a realized travel time).}
+
+
 \subsection{Main performance results on Mandl's benchmark}\label{sec:mandl_RESULT1}
 
 \begin{table}[htbp]
@@ -376,7 +384,7 @@ in~\eqref{eq:multi_objective}:
 \centering
 \footnotesize
 \setlength{\tabcolsep}{0pt}
-\renewcommand{\arraystretch}{1.12}
+\renewcommand{\arraystretch}{1.0}
 
 \begin{threeparttable}
 \begin{tabular*}{\textwidth}{@{\extracolsep{\fill}}cccccc@{}}
@@ -440,7 +448,7 @@ We now test whether the proposed proactive redesign is driven by the intrinsic v
 \centering
 \footnotesize
 \setlength{\tabcolsep}{3pt}
-\renewcommand{\arraystretch}{1.12}
+\renewcommand{\arraystretch}{1.0}
 \resizebox{\textwidth}{!}{%
 \begin{threeparttable}
     \begin{tabular}{c c c c c c c c}
