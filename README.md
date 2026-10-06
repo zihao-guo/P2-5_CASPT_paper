@@ -21,6 +21,7 @@ algorithmic details, additional experiments — is referred to as the **extended
 | `build.sh` | Builds both PDFs and fails if either exceeds 8 pages. |
 | `tools/` | `check_verbatim.py` (fidelity check), `make_orig_labels.py`, `prune_bib.py`. |
 | `orig_labels.tex` | Original label numbers, used only inside struck-out old text of the marked version. |
+| `qa/` | Codex (`gpt-6-astra`, xhigh) review of each modification step, with what was done about each finding. |
 
 ## Building
 
