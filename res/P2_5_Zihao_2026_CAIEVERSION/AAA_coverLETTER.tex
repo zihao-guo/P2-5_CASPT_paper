@@ -1,0 +1,87 @@
+\documentclass[11pt,a4paper]{letter}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{geometry}
+\usepackage{graphicx}
+\usepackage{url}
+\usepackage{hyperref}
+\usepackage{enumitem}
+\usepackage[en-GB]{datetime2}
+
+% 页面设置
+\geometry{
+    left=1.5cm,
+    right=1.5cm,
+    top=1.5cm,
+    bottom=1.5cm
+}
+
+\hypersetup{
+    colorlinks=true,
+    urlcolor=blue,
+    linkcolor=blue,
+    citecolor=blue,
+    filecolor=blue,
+    pdfborder={0 0 0}
+}
+
+% 设置字体
+\usepackage{times}
+
+% 自定义页眉
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\includegraphics[height=1.5cm]{ip-paris_logo.png}}
+\fancyhead[R]{\small\textbf{Institut Polytechnique de Paris}\\
+\small Paris Region, France\\
+\small Paris, \DTMtoday}
+\renewcommand{\headrulewidth}{0pt}
+\setlength{\headheight}{3cm}
+
+\begin{document}
+
+Dear Editor,
+
+We are pleased to submit our paper titled ``Predict-then-Optimize Framework for Public Transport Line Redesign under Fluctuating Traffic Conditions''. 
+
+Public Transport (PT) design is traditionally based on nominal conditions (e.g., peak or average link travel times). Although conditions stochastically fluctuate, the designed network structure remains mostly unvaried and only limited corrective actions (e.g., stop-skipping, holding) are implemented. As a result, public transport networks struggle to maintain efficiency. 
+
+The \textbf{contribution} of this article is a systematic analysis of the potential of a proactive redesign of PT lines, in the case of large traffic fluctuations that would deteriorate user and operator performance. To this aim, we adopt a predict-then-optimize approach, also realistically modeling the inevitable forecasting errors and their impact on the redesign decisions.
+% We perform extensive numerical evaluation, in the Beijing and Mandl's networks, under different scenarios of traffic variance. We show that, by adapting the PT network to current conditions in real time, our framework improves the travel time of XXXX \% of OD-pairs with respect to the status quo (consisting in not changing the network), while also decreasing operational cost.
+Extensive numerical evaluations are performed in Mandl's network and a real-world network in Beijing.
+
+%, under different scenarios of traffic variance. We show that, by adapting the PT network to current conditions in real time, Mandl's network achieves at least 77.9\% of OD pairs, reducing travel time by $\ge$20\%, alongside an operational cost reduction of up to 37\%, while preserving 79\% of the original network structure. Furthermore, empirical results from the large-scale Beijing network demonstrate that the proposed method yields up to 20.5\% average travel time improvement and 15.6\% operational cost reduction, all while maintaining more than 60\% route overlap with the existing configuration.
+%We formulate a multi-objective optimization problem balancing passenger travel time, operational costs, and network stability, solved through a customized Non-Dominated Sorting Genetic Algorithm III (NSGA-III).
+%
+
+We believe that our research methodology and findings are strongly consistent with the aim of \textit{Computers \& Industrial Engineering}. The paper analyzes an optimization methodology for a relevant industrial-engineering problem: the adaptive redesign of public-transport line structures under stochastic operating conditions. It also evaluates this methodology on benchmark and large-scale networks, using both user- and operator-oriented performance indicators.
+
+
+The preliminary version of this work was presented at the 19th Learning and Intelligent Optimization Conference (LION19). However, this article is deeply different than that preliminary version:
+\begin{itemize}
+\item We now realistically model the error distribution resulting from well-established deep learning based prediction models. This allows us to evaluate the effectiveness of our optimization, even when faced with the inevitable inaccuracies of prediction models. In LION19, instead, we made the unrealistic assumption that link travel times are perfectly known in advance.
+\item To ensure that the proposed real-time network modifications are not excessive, we add in the objective function a Jaccard index, which measures the similarity with respect to the original network. In LION19, a simple count of overlapping links was used. The new formulation, although more accurate, leads to a non-linear optimization problem (while in LION19 it was linear), which requires a more involved solution method.
+\item We now add a large-scale scenario, namely the Beijing dataset. 
+\item We changed the optimization approach. It was a single objective optimization in LION19 (we combine multiple factors in the same scalar objective function), solved via a solver. It is now multiobjective (considering passenger travel time, operational cost, and network similarity), and we now devise a modified NSGA-III algorithm.
+\item Because of the aforementioned differences, all results are new.
+\end{itemize}
+
+
+Finally, we confirm that this manuscript has not been published elsewhere and is not under consideration by another journal. All authors have approved the manuscript and agree with its submission.
+
+We believe the approach presented in this paper is novel and can contribute both on the academic literature and, in the long term, on real public transport operations.
+
+\vspace{0.5cm}
+
+Regards,\\
+Assoc. Prof. \textbf{Andrea ARALDO}, \textbf{Zihao GUO} (PhD student), Prof. \textbf{Mounim EL-YACOUBI}\\
+\textit{Institut Polytechnique de Paris}\\
+\\
+Dr. \textbf{Fayçal A. TOUZOUT} \\
+\textit{National School of State Public Works}
+\\
+\\
+Contact: \href{mailto:andrea.araldo@telecom-sudparis.eu}{andrea.araldo@telecom-sudparis.eu}
+
+\end{document}

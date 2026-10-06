@@ -1,0 +1,60 @@
+\documentclass{article} % 必须退回基础 article
+
+% ==================== 导言区 (Preamble) ====================
+\usepackage{booktabs} 
+\usepackage{amssymb}  
+\usepackage{amsmath}  
+\usepackage{microtype} 
+\usepackage{CJKutf8}    % 强制引入 pdfLaTeX 专用的 UTF-8 中文宏包
+
+% ==================== 正文区 (Document Body) ====================
+\begin{document}
+\begin{CJK*}{UTF8}{gbsn} % 开启中文环境，使用简体宋体 (gbsn)
+
+\subsection*{主实验}
+
+本实验旨在观察当真实交通波动增强时，预测驱动的重新设计（forecast-driven redesign）是否仍然有效。
+其中，DCRNN 和 MTGNN 模型使用原始经验误差（empirical error），即 $\alpha = 1.0$。
+实验参数配置与对照如表~\ref{tab:main_experiment} 所示。
+
+\begin{table}[htbp]
+\centering
+\small 
+\caption{主实验设置与对照}
+\label{tab:main_experiment}
+\begin{tabular}{lcccc}
+\toprule
+$CV_T$ & No forecast & DCRNN noisy & MTGNN noisy & Perfect forecast \\
+\midrule
+0.05 & \checkmark & \checkmark & \checkmark & \checkmark \\
+0.25 & \checkmark & \checkmark & \checkmark & \checkmark \\
+0.50 & \checkmark & \checkmark & \checkmark & \checkmark \\
+1.00 & \checkmark & \checkmark & \checkmark & \checkmark \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection*{敏感性实验}
+
+本实验旨在分析优化结果对预测误差的敏感性，重点回答：当预测误差逐渐增大时，优化结果从什么时候开始明显变差。
+实验通过固定 $CV_T$（例如选择 $CV_T = 0.50$ 或 $1.00$），并改变预测误差缩放因子 $\alpha$ 的值来实现，$\alpha$ 的具体物理含义见表~\ref{tab:sensitivity_alpha}。
+
+\begin{table}[htbp]
+\centering
+\caption{预测误差缩放因子 $\alpha$ 的含义}
+\label{tab:sensitivity_alpha}
+\begin{tabular}{cl}
+\toprule
+$\alpha$ & 含义 \\
+\midrule
+0.0 & Perfect forecast \\
+0.5 & Low error \\
+1.0 & Empirical model error \\
+1.5 & High error \\
+2.0 & Severe error \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\end{CJK*} % 结束中文环境
+\end{document}
