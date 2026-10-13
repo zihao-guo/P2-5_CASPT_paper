@@ -142,194 +142,196 @@ on Advanced Systems in Public Transport and TransitData 2027}
 
 }
 
-\textbf{Abstract}: Accessibility, understood as the extent to which opportunities can be reached within a specified travel-time threshold, constitutes a central benefit of public transport systems. Although Urban Rail Transit (URT) plays a pivotal role in ensuring such accessibility, its inherent susceptibility to disruptions disproportionately affects suburban regions where alternative travel options are scarce. Existing disruption management strategies, however, often fall short: rigid proactive measures offer limited operational flexibility, whereas purely reactive responses are typically inefficient in restoring accessibility once disruptions occur. To address these limitations, this paper introduces a two-stage stochastic optimization framework that couples proactive infrastructure investment with adaptive operational adjustments. The first stage identifies flexible network enhancements to be implemented in advance, while the second stage optimizes bus operations in response to disruption scenarios. Results from a stylized case study reveal that, relative to conventional replacement buses, the proposed framework consistently achieves higher accessibility restoration across disruption scenarios, while maintaining at least 66.7\% path similarity with the original bus routes.
+\textbf{Abstract}: Accessibility, the extent to which opportunities can be reached within a given travel-time threshold, is a central benefit of public transport. Urban Rail Transit (URT) disruptions remove much of it, and the usual remedy, replacement buses shuttling between the affected stations, restores the form of rail service rather than access to destinations. This paper proposes a proactive--adaptive framework for redesigning the bus network under URT disruptions. Before any disruption, the operator prepares a few contingency route variants; afterwards, routes and frequencies are adapted in time phases, with prepared variants available soon after the disruption and unprepared ones only after a planning delay. Every variant keeps at least two thirds of its original route segments. The objective is 30-minute cumulative accessibility. The model is a defender--attacker--defender program whose worst-case objective can be blended with the expected value of a two-stage stochastic program. We solve it with an exact column-and-constraint generation algorithm that returns machine-checkable certified bounds. In a protocol-fixed comparison under worst-case one- and two-link rail failures, the benchmark is frequency-optimal bridging: replacement buses on a declared sub-chain menu, released 10 minutes after the disruption. On two synthetic grid networks, prepared rerouting with frequency adjustment and no shuttles recovers 18.9--19.5\% of the worst-case accessibility loss, against 12.8--16.4\% for bridging, and combining rerouting with the bridging shuttles recovers 22--23\%. On a network built from Rennes (France) data, bridging is stronger than rerouting alone (43.3\% vs.\ 17.8--19.1\%), and the combination exceeds it by only 1.1--2.3 percentage points. Redesign is therefore not a universal substitute for replacement buses.
 
-\textbf{Keywords}: Proactive-adaptive strategy \sep Accessibility \sep Public transport resilience \sep Disruption management \sep Two-stage stochastic programming
+\textbf{Keywords}: Proactive-adaptive strategy \sep Accessibility \sep Public transport resilience \sep Bus bridging \sep Defender--attacker--defender model
 
 \_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_
 
 % =============================================
 \section{Introduction}\label{sec:intro}
 % =============================================
-Urban Rail Transit (URT) systems form the backbone of metropolitan mobility, providing high-capacity, reliable services under normal operations~\citep{tan2020evacuating}. Yet this critical infrastructure remains vulnerable to diverse disruptions, from unexpected incidents to planned maintenance: a fire at New York City's 145th Street Station suspended service for over two hours during the morning peak~\citep{barone2017abcdfire}, recurring closures on Paris's RER B line have affected nearly 200,000 daily passengers despite replacement bus deployments~\citep{actu2024travaux}, and even the highly reliable Hong Kong MTR experiences hundreds of disruptions per year~\citep{zhang2020metro}.
+Urban Rail Transit (URT) systems form the backbone of metropolitan mobility, providing high-capacity, reliable services under normal operations~\citep{tan2020evacuating}. Yet this critical infrastructure remains vulnerable to diverse disruptions, from unexpected incidents to planned maintenance: a track fire at New York City's 145th Street station suspended A, B, C and D service for over two hours during the morning peak~\citep{barone2017abcdfire}, the 2024 summer closure of part of Paris's RER B line was described as a historic interruption~\citep{actu2024travaux}, and even the highly reliable Hong Kong MTR experiences hundreds of disruptions per year~\citep{zhang2020metro}.
 
 The fallout from URT disruptions signifies more than mere delays; it represents a critical failure of access. Although city centers may have redundant routes, suburbs with thinner networks are far more vulnerable: a single disruption there can cut people off from vital destinations such as jobs, schools, or hospitals~\citep{liu2024measuring}. Traditional metrics like average delay therefore provide an incomplete picture. A more comprehensive metric is \emph{accessibility}, the practical ability to reach important daily destinations within a reasonable time~\citep{hansen1959accessibility,miller2020measuring}.
 
-Current disruption management tools are not well-equipped to protect that kind of access. The go-to solution, substitute buses along the affected rail corridor (\emph{bus bridging}), tends to recreate the form of service without delivering its function~\citep{Pender2012,CurrieMuir2017}: replacement buses often suffer from inadequate capacity, longer travel times, and poor reliability compared to the original rail system~\citep{CurrieMuir2017}. More generally, the literature has followed two largely separate streams. \emph{Proactive} planning strengthens the network before disruptions occur, e.g., through redundant routes or vulnerability and resilience analysis~\citep{CatsJenelius2014,RodriguezNunez2014,XuChopra2022}; these approaches are inherently static, often conservative, and frequently remain at an analytical level. \emph{Reactive} operations, such as train rescheduling~\citep{Cacchiani2014}, bus bridging route design and dispatching~\citep{Jin2016,vanDerHurk2016}, stop skipping~\citep{Tang2018}, or short turning~\citep{Peled2021} (see~\citealp{Gkiotsalitis2022}, for an overview), are applied after a disruption occurs; they are generally ad hoc, tailored to specific cases, and optimize local performance rather than system-wide outcomes. Stochastic and robust models that integrate design and operations exist~\citep{Cadarso2015,AnLo2016}, but strategic infrastructure planning and operational disruption management are still mostly treated separately~\citep{Besinovic2020}. Moreover, while accessibility is well established in transport planning~\citep{geurs2004accessibility}, URT disruption research has used it to \emph{measure} disruption impacts~\citep{liu2024measuring,nalin2025evaluation} but not as an \emph{optimization objective} for recovery.
-
-To address this gap, we propose a bus network redesign methodology for URT disruptions that jointly integrates preventive planning and adaptive operations, with accessibility as the explicit objective. We formulate a two-stage stochastic program: in the first stage, candidate stops, dedicated bus lanes and contingency line topologies are prepared before any disruption; in the second stage, service frequencies and passenger routings are adapted to the realized disruption scenario. A Path Order Preservation Rate (POPR) constraint keeps redesigned lines close to their original structure, limiting passenger disorientation and driver operational complexity. On a stylized case study, the framework consistently outperforms conventional replacement buses in accessibility while maintaining at least 66.7\% path similarity.
+The go-to remedy, substitute buses along the affected rail corridor (\emph{bus bridging}), tends to recreate the form of service without delivering its function~\citep{Pender2012,CurrieMuir2017}: replacement buses often suffer from inadequate capacity, longer travel times, and poor reliability compared to the original rail system~\citep{CurrieMuir2017}. The literature has followed two largely separate streams. \emph{Proactive} studies assess and strengthen networks before disruptions occur, through vulnerability and resilience analysis~\citep{CatsJenelius2014,RodriguezNunez2014,XuChopra2022}. \emph{Reactive} studies optimize operations after a disruption, for example through rapid-transit recovery planning~\citep{Cadarso2015}, train rescheduling~\citep{Cacchiani2014}, bus bridging route design and dispatching~\citep{Jin2016,vanDerHurk2016} and operational strategies such as stop skipping~\citep{Tang2018}; see~\citet{Gkiotsalitis2022} for an overview. Stochastic programs exist for transit network design~\citep{AnLo2016}, but strategic planning and operational disruption management are still mostly treated separately~\citep{Besinovic2020}. URT disruption research has mostly used accessibility to \emph{measure} impacts~\citep{liu2024measuring,nalin2025evaluation}. Our earlier work optimized it through reactive bus rerouting for a single, known disruption~\citep{Guo2025TRR}. This paper extends that idea to preparation under uncertainty, with four contributions:
+\begin{enumerate}\setlength\itemsep{0pt}
+\item \emph{Preparation as prepared route variants.} Preparation consists of contingency route variants that are planned and briefed in advance, so they can run soon after a disruption, while unprepared variants become available only after a planning delay. This makes the trade-off between preparing and reacting explicit.
+\item \emph{Disruptions as an adversary.} Disruptions are modelled as an adversary removing up to two rail links. The resulting defender--attacker--defender (DAD) program~\citep{Brown2006} is blended with the expectation of the corresponding two-stage stochastic program, and a Path Order Preservation Rate (POPR) constraint keeps every variant close to its original line.
+\item \emph{Exact, certified solution.} We give an exact column-and-constraint generation algorithm~\citep{ZengZhao2013} whose results carry machine-checkable bounds.
+\item \emph{Protocol-fixed comparison.} We compare the method with frequency-optimal bridging under a protocol fixed before the comparison runs, on two synthetic networks and one built from Rennes data, and report where it does \emph{not} win.
+\end{enumerate}
 
 % =============================================
 \section{Problem Setting}\label{sec:preliminaries}
 % =============================================
-The system is defined as a 4-tuple $\Sigma = (\pazocal{S}, \pazocal{G}, \pazocal{L}, \Omega)$, where $\pazocal{S}$ is the spatial tessellation of the study area, $\pazocal{G}$ the physical infrastructure graph, $\pazocal{L}$ the set of PT service lines, and $\Omega$ the set of disruption scenarios.
+\textbf{Demand and network.} The study area is partitioned into square tiles $s\in\pazocal S$ with population shares $P_s$ ($\sum_sP_s=1$); tile $d$ holds $n_d$ opportunities. The multimodal graph $\pazocal G=(\pazocal N,\pazocal E)$ has rail stations, existing bus stops and candidate stops as nodes, and rail links $\pazocal E^r$, road links usable by buses and walking links as links. A journey combines walking access and egress, waiting ($30/f$ min at frequency $f$ in veh/h), in-vehicle time and walking transfers. Bus lines $\ell\in\pazocal L$ run symmetric services on simple paths $p^0_\ell$ at nominal frequency $f^\text{nom}_\ell$.
 
-\textbf{Tessellation and demand.} We partition the study area into a regular tessellation of tiles $s \in \pazocal{S}$ with centroids $c_s$. A traveler can either walk directly or combine walking with PT. Walking times $\bar{t}_{sj}^{\text{access}}$ from $c_s$ to each stop $j$ are precomputed; tiles without stops are assigned a candidate stop at $c_s$. For each tile $s$, $\pazocal{O}_s$ is the set of activity opportunities (workplaces, schools, healthcare facilities) linked to $s$. The pair $(s,k)$, $k \in \pazocal{O}_s$, is referred to as an origin--destination (OD) pair.
+\textbf{Route variants and POPR.} Each line has a finite, restricted (not exhaustive) pool $\pazocal P_\ell$ of alternative routes, frozen before the analysis. Let $P=(v_1,\dots,v_n)$ be the original stop sequence. A segment $\{v_i,v_{i+1}\}$ is preserved by a route $P'$ if $P'$ traverses it in either direction. With $K$ preserved segments, $\text{POPR}(P,P')=K/(n-1)$. This is a discrete, topology-oriented counterpart of the path overlap ratio~\citep{Lim2005PathOverlap}. Every variant must satisfy $\text{POPR}\ge\rho=2/3$. Because POPR counts adjacencies and not order, the original stops must also appear in their original order; in addition, the run time between the original terminals may grow by at most $\delta_R=30\%$, and the whole route takes at most $C^\text{max}=60$ min. Besides local detours, the pool contains, for every line end and every eligible transfer target, the shortest terminal extension. An eligible transfer target is the nearest bus node within a 5-min walk of a rail station. This extension family was added after exploratory runs; the frozen pools are the files \texttt{pool\_osr1\_m1\_20.json} of the repository.
 
-\textbf{Network graph.} The PT network is a directed multi-layer graph $\pazocal{G} = (\pazocal{N}, \pazocal{E})$. The node set $\pazocal{N} = \pazocal{N}^r \cup \pazocal{N}^b \cup \pazocal{N}^c$ consists of urban rail stations, existing bus stops and candidate bus stops. The edge set $\pazocal{E} = \pazocal{E}^r \cup \pazocal{E}^b \cup \pazocal{E}^c \cup \pazocal{E}^t$ includes rail links with travel times $\bar{t}_{ij}^r$, existing bus links, potential new bus links connecting candidate stops, and walking transfer edges with times $\bar{t}_{ij}^{\text{transfer}}$. Each physical link is represented by two opposite arcs.
-
-\textbf{Service layer.} Urban rail lines $\pazocal{L}^r$ run on fixed routes and timetables, providing the stable backbone of the network (average waiting time $\bar{w}_i^r$ at station $i$). Bus lines $\pazocal{L}^b$ are more flexible: they can be rerouted or extended to candidate stops when rail disruptions occur. Each line is a directed simple path; the opposite direction mirrors it with the same frequency (symmetric service).
-
-\textbf{Disruption scenarios.} Uncertainty is described by a finite set of scenarios $\Omega$. Each $\omega \in \Omega$ occurs with probability $p_\omega$ and specifies (i) rail link failures $\bar{d}_{ij}^{\omega} \in \{0,1\}$, $(i,j) \in \pazocal{E}^r$, and (ii) scenario-dependent bus travel times. Since displaced rail demand adds pressure on the road network, the nominal bus time $\bar{t}_{ij}^\ell$ of line $\ell$ on edge $(i,j)$ is inflated as $\hat{t}_{ij}^{\ell,\omega} = \bar{t}_{ij}^\ell \big(1 + \mu_{\text{bus}} \sum_{(m,n)\in \pazocal{E}^r} \bar{d}_{mn}^\omega \big)$, where the sensitivity $\mu_{\text{bus}}$ is informed by congestion multipliers of up to 2.0 reported for degraded road conditions~\citep{dft2018congestion}. Dedicated bus lanes shorten travel times by a factor $\alpha$, about 18\% on average~\citep{russo2022buslane}.
+\textbf{Disruptions.} A failure unit is one rail link between adjacent stations. The attack set $\pazocal Y$ contains all one- and two-link failures ($\Gamma=2$). For expected values, links fail independently with probability $\pi=0.1$, renormalised on $\pazocal Y$ to weights $q_y$.
 
 % =============================================
 \section{Methodology}\label{sec:methodology}
 % =============================================
-\subsection{Two-stage decision process}\label{subsec:problemStatement}
-Decisions operate on two time scales (Fig.~\ref{fig:PT_repre}). \emph{First-stage (here-and-now) design decisions}, taken before any disruption materializes, comprise (a) the construction of candidate stops ($z_i$), (b) the installation of dedicated bus lanes ($b_{ij}$), a tactical investment justified because it is decided once and benefits all future scenarios, and (c) the contingency topology of each bus line ($x_{ij}^\ell$), prepared in advance so that it can be activated immediately. \emph{Second-stage (recourse) decisions}, taken after scenario $\omega$ is realized, comprise (d) the service frequency $f^{\ell,\omega}$ of each line, which implicitly allocates the bus fleet, and (e) the resulting passenger routings $y_{ij}^{sk\omega}$. Disrupted rail stations are deactivated, and their passengers are directed (through phone alerts or station signage) to redesigned bus services at designated consolidation nodes. Real-time driver guidance through onboard consoles or tablets allows drivers to follow the pre-computed contingency routes with minimal additional hardware or training.
+\subsection{Proactive--adaptive decision process}\label{subsec:problemStatement}
+Decisions are taken at three moments:
+\begin{enumerate}\setlength\itemsep{0pt}
+\item \emph{Preparation} $x$, before any disruption, selects at most $K=3$ variants from the pools. A prepared variant is a complete contingency route, ready to run soon after a disruption. We use a single readiness tier, i.e.\ no partially prepared variants.
+\item The \emph{disruption} $y\in\pazocal Y$ is revealed.
+\item The \emph{response} $z=(z_j)_j$ is chosen per phase $j$ of the horizon $D=120$ min:
+\begin{itemize}\setlength\itemsep{0pt}
+\item $[0,\mu)$ with $\mu=10$ min: the original network runs without the failed links;
+\item $[\mu,\delta)$ with $\delta=60$ min: each line runs its original route or a \emph{prepared} variant;
+\item $[\delta,D]$: each line may run any variant of its pool.
+\end{itemize}
+\end{enumerate}
+Frequencies are re-chosen in every phase after the first. Replacement shuttles are available from their release time $r_S\in\{\mu,\delta\}$. Each phase is evaluated as a steady state and weighted by its duration, $w_j=|T_j|/D$, without dynamics across phases.
 
-\begin{figure}[htbp]
-\centering
-\includegraphics[width=.5\textwidth]{Figure/framework.png}
-\caption{Two-stage framework for preparedness and adaptive response under disruptions. Left of the dashed boundary, first-stage design decisions ($z_i$, $b_{ij}$, $x_{ij}^\ell$) are fixed before uncertainty is resolved; to its right, second-stage recourse decisions ($f^{\ell,\omega}$, passenger routings) are taken per realized scenario.}\label{fig:PT_repre}
-\end{figure}
-
-\subsection{Performance measures}\label{subsec:measures}
-\textbf{Path Order Preservation Rate (POPR).}\label{subsec:porp} Let the original route be the node sequence $P = [v_1, \dots, v_n]$ with consecutive pairs $\pazocal{S}_{\text{orig}} = \{(v_i, v_{i+1}) \mid 1 \leq i \leq n-1\}$, and $P'$ the redesigned route. A pair is preserved if $P'$ contains $(v_i,v_{i+1})$ or $(v_{i+1},v_i)$; with $K$ preserved pairs, $\text{POPR}(P,P') = K/(n-1)$. POPR is a discrete, topology-oriented counterpart of the path overlap ratio~\citep{Lim2005PathOverlap}: it keeps redesigned lines close to their original topology, mitigating passenger disorientation and driver operational complexity.
-
-\textbf{Accessibility.}\label{sec:TWA} Classical gravity-based measures weight opportunities inversely by travel time~\citep{hansen1959accessibility,geurs2004accessibility}. To better reflect practical conditions, we use a time-weighted cumulative-opportunity measure with the widely used 30-minute threshold $\tau$. For tile $s$ under scenario $\omega$,
+\subsection{Accessibility objective}\label{sec:TWA}
+Let $\pazocal R^\text{nom}_s$ be the destinations reachable from $s$ within $\tau=30$ min in the intact network, and $\chi_{sd}(z_j,y)\in\{0,1\}$ the 30-minute reachability in phase $j$. Accessibility is population-weighted and \emph{capped at nominal}: only nominally reachable pairs count, each at most once. The phase and preparation values are
 \begin{equation}
-    A^{s,\omega} = \sum_{k \in \pazocal{O}_s} \max\left(0, \frac{\tau - T^{sk\omega}}{\tau}\right),
-    \label{eq:Acc}
+\hat A(z_j,y)=\sum_{s}P_s\sum_{d\in\pazocal R^\text{nom}_s}n_d\,\chi_{sd}(z_j,y),\qquad
+V(x,y)=\sum_j w_j\max_{z_j\in Z_j(x,y)}\hat A(z_j,y),
+\label{eq:Acc}
 \end{equation}
-where $T^{sk\omega}$ is the travel time from $c_s$ to opportunity $k$. An opportunity contributes a full score when reachable immediately; its value decreases linearly with travel time and becomes zero beyond $\tau$. This places more emphasis on nearby opportunities, making the measure sensitive to accessibility changes caused by rail disruptions. $\bar{A}^{s,\omega}$ denotes the reference accessibility of the unmitigated disrupted network (disrupted rail edges disabled, no redesign).
-
-\textbf{Travel time.}\label{subsubsec:travel_time} The PT journey time of OD pair $(s,k)$ sums access walking, waiting, in-vehicle, transfer and egress times, $T^{sk\omega}_{\text{PT}} = T^{sk\omega}_{\text{access}} + T^{sk\omega}_{\text{wait}} + T^{sk\omega}_{\text{ivt}} + T^{sk\omega}_{\text{transfer}} + T^{sk\omega}_{\text{egress}}$, and the traveler selects the faster of PT and direct walking, $T^{sk\omega} = \min \{T^{sk\omega}_{\text{PT}}, \bar{t}^{\text{walk}}_{sk}\}$. Under uniformly distributed passenger arrivals, the expected waiting time for a line with frequency $f$ is half the headway~\citep{osuna1972control}. The realized bus time of OD pair $(s,k)$ on edge $(i,j)$ of line $\ell$ is $BT_{ij}^{\ell,sk\omega} = \hat{t}_{ij}^{\ell,\omega} u_{ij}^{\ell,sk\omega} (1 - \alpha b_{ij})$, where $u_{ij}^{\ell,sk\omega}\in\{0,1\}$ indicates whether the OD pair uses line $\ell$ on that edge.
-
-\subsection{Two-stage stochastic program}\label{sec:problemFormulation}
-The cycle time of bus line $\ell$ in scenario $\omega$ is $C_{\ell}^{\omega}=\sum_{(i,j)\in \pazocal E^b \cup \pazocal E^c}\hat{t}_{ij}^{\ell,\omega}x_{ij}^{\ell}$. Consistent with transit economics and industry practice, operating effort is measured in vehicle-hours, $C_{\ell}^{\omega} f^{\ell,\omega}$~\citep{horcher2021public,tcrp118}. The model reads
+and the model is
 \begin{equation}
-\min_{z,\,b,\,x,\,f}\;
-\underbrace{\sum_{i \in \pazocal{N}^c} c_i^{\text{stop}} z_i
-  + \sum_{(i,j) \in \pazocal{E}^b \cup \pazocal{E}^c} c_{ij}^{\text{lane}} b_{ij}}_{I(z,b)}
-\;+\;
-\sum_{\omega \in \Omega} p_\omega \Big[
-    \sum_{\ell \in \pazocal{L}^b} C_{\ell}^{\omega} f^{\ell,\omega}
-    - \lambda \sum_{s \in \pazocal{S}} \big(A^{s,\omega} - \bar{A}^{s,\omega}\big)
-\Big],
+\max_{x\in X}\;\Phi_\lambda(x)=\lambda\min_{y\in\pazocal Y}V(x,y)+(1-\lambda)\sum_{y\in\pazocal Y}q_yV(x,y).
 \label{eq:obj}
 \end{equation}
-where $I(z,b)$ is the first-stage investment and the bracket is the second-stage recourse value: operating effort minus the accessibility restored relative to the unmitigated disrupted network. The coefficient $\lambda$ is a policy parameter expressing the operating effort the operator is willing to expend per unit of restored accessibility.
+With $\lambda=1$ it is a DAD program, with preparation chosen against the worst disruption; with $\lambda=0$ it is the two-stage stochastic program. Preparation only enlarges the response sets $Z_j(x,y)$; it does not harden rail links. The nominal value is $A^\text{nom}$. The unmitigated value $H(y)$ is that of the original routes at nominal frequency without shuttles.
 
-\textbf{First-stage constraints.} Infrastructure investments and line topologies satisfy
-\begin{align}
-& I(z,b) \leq B, \qquad
-x_{ij}^\ell \leq z_i,\;\; x_{ij}^\ell \leq z_j \;\; \forall (i,j) \in \pazocal E^c, \ell, \qquad
-b_{ij} \leq \textstyle\sum_{\ell} x_{ij}^\ell,\;\; b_{ij} = b_{ji} \;\; \forall (i,j) \in \pazocal E^b \cup \pazocal E^c,
-\label{eq:f1} \\
-& \pi_{ij}^\ell = x_{ij}^\ell + x_{ji}^\ell \;\; \forall (i,j) \in \pazocal{S}_\text{orig}^\ell, \qquad
-\textstyle\sum_{(i,j) \in \pazocal{S}_\text{orig}^\ell} \pi_{ij}^\ell \geq \rho\, |\pazocal{S}_\text{orig}^\ell|\, a^\ell, \qquad
-f^{\ell,\omega} \leq M \textstyle\sum_{(i,j)} x_{ij}^\ell \;\; \forall \ell, \omega.
-\label{eq:popr}
-\end{align}
-Constraints~\eqref{eq:f1} impose the budget $B$, allow a line to traverse a new edge only if both endpoint stops are built, and allow a (direction-neutral) dedicated lane only on edges used by at least one line. Constraints~\eqref{eq:popr} implement POPR: for every operated line ($a^\ell=1$), at least a fraction $\rho \in (0,1]$ of the original consecutive segments must be preserved; only operated lines may have a positive frequency. In addition, a set of path-structure constraints characterizes each operated line as a single simple path: in- and out-degree at most one per node, Miller--Tucker--Zemlin ordering labels $u_i^\ell$ for subtour elimination, exactly two terminal nodes per operated line, and the node--edge count identity of a path (a connected path with $E$ edges visits $E+1$ nodes).
+\subsection{Response constraints}\label{sec:constraints}
+In each phase, $Z_j(x,y)$ requires:
+\begin{enumerate}\setlength\itemsep{0pt}
+\item \emph{One route and frequency per line.} Each line runs exactly one admissible route at one frequency from the menu $\{2,3,4,6,8,10,12,15\}$ veh/h (Rennes adds 5, 7.5 and 9), with $f\ge\max(f^\text{min},\theta f^\text{nom}_\ell)$, $f^\text{min}=3$, $\theta=2/3$.
+\item \emph{Fleet.} $\sum_\ell\lceil 2(1+\beta)R_\ell f_\ell/60\rceil$ plus shuttle vehicles $\le F$, with run time $R_\ell$ and layover share $\beta=0.1$.
+\item \emph{Operating cost.} Vehicle-km per hour stay within $(1+\varepsilon)$ of the nominal value, $\varepsilon=0.1$.
+\item \emph{Rider protection.} For every rider leg on a line, the detour's extra in-vehicle time plus the extra wait from a lower frequency is at most $\eta=10$ min. This is a policy tolerance, not a calibrated value; it applies per leg, so a journey with $k$ affected legs may lose up to $k\eta$.
+\item \emph{No harm.} No tile pair reachable in the unmitigated state may lose reachability.
+\end{enumerate}
+Shuttles count towards the fleet and vehicle-km limits but are exempt from the route and rider-protection rules. The recourse is complete, because the original routes at nominal frequency are always feasible.
 
-\textbf{Second-stage constraints.} For each scenario $\omega$, routing of OD pair $(s,k)$ is defined on the network edges extended by walking access arcs $(s,j)$ and egress arcs $(i,k)$. Passengers may only use built stops, operated lines ($u_{ij}^{\ell,sk\omega} \leq x_{ij}^\ell$) and non-disrupted rail links ($y_{ij}^{sk\omega} \leq 1 - \bar{d}_{ij}^\omega$); they enter and exit the network exactly once, or walk directly if faster (binary $\delta^{sk\omega}$); and they may board a bus line at stop $i$ (indicator $t_{i}^{\ell,sk\omega}$) or rail at a station, or use a transfer edge, only after reaching that node. The PT journey time is then
-\begin{multline}
-T^{sk\omega}_{\text{PT}} = \sum_{j \in \pazocal N} y_{sj}^{sk\omega} \bar{t}_{sj}^{\text{access}}
-+ \sum_{i, \ell} WT_{i\ell}^{sk\omega}
-+ \sum_{(i,j), \ell} BT_{ij}^{\ell,sk\omega}
-+ \sum_{(i,j) \in \pazocal E^{t}} y_{ij}^{sk\omega} \bar{t}_{ij}^{\text{transfer}} \\
-+ \sum_{i \in \pazocal N^r} t_{i}^{r,sk\omega} \bar{w}_i^{r}
-+ \sum_{(i,j) \in \pazocal E^r} y_{ij}^{sk\omega} \bar{t}_{ij}^{r}
-+ \sum_{i \in \pazocal N} y_{ik}^{sk\omega} \bar{t}_{ik}^{\text{egress}},
-\label{eq:tt1}
-\end{multline}
-where bus-related terms are driven by design decisions, whereas rail-related terms are exogenous and vary only with $\omega$.
+\subsection{Exact solution and certification}\label{sec:problemFormulation}
+The monolithic formulation (A-DAD) enumerates $\pazocal Y$ with one recourse copy per attack and phase, using a linearised reachability block. A benchmark against it is pending.
 
-\textbf{Linearization.} The waiting time $WT_{i\ell}^{sk\omega} = t_{i}^{\ell,sk\omega}/(2f^{\ell,\omega})$ is reformulated without division as $0 \le WT_{i\ell}^{sk\omega} \le \theta\, t_{i}^{\ell,sk\omega}$ and $WT_{i\ell}^{sk\omega} f^{\ell,\omega} \ge \kappa\, t_{i}^{\ell,sk\omega}$, with upper bound $\theta = 15$ min and $\kappa = 30$ min ($f$ in veh/h). The product $b_{ij} u_{ij}^{\ell,sk\omega}$ in $BT$ is replaced by a binary $\eta_{ij}^{\ell,sk\omega}$ with the standard McCormick inequalities, and the minimum between PT and walking times by Big-$M$ constraints on $\delta^{sk\omega}$. Finally, the accessibility~\eqref{eq:Acc} is linearized with a binary $\chi^{sk\omega}$ indicating that $T^{sk\omega} \le \tau$:
-\begin{equation}
-T^{sk\omega} \le \tau + M(1 - \chi^{sk\omega}),\quad
-T^{sk\omega} \ge \tau + \epsilon - M\chi^{sk\omega},\quad
-\chi^{sk\omega} - \tfrac{T^{sk\omega}}{\tau} \le \gamma_{sk\omega} \le \chi^{sk\omega},\quad
-A^{s,\omega} = \textstyle\sum_{k} \gamma_{sk\omega},
-\label{eq:wa}
-\end{equation}
-where $M$ is a sufficiently large constant and $\epsilon>0$ avoids boundary ambiguity.
+We use a column-and-constraint generation method (C\&CG-C)~\citep{ZengZhao2013}. For $\lambda=1$ it starts with an \emph{initial bounding} phase, which uses the fact that $\max_xV(x,y)$ bounds the optimum for every attack $y$. Attacks are processed in the order of preparation-independent upper bounds, and a wait-and-see problem (preparation chosen knowing $y$) is solved for each; the smallest bound is a valid upper bound. Each wait-and-see preparation is a candidate, and its value against all attacks is bounded from below by screening and exact evaluation, which gives the lower bound. Early phases use a configuration and frequency search; single-attack MILPs handle selected bounding and refinement tasks. Recourse values may remain intervals even in optimal runs. If the bounds do not meet, a master problem over $x$ and an epigraph variable iterates over generated attacks with optimistic, lazily refined per-attack configuration columns, and separation adds attacks certified to violate the incumbent master target, refining unresolved intervals as needed. The initial-bounding phase is disabled for $\lambda<1$, where a single-attack bound does not bound the expected value; the master loop then runs alone.
+The method is exact and terminates finitely, since $X$ and $\pazocal Y$ are finite, but within a time limit it may return only an interval.
+
+An independent checker re-validates every reported certificate. It binds the certificate to the instance, pool, attack-set and code hashes, re-evaluates every witness response, recomputes the lower bound, and re-derives the upper bound from the recorded solver bounds. ``Optimal'' means a certified relative gap of at most $10^{-4}$, and optimality is relative to the frozen pools.
 
 % =============================================
 \section{Numerical Results}\label{sec:results}
 % =============================================
-The two-stage stochastic optimization model is coded in Python and solved with Gurobi 12.0 on an Intel Core i5 PC (4.6 GHz, 16.0 GB RAM).
-
-\textbf{Case study.}\label{subsec:caseStudy} We design a stylized case study on a small-scale synthetic network (Fig.~\ref{fig:case_illustration}, Table~\ref{tab:case_parameters}). The study area is a $3 \times 4$ grid, where each tile centroid represents a demand origin, and the PT network consists of three urban rail stations supplemented by two bus lines. Within this grid, 99 opportunities are spatially distributed. For each tile $s$, the set of reachable opportunities $\pazocal{O}_s$ is determined by computing shortest paths to all opportunities with Dijkstra's algorithm under a 30-minute travel-time budget in the nominal, undisrupted network. As a preliminary experiment, we restrict our attention to urban rail disruptions and do not account for uncertainties in traffic; we therefore exclude dedicated bus lanes ($b_{ij} = 0$). We consider four scenarios with probabilities $\{0.5, 0.2, 0.2, 0.1\}$: (i)~no disruption, (ii)~only R1--R2 disrupted, (iii)~only R2--R3 disrupted, and (iv)~both links disrupted.
-
-\begin{figure}[htbp]
-\centering
-\begin{minipage}[c]{.56\textwidth}
-\centering
-\includegraphics[width=\linewidth]{Figure/caseStudy.jpg}
-\caption{Case study network: $3 \times 4$ tiles, rail stations R1--R3, bus stops B1--B7 and two bus lines.}\label{fig:case_illustration}
-\end{minipage}\hfill
-\begin{minipage}[c]{.41\textwidth}
-\centering
-\captionof{table}{Key parameters of the case study.}\label{tab:case_parameters}
-\small
-\begin{tabular}{@{}ll@{}}
-\toprule
-Parameter & Value \\
-\midrule
-Grid unit length & 2.0 km \\
-Walking speed & 3.5 km/h \\
-Bus speed & 25 km/h \\
-Max.\ transfer walk time & 30 min \\
-Rail frequency & 15 veh/h \\
-Accessibility threshold $\tau$ & 30 min \\
-\bottomrule
-\end{tabular}
-\end{minipage}
-\end{figure}
-
-Given a disruption scenario $\omega$, we compare four network states: the \emph{Nominal Baseline} $\pazocal G^O$ (intact network); the \emph{Unmitigated Disruption} $\pazocal G^\text{DISR}_\omega$, where disrupted rail segments are simply disabled; the \emph{Conventional Replacement Bus} $\pazocal G^\text{REPL}_\omega$, with additional buses operating along the disrupted rail link, which is the approach classically taken, although such buses travel on a road network with lower speed and higher circuity than the replaced rail; and \emph{Our Solution} $\pazocal G^\text{OURS}_\omega$, produced by model~\eqref{eq:obj}.
-
-\textbf{Accessibility restoration.}\label{subsec:performance} We use two scenario-average indicators. The \emph{WA gain} is the relative improvement of accessibility compared with the disrupted network, $\overline{\Delta}^\text{gain}_{\text{WA}}(\omega;\pazocal G^\ast) = \frac{1}{|\pazocal S|}\sum_{s} \big(A_{s}(\pazocal G^\ast_\omega) - A_{s}(\pazocal G^\text{DISR}_\omega)\big)/A_{s}(\pazocal G^\text{DISR}_\omega)$. The \emph{opportunity change} $\overline{\Delta}^{\text{opp}}(\omega;\pazocal G^\ast) = \frac{1}{|\pazocal S|}\sum_{s} \big(N^{30}_{s,\omega}(\pazocal G^\ast) - N^{30}_{s,\omega}(\pazocal G^\text{DISR})\big)$ captures the variation in the number $N^{30}_{s,\omega}$ of opportunities reachable within 30 minutes.
+\textbf{Instances.} Table~\ref{tab:instances} lists the three validation instances.
+\begin{itemize}\setlength\itemsep{0pt}
+\item \emph{Grids.} The two grids are rule-generated and uncalibrated, and share one generator. Three rail lines (east--west, north--south, diagonal) cross a central station, and feeder, orbital and crosstown bus lines complete the network. Jobs and population decay exponentially with distance from the center.
+\item \emph{Rennes.} This instance uses the STAR GTFS feed (two metro lines and six trunk bus lines, Tuesday 07:00--09:00), the INSEE 2021 1-km population grid and OpenStreetMap activity locations as opportunities. Speeds and circuity are calibrated on GTFS run times and the OSM pedestrian network. It remains a reduced geometric approximation, without crowding or capacity and without full journey-time validation, so we use it for relative comparisons only.
+\end{itemize}
+The worst-case unmitigated loss $\bar L=\max_y(A^\text{nom}-H(y))$ is 22--24\% of $A^\text{nom}$ on all three instances.
 
 \begin{table}[htbp]
 \centering
-\caption{Scenario-average performance: WA gains and 30-minute opportunity changes for the replacement bus and the optimized design.}
-\label{tab:wa_scenarios}
+\caption{Validation instances.}
+\label{tab:instances}
 \small
+\begin{tabular*}{\textwidth}{@{\extracolsep{\fill}}lccccccc@{}}
+\toprule
+Instance & Tiles & Rail stations/links & Bus lines & Cand.\ stops & Fleet $F$ & $|\pazocal Y|$ & Variants \\
+\midrule
+Grid 10$\times$12 & 120 (1.5 km) & 19 / 18 & 11 & 57 & 113 & 171 & 336 \\
+Grid 12$\times$14 & 168 (1.5 km) & 23 / 22 & 12 & 93 & 125 & 253 & 350 \\
+Rennes & 108 (1 km) & 28 / 28 & 6 & 26 & 78 & 406 & 146 \\
+\bottomrule
+\end{tabular*}
+\end{table}
+
+\textbf{Compared strategies.} All strategies share the fleet, vehicle-km, frequency and no-harm rules and the same exact evaluator.
+\begin{itemize}\setlength\itemsep{0pt}
+\item \emph{Unmitigated} (U): no response.
+\item \emph{Frequency only} (FO): original routes with re-optimised frequencies.
+\item \emph{Bridging} (RB+): original routes plus replacement shuttles, with at most one slot per contiguous sub-chain of every maximal disrupted chain and frequencies optimised per attack. We call it \emph{frequency-optimal bridging on a declared sub-chain menu}. It strengthens conventional replacement buses, which serve the maximal disrupted chain only.
+\item \emph{Prepared adaptive rerouting} (PA, our method): preparation and the phased response above, \emph{without} shuttles.
+\item \emph{Hybrid} (HY): PA plus the RB+ shuttles. Its feasible set contains that of RB+.
+\end{itemize}
+
+\textbf{Shuttle stops.} Shuttles stop at the nearest bus or candidate stop within a 5-min walk of each station, reached by an ordinary transfer of $\max(w,0.5)$ min for walk time $w$. Operators typically use kerbside stops near stations, but this exact rule is a modelling choice. On the grids every station has such a stop, 2.6 min away. In the reduced Rennes model four stations have none. There we assume a temporary station-front stop with zero additional transfer time. This is an assumption: its net effect on accessibility has no guaranteed sign.
+
+\textbf{Performance measure and decision rule.} The worst-case recovery of a strategy is
+\begin{equation}
+\text{WR}=1-\frac{A^\text{nom}-\min_{y}V(x,y)}{\bar L},
+\label{eq:wa}
+\end{equation}
+the share of the worst-case unmitigated loss that is recovered; U has $\text{WR}=0$. Interval results are compared through $\Delta=[A^--B^+,A^+-B^-]$. The rule, fixed before the validation comparisons, reads: SUP (better) if $\Delta^->0$; SUB (substantially better) if $\Delta^-\ge0.05$; LOSS if $\Delta^+<0$; INC otherwise. HY is judged on SUB only.
+
+\textbf{Setup.} PA and HY were solved with Gurobi 13.0.3 (4 threads) under an 8-GB solver memory limit and an external 10-GB watchdog, on an Intel i5-13400F with 15 GB of RAM, with a 7200-s search budget. Bridging was solved per (attack, shuttle class) unit, using a custom frequency branch-and-bound with exact evaluation and 600 s per unit.
+\begin{itemize}\setlength\itemsep{0pt}
+\item \emph{Grids.} All six PA/HY runs were certified optimal, with wall times of 753--2426 s, certification of 18--52 s and peak memory of 2.4--3.9 GB (solver) or 2.5--4.6 GB (process tree).
+\item \emph{Rennes.} PA, HY ($r_S=\mu$) and HY ($r_S=\delta$) reached the time limit. Their wall times were 7250, 7303 and 7347 s; the overruns of 50, 103 and 147 s are spent on the permitted final certification (93, 144 and 179 s). Peak memory was 3.6--3.7 GB (solver) and 4.5--4.7 GB (process tree).
+\item \emph{Initial bounding.} In eight of the nine runs, initial bounding alone produced the reported bounds, without master iterations.
+\end{itemize}
+Per-run status, wall and certification times, both memory peaks, certificates and the generated tables are in the repository \url{https://github.com/zihao-guo/P3_ACC_CASPT_CODE}, commit \texttt{0774f47}, file \texttt{results/dad/bs\_validation/tables.md}.
+
+\begin{table}[htbp]
+\centering
+\caption{Worst-case recovery WR (U $=0$). PA and HY values are certified intervals (endpoints rounded to four decimals); FO and RB+ values without brackets are exact. Shuttle release $r_S=\mu$ (10 min) is primary, $r_S=\delta$ (60 min) secondary.}
+\label{tab:wr}
+\footnotesize\setlength{\tabcolsep}{3pt}
+\begin{tabular*}{\textwidth}{@{\extracolsep{\fill}}lcccccc@{}}
+\toprule
+& FO & \multicolumn{2}{c}{Bridging RB+} & PA (ours, & \multicolumn{2}{c}{Hybrid HY} \\
+\cmidrule(lr){3-4}\cmidrule(lr){6-7}
+Instance & & $r_S=\mu$ & $r_S=\delta$ & no shuttles) & $r_S=\mu$ & $r_S=\delta$ \\
+\midrule
+Grid 10$\times$12 & 0.0293 & 0.1314 & 0.0850 & [0.1946, 0.1946] & [0.2303, 0.2304] & [0.2141, 0.2141] \\
+Grid 12$\times$14 & [0.0286, 0.0803] & [0.1279, 0.1640] & [0.0828, 0.1259] & [0.1891, 0.1891] & [0.2215, 0.2215] & [0.2068, 0.2068] \\
+Rennes & 0.1015 & 0.4327 & 0.2948 & [0.1779, 0.1913] & [0.4438, 0.4554] & [0.1520, 0.3413] \\
+\bottomrule
+\end{tabular*}
+\end{table}
+
+\begin{table}[htbp]
+\centering
+\caption{Differences $\Delta$ to bridging RB+ (same $r_S$) and verdicts of the fixed decision rule.}
+\label{tab:delta}
+\footnotesize\setlength{\tabcolsep}{3pt}
 \begin{tabular*}{\textwidth}{@{\extracolsep{\fill}}lcccc@{}}
 \toprule
-Scenario & \multicolumn{2}{c}{WA Gain (tile avg.)} & \multicolumn{2}{c}{Opp.\ Change (tile avg.)}\\
-\cmidrule(lr){2-3}\cmidrule(lr){4-5}
-& Replacement Bus & Our Method & Replacement Bus & Our Method \\
+Instance & PA, $r_S=\mu$ & PA, $r_S=\delta$ & HY, $r_S=\mu$ & HY, $r_S=\delta$ \\
 \midrule
-R1--R2 disrupted          & +11.92 & +12.15 & $-2.2$ & $-0.6$ \\
-R2--R3 disrupted          & +11.30 & +12.13 & $-2.3$ & $-0.3$ \\
-Both links disrupted      & +11.89 & +13.02 & $-3.0$ & $-1.3$ \\
+Grid 10$\times$12 & [0.0631, 0.0631] SUB & [0.1096, 0.1096] SUB & [0.0989, 0.0990] SUB & [0.1291, 0.1291] SUB \\
+Grid 12$\times$14 & [0.0251, 0.0612] SUP & [0.0631, 0.1063] SUB & [0.0575, 0.0936] SUB & [0.0808, 0.1240] SUB \\
+Rennes & [$-0.2548$, $-0.2414$] LOSS & [$-0.1169$, $-0.1035$] LOSS & [0.0111, 0.0227] no SUB & [$-0.1428$, 0.0465] no SUB \\
 \bottomrule
 \end{tabular*}
 \end{table}
 
-Table~\ref{tab:wa_scenarios} reports the results. Across all disruption scenarios, both the replacement bus and the optimized design substantially improve accessibility, but the optimized design consistently achieves greater recovery. In terms of 30-minute reachability, both strategies incur average losses, confirming that the strict time threshold remains a binding constraint; however, the optimized design reduces these losses significantly relative to the replacement bus. By reallocating services toward time-critical OD pairs, our method delivers higher weighted accessibility while limiting the sacrifice of longer-distance opportunities.
+\textbf{Results.} Tables~\ref{tab:wr}--\ref{tab:delta} report the results. Frequency changes alone recover little (FO: 2.9--10.2\%).
 
-\textbf{Proactive planning decisions.} We next examine the infrastructure measures made in advance of disruptions: which candidate stops to open and the extent to which the optimized bus network preserves the original line structure, measured by POPR (Table~\ref{tab:infra_decisions}).
+\emph{Grids: redesign beats bridging.} With early shuttles ($r_S=\mu$), PA recovers 18.9--19.5\% of the worst-case loss, against 13.1\% and at most 16.4\% for bridging. On grid 10$\times$12 the advantage is substantial (SUB). On grid 12$\times$14, PA is better (SUP), but SUB is unresolved because 218 of the 506 bridging units ended with an interval. With late shuttles ($r_S=\delta$), bridging falls to at most 8.5\% and 12.6\%, and PA is SUB on both grids. The hybrid is SUB on both grids at both release times. We conjecture that a few rerouted lines reach time-critical origin--destination pairs that a station-to-station shuttle on slower roads cannot reach within 30 minutes. Our aggregate results do not test this.
 
-\begin{table}[htbp]
-\centering
-\caption{Infrastructure decisions and line-structure preservation under different disruption scenarios (without dedicated lanes).}
-\label{tab:infra_decisions}
-\small
-\begin{tabular*}{.75\textwidth}{@{\extracolsep{\fill}}lcc@{}}
-\toprule
-Scenario & Selected candidate stops ($z_i$) & POPR \\
-\midrule
-R1--R2 disrupted     & C1, C3, C4 & 1.000 \\
-R2--R3 disrupted     & C1, C3     & 0.667 \\
-Both links disrupted & C1, C3, C4 & 0.875 \\
-\bottomrule
-\end{tabular*}
-\end{table}
+\emph{Rennes: bridging is strong.} Here bridging with early shuttles recovers 43.3\%, while PA without shuttles recovers 17.8--19.1\%, a LOSS at both release times. The hybrid exceeds bridging by 1.1--2.3 points with early shuttles, below the SUB threshold. With late shuttles it is inconclusive (no SUB), because its certified interval remains wide after two hours, although its true value cannot be below that of bridging. One untested explanation is that few reroutable bus lines run close to the failed metro links. Shuttle results also depend on the temporary-stop assumption at four stations. The protocol therefore requires a descriptive subset (S-flag): the 171 attacks whose shuttle slots avoid those stations, with the loss $\bar L$ recomputed on the subset and the preparations optimized on all 406 attacks re-used without re-optimization. With $r_S=\mu$, bridging recovers 34.9\%, PA $\ge12.2\%$ (inconclusive) and HY $\ge35.1\%$ (better, SUB undetermined); with $r_S=\delta$, bridging recovers 23.6\%, PA $\ge12.2\%$ and HY $\ge6.6\%$ (both inconclusive). These results are descriptive and not part of the claims.
 
-Across scenarios, the model selects a small subset of stops (two or three out of four), while preserving much of the original line structure. When the R1--R2 link is disrupted, opening three stops achieves a POPR of 1.000, meaning the line order is fully retained. The R2--R3 disruption produces the most adjustment, with only two stops selected and a POPR of 0.667. Even with minimal infrastructure changes, the optimized design maintains high structural continuity, balancing adaptability with passenger familiarity.
+\emph{Claims (primary setting $r_S=\mu$).} ``PA's worst-case recovery is better than bridging on all three instances'' is \emph{not supported} (SUP on two instances, LOSS on one); ``HY is substantially better than bridging on all three'' is \emph{partially supported}. SUB counts are PA 1/3 and HY 2/3 at $r_S=\mu$, and PA 2/3 and HY 2/3 at $r_S=\delta$. The results are provisional. The protocol also requires the expected-value results ($\lambda=0$, now running), the rail-node-stop sensitivity (S-rail, needed before the comparative claims are final), the Rennes nearest-stop sensitivity and the no-preparation and conventional-bridging controls. These are queued and not yet run, as is the A-DAD benchmark. Without the no-preparation control, PA's advantage cannot yet be attributed to preparation itself.
+
+\textbf{Disclosures.}
+\begin{itemize}\setlength\itemsep{0pt}
+\item \emph{Stop rule.} An earlier protocol let shuttles stop at rail nodes with no transfer walk, while buses used kerbside stops. The bus-stop rule was adopted after that choice reversed the ranking on a development grid (metro 8$\times$10), which is excluded from all claims.
+\item \emph{Prior exposure of the validation instances.} These instances are comparison-unseen only: no PA, HY or RB+ comparison had been run, but unmitigated baselines, rail-node bridging recovery values on the grids, and the Rennes calibration and unmitigated baselines had been seen. The two grids share a generator and test scale, not a different mechanism.
+\item \emph{Exploratory choices.} The terminal-extension variants, the RB+ menu and four exact solver accelerations were introduced after exploratory runs.
+\item \emph{Software defects.} Two defects were fixed during the runs. A torn bridging run ledger affected bookkeeping only, not values. A preprocessing memory leak voided three grid 12$\times$14 runs, which were re-run with the same budget.
+\end{itemize}
 
 % =============================================
 \section{Conclusion and Future Work}\label{sec:conclusion}
 % =============================================
-This paper presented a proactive and adaptive optimization framework for improving the resilience of public transport systems during urban rail disruptions, with accessibility as the explicit objective. On a stylized case study built on a synthetic grid network, the proposed method consistently outperformed conventional bus-bridging strategies: it delivered larger gains in time-weighted accessibility and better preserved 30-minute reachability. Preparing only a small set of candidate bus stops in advance produced substantial benefits without materially altering the original line structure. These results underscore the value of jointly optimizing accessibility restoration and operational continuity when managing disruptions.
+This paper presented a proactive--adaptive framework for bus network redesign under URT disruptions. Its objective is 30-minute accessibility, and a POPR constraint keeps every variant close to its line. The model links prepared contingency variants and later ad-hoc rerouting through explicit time phases, and blends the worst case with the expected value. An exact algorithm returns certified bounds.
 
-The present study is best regarded as a proof of concept. First, the framework should be applied to large-scale, real-world networks to assess its computational scalability and practical performance. Second, the current model does not fully capture the traffic dynamics induced by disrupted travel patterns, where reallocated demand can trigger congestion spillovers onto surrounding roads; incorporating such effects, for example through dedicated bus lanes and a spatially differentiated congestion response, is a natural next step.
+In a protocol-fixed comparison with early bridging shuttles, prepared rerouting with frequency adjustment recovered more worst-case accessibility than frequency-optimal bridging on two synthetic grids, substantially so on one of them. On the Rennes network, bridging was stronger than rerouting alone, and adding the bridging shuttles to the redesign improved on bridging only marginally. Network redesign is thus not a universal substitute for replacement buses; its value appears to depend on the network.
+
+Future work covers the remaining protocol results, diagnostics of which origin--destination pairs each strategy restores, further real networks, and within-phase dynamics, crowding and congestion.
 
 \section*{Acknowledgements}
 This work has been supported by the French ANR research project MuTAS (ANR-21-CE22-0025-01). We are grateful to the Gurobi Academic Program for providing Gurobi Optimizer.
