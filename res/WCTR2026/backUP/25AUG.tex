@@ -1,0 +1,620 @@
+% Template for Elsevier CRC journal article
+% version 1.2 dated 09 May 2011
+
+% This file (c) 2009-2011 Elsevier Ltd.  Modifications may be freely made,
+% provided the edited file is saved under a different name
+
+% This file contains modifications for Transportation Research Procedia
+
+% Changes since version 1.1
+% - added "procedia" option compliant with ecrc.sty version 1.2a
+%   (makes the layout approximately the same as the Word CRC template)
+% - added example for generating copyright line in abstract
+
+%-----------------------------------------------------------------------------------
+
+%% This template uses the elsarticle.cls document class and the extension package ecrc.sty
+%% For full documentation on usage of elsarticle.cls, consult the documentation "elsdoc.pdf"
+%% Further resources available at http://www.elsevier.com/latex
+
+%-----------------------------------------------------------------------------------
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%                                                          %%
+%% Important note on usage                                  %%
+%% -----------------------                                  %%
+%% This file should normally be compiled with PDFLaTeX      %%
+%% Using standard LaTeX should work but may produce clashes %%
+%%                                                          %%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%% The '3p' and 'times' class options of elsarticle are used for Elsevier CRC
+%% The 'procedia' option causes ecrc to approximate to the Word template
+\documentclass[3p,times,procedia]{elsarticle}
+\flushbottom
+
+%% The `ecrc' package must be called to make the CRC functionality available
+\usepackage{ecrc}
+%\usepackage{amsmath}
+
+
+%% The ecrc package defines commands needed for running heads and logos.
+%% For running heads, you can set the journal name, the volume, the starting page and the authors
+
+%% set the volume if you know. Otherwise `00'
+\volume{00}
+
+%% set the starting page if not 1
+\firstpage{1}
+
+%% Give the name of the journal
+\journalname{Transportation Research Procedia}
+
+%% Give the author list to appear in the running head
+%% Example \runauth{C.V. Radhakrishnan et al.}
+\runauth{Author name}
+
+%% The choice of journal logo is determined by the \jid and \jnltitlelogo commands.
+%% A user-supplied logo with the name <\jid>logo.pdf will be inserted if present.
+%% e.g. if \jid{yspmi} the system will look for a file yspmilogo.pdf
+%% Otherwise the content of \jnltitlelogo will be set between horizontal lines as a default logo
+
+%% Give the abbreviation of the Journal.
+\jid{trpro}
+
+%% Give a short journal name for the dummy logo (if needed)
+%\jnltitlelogo{Transportation Research}
+
+%% Hereafter the template follows `elsarticle'.
+%% For more details see the existing template files elsarticle-template-harv.tex and elsarticle-template-num.tex.
+
+%% Elsevier CRC generally uses a numbered reference style
+%% For this, the conventions of elsarticle-template-num.tex should be followed (included below)
+%% If using BibTeX, use the style file elsarticle-num.bst
+
+%% End of ecrc-specific commands
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%% The amssymb package provides various useful mathematical symbols
+\usepackage{calrsfs} % For pazocal
+\DeclareMathAlphabet{\pazocal}{OMS}{zplm}{m}{n}
+
+\usepackage{amsmath} 
+\usepackage{amssymb}
+%% The amsthm package provides extended theorem environments
+%% \usepackage{amsthm}
+
+%% The lineno packages adds line numbers. Start line numbering with
+%% \begin{linenumbers}, end it with \end{linenumbers}. Or switch it on
+%% for the whole article with \linenumbers after \end{frontmatter}.
+%% \usepackage{lineno}
+
+%% natbib.sty is loaded by default. However, natbib options can be
+%% provided with \biboptions{...} command. Following options are
+%% valid:
+
+%%   round  -  round parentheses are used (default)
+%%   square -  square brackets are used   [option]
+%%   curly  -  curly braces are used      {option}
+%%   angle  -  angle brackets are used    <option>
+%%   semicolon  -  multiple citations separated by semi-colon
+%%   colon  - same as semicolon, an earlier confusion
+%%   comma  -  separated by comma
+%%   numbers-  selects numerical citations
+%%   super  -  numerical citations as superscripts
+%%   sort   -  sorts multiple citations according to order in ref. list
+%%   sort&compress   -  like sort, but also compresses numerical citations
+%%   compress - compresses without sorting
+%%
+\biboptions{authoryear}
+
+% \biboptions{}
+
+% if you have landscape tables
+\usepackage[figuresright]{rotating}
+%\usepackage{harvard}
+% put your own definitions here:x
+%   \newcommand{\cZ}{\cal{Z}}
+%   \newtheorem{def}{Definition}[section]
+%   ...
+
+% add words to TeX's hyphenation exception list
+%\hyphenation{author another created financial paper re-commend-ed Post-Script}
+
+% declarations for front matter
+
+\usepackage[bookmarks=false]{hyperref}
+    \hypersetup{colorlinks,
+      linkcolor=blue,
+      citecolor=blue,
+      urlcolor=blue}
+
+
+\begin{document}
+\begin{frontmatter}
+
+%% Title, authors and addresses
+
+%% use the tnoteref command within \title for footnotes;
+%% use the tnotetext command for the associated footnote;
+%% use the fnref command within \author or \address for footnotes;
+%% use the fntext command for the associated footnote;
+%% use the corref command within \author for corresponding author footnotes;
+%% use the cortext command for the associated footnote;
+%% use the ead command for the email address,
+%% and the form \ead[url] for the home page:
+%%
+%% \title{Title\tnoteref{label1}}
+%% \tnotetext[label1]{}
+%% \author{Name\corref{cor1}\fnref{label2}}
+%% \ead{email address}
+%% \ead[url]{home page}
+%% \fntext[label2]{}
+%% \cortext[cor1]{}
+%% \address{Address\fnref{label3}}
+%% \fntext[label3]{}
+
+\dochead{World Conference on Transport Research - WCTR 2026 Toulouse 6-10 July 2026}%
+
+\title{Designing and Adapting Bus Networks to Safeguard Accessibility under Rail Disruptions and Travel Time Uncertainty}
+
+%% use optional labels to link authors explicitly to addresses:
+%% \author[label1,label2]{<author name>}
+%% \address[label1]{<address>}
+%% \address[label2]{<address>}
+
+
+
+\author[a]{First Author} 
+\author[b]{Second Author}
+\author[a,b]{Third Author\corref{cor1}}
+
+\address[a]{First affiliation, Address, City and Postcode, Country}
+\address[b]{Second affiliation, Address, City and Postcode, Country}
+
+\begin{abstract}
+%% Text of abstract
+Insert here your abstract text.
+\end{abstract}
+
+\begin{keyword}
+Type your keywords here, separated by semicolons ; 
+
+
+%% keywords here, in the form: keyword \sep keyword
+
+%% PACS codes here, in the form: \PACS code \sep code
+
+%% MSC codes here, in the form: \MSC code \sep code
+%% or \MSC[2008] code \sep code (2000 is the default)
+
+\end{keyword}
+\cortext[cor1]{Corresponding author. Tel.: +0-000-000-0000.}
+\end{frontmatter}
+
+%\correspondingauthor[*]{Corresponding author. Tel.: +0-000-000-0000 ; fax: +0-000-000-0000.}
+\email{author@institute.xxx}
+
+%%
+%% Start line numbering here if you want
+%%
+% \linenumbers
+
+%% main text
+\vspace*{-12pt}
+% =============================================
+% 1. Introduction
+% =============================================
+\section{Introduction}
+\begin{enumerate}
+    \item \textbf{Urgency of Real-world Problems: }
+    \begin{itemize}
+        \item Urban public transportation systems face severe uncertainty threats, particularly rail transit (metro, light rail), which is vulnerable to equipment failures, extreme weather, and unexpected incidents that cause service disruptions
+        \item When rail transit is disrupted, large numbers of passengers are forced to transfer to other transportation modes, leading to bus system overload and increased congestion
+        \item Also currently deployed solutions, such as URT replacement bus, are inefficient.
+    \end{itemize}
+    \item \textbf{Importance of Accessibility:}
+    All previous solutions ignore accessibility (this is why replacement buses are in place -if operators had considered accessibility, they would have realized that replacement buses are bad in terms of restoring accessibility)
+\end{enumerate}
+Our goal is to strategically modify the existing bus network to minimize accessibility deterioration under \textbf{urban rail disruptions} and \textbf{uncertain bus travel times}. 
+% =============================================
+% 2. Related Work
+% =============================================
+\section{Related Work}
+% ------------------------ Motivation.1
+\subsection{What is new compared to what real PT operators do today?}
+\begin{itemize}
+    \item \textbf{From Reactive Response to Proactive Design: }
+    Traditional emergency response plans are reactive post-incident measures. On the other hand, during the design (strategic and tactical planning), the impact of possible disruptions is not though about.We want to design a network that is able to react, i.e., which has the capability to restore accessibility, via limited modifications.
+\end{itemize}
+% ------------------------ Motivation.2
+\subsection{What is new compared to what other studies do today?}
+\begin{itemize}
+    \item Most studies focus on either reactive post-incident emergency response or static proactive infrastructure planning, but we develop an integrated proactive framework that combines strategic infrastructure design (Stage 1) with adaptive operational responses during actual disruptions (Stage 2).
+This avoids both the over-robustness of purely preventive designs (overly pessimistic and costly) and the passivity and inefficiency of purely reactive post-incident responses.
+\end{itemize}
+% =============================================
+% 3. Preliminaries
+% =============================================
+\section{Preliminaries}
+In this section, we introduce the basic elements of our resilient and adaptive public transport (PT) network design problem. 
+Here, \emph{resilience} refers to the ability of the system to sustain service when parts of the infrastructure are disrupted, while \emph{adaptiveness} captures the flexibility to adjust bus services in response to changing conditions. 
+%
+Formally, the system is defined as a 4-tuple 
+$\Sigma = (\pazocal{S}, \pazocal{G}, \pazocal{L}, \Omega)$,
+where $\pazocal{S}$ is the spatial tessellation of the study area, $\pazocal{G}$ the physical infrastructure graph, $\pazocal{L}$ the set of PT service lines, and $\Omega$ the set of disruption scenarios. 
+%
+The following subsections provide a detailed description of each component.
+
+% --------------------------------- 3.1
+\subsection{Tessellation of the Study Area}
+We partition the study area into a regular tessellation of spatial tiles. Let $\pazocal{S}$ denote the set of tiles, and $c_s$ the geometric centroid of tile $s \in \pazocal{S}$. The set of centroids is $\pazocal{C} = \{c_s : s \in \pazocal{S}\}$. 
+%
+A traveler can either walk directly at speed $v_{walking}$ or combine walking with PT, such as walking from $c_i$ to an urban rail station or bus stop, taking PT, and then walking from the alighting point to $c_j$. Although centroid-to-centroid distances do not perfectly match actual paths, they provide a reasonable approximation for network-scale analysis.
+
+If a tile contains existing bus stops, walking times $w_{sj}$ from its centroid $c_s$ to each stop $j$ are precomputed. 
+Tiles without stops are instead assigned a candidate stop at $c_s$. 
+For each tile $s$, we also define a set of accessible opportunities $\pazocal{O}_s$, 
+meaning the activity locations (such as workplaces, schools, or healthcare facilities) that can be reached from $c_s$. 
+Accessibility is understood as the ease of reaching such opportunities within a given travel time, 
+and a detailed measure will be introduced in Section~\ref{sec:TWA}.
+
+% --------------------------------- 3.2
+\subsection{Graph Representation of the PT Network}
+The PT network is represented by a multi-layer graph $\pazocal{G} = (\pazocal{N}, \pazocal{E})$ that captures both existing infrastructure and potential expansions. The node set $\pazocal{N} = \pazocal{N}^r \cup \pazocal{N}^b \cup \pazocal{N}^c$ consists of urban rail stations $\pazocal{N}^r$, existing bus stops $\pazocal{N}^b$, and candidate bus stops $\pazocal{N}^c$. The edge set $\pazocal{E} = \pazocal{E}^r \cup \pazocal{E}^b \cup \pazocal{E}^c$ includes urban rail links $\pazocal{E}^r$ connecting adjacent stations with travel times $t_{ij}^r$, existing bus connections $\pazocal{E}^b$ with travel times $t_{ij}^b$, and potential new bus links $\pazocal{E}^c$ that may connect candidate stops to existing ones or to other candidates.
+
+% --------------------------------- 3.3
+\subsection{Service Layer of the PT Network}
+PT services are structured around two primary modes: urban rail and bus. %
+Urban rail lines $\pazocal{L}^r$ run on fixed routes and timetables, providing the stable backbone of the network.  
+Bus lines $\pazocal{L}^b$, in contrast, are more flexible. They can be adjusted when rail disruptions occur or when bus travel times become uncertain. Such adjustments may involve rerouting existing services or incorporating candidate stops, thereby ensuring continuity of coverage and sustaining overall system performance.  
+%
+Formally, each line $\ell \in \pazocal{L}$ is represented by a route $\pazocal{R}_\ell$, modeled as a simple path from an origin to a destination.  
+
+% --------------------------------- 3.4
+\subsection{Disruption Scenarios}
+Uncertainty in the system is represented by a pair of random components, $\xi = (\xi^{\text{disruption}}, \xi^{\text{travel}})$.  
+The first component, $\xi^{\text{disruption}} = \{d_{ij} : (i,j) \in \pazocal{E}^r\}$, captures rail link failures, where $d_{ij}=1$ indicates that rail edge $(i,j)$ is disrupted and therefore unavailable. %
+The second component, $\xi^{\text{travel}} = \{t_{ij}^b : (i,j) \in \pazocal{E}^b \cup \pazocal{E}^c\}$, models stochastic variation in bus travel times, reflecting congestion or other operational uncertainties.  
+
+These preliminaries provide the foundation for the resilient and adaptive PT network design problem, on which we build the formal optimization model in Section~\ref{sec:problemFormulation}.
+
+% =============================================
+% 4. Methodology
+% =============================================
+\section{Methodology}
+In this section, we develop the methodological framework for the resilient and adaptive PT network design problem. 
+The objective is to restore accessibility under urban rail transit (URT) disruptions and stochastic variation in bus travel times. 
+%
+We proceed in two steps. 
+First, we formulate the network redesign problem, where existing bus lines may be modified by rerouting or adding candidate stops in order to compensate for the loss of rail connectivity. 
+Second, 
+% 
+...
+% we construct a two-stage integer programming model that determines the optimal allocation of the bus fleet across the redesigned network, balancing operational efficiency with improved accessibility.
+
+
+% --------------------------------- 4.1
+\subsection{Problem Statement}
+In the face of urban rail system disruptions and uncertainty in bus travel times, our research aims to maximize accessibility through a strategic redesign of bus services. 
+The optimization framework integrates both structural and operational aspects of the network. 
+Our optimization problem makes the following key decisions:  
+(a) how to adapt the topology of bus lines under rail disruptions and uncertain road conditions, including rerouting existing services and introducing candidate stops to maintain coverage,  
+(b) how to determine service frequencies on each line in the presence of travel time uncertainty, and  
+(c) how to allocate the available bus fleet efficiently across the redesigned network.  
+
+The practical implementation of this approach assumes that drivers can adapt to revised routes through real-time navigation systems commonly employed by transit operators worldwide. These systems, such as onboard consoles or tablets, provide turn-by-turn navigation and can rapidly deploy route changes during disruptions with minimal additional hardware requirements.
+
+We consider in this case ...
+% 加一个figure
+
+% ----------------- 4.2.1
+\subsubsection{Travel Time Components}
+The operation of a line is determined by its round-trip time $t^\ell$ and the number of vehicles $n^\ell$ assigned to it. These imply a headway $h^\ell = t^\ell/n^\ell$, a frequency $f^\ell = 1/h^\ell$, and an expected waiting time of $h^\ell/2$ under the assumption of uniform passenger arrivals~\citep{pinto2020joint}. In-vehicle travel is denoted $t(s_j, s_{j+1})$, the time between two consecutive service points $s_j$ and $s_{j+1}$ under normal operations, where a service point is a station for rail or a stop for bus. The dwell time at a service point $s_j$ is written as $d_{s_j}$, representing the time a vehicle spends stopping for boarding and alighting. When transferring from line $\ell$ to line $\ell'$ at service point $s_j$, passengers incur an additional average waiting time of $h^{\ell'}/2$.  
+
+Under a disruption scenario $\omega \in \Omega$, in-vehicle times are denoted $t_{ij}(\omega)$ to reflect possible delays, and the total travel time of a passenger journey is given by the sum of in-vehicle times, expected waiting times, and dwell times at stations or stops.
+
+% ----------------- 4.2.2
+\subsubsection{Path Order Preservation Rate (POPR)}
+To promote consistency between redesigned bus lines and their original service structure, we introduce the Path Order Preservation Rate (POPR). This metric quantifies the proportion of consecutive segments from an original route that are preserved in the redesigned one, thereby enhancing operational stability and reducing passenger disorientation.
+%
+Let the original route be represented by the node sequence $P = [v_1, v_2, \dots, v_n]$ and the redesigned route by $P' = [v'_1, v'_2, \dots, v'_m]$. Define $\pazocal{S} = \{(v_i, v_{i+1}) \mid 1 \leq i \leq n-1\}$ as the set of consecutive node pairs in $P$. A pair $(v_i, v_{i+1}) \in \pazocal{S}$ is considered preserved if $P'$ contains either the directed edge $(v_i,v_{i+1})$ or $(v_{i+1},v_i)$. Let $K$ be the number of preserved pairs and $T = |\pazocal{S}| = n-1$. The POPR is then defined as
+\begin{equation}
+    \text{POPR}(P,P') = \tfrac{K}{T}.
+\end{equation}
+
+This formulation is related to the \emph{path overlap ratio}, which quantifies shared link length relative to a reference path~\citep{Lim2005PathOverlap}. The POPR provides a discrete, topology-oriented counterpart by emphasizing stop sequence preservation, thereby capturing structural similarity, keeping redesigned lines close to their original topology, and mitigating passenger disorientation as well as driver operational complexity.
+
+% ----------------- 4.2.3
+\subsubsection{Time-Weighted Accessibility}\label{sec:TWA}
+Accessibility reflects how easily people can reach opportunities, such as workplaces, schools, healthcare facilities, or other essential activity locations. 
+%
+For each tile $s \in \pazocal{S}$, we define a set of opportunities $\pazocal{O}_s$ that are reachable from its centroid $c_s$.  
+
+A classical way to measure accessibility is through gravity-based formulations~\citep{miller2020measuring}, 
+where opportunities are weighted inversely by travel time. 
+In this framework, the accessibility of a centroid $c_i \in \pazocal{C}$ is expressed as
+\begin{equation}
+    \text{acc}(c_i, \pazocal{G}) = \sum_{c_j \in \pazocal{C}, \, c_j \neq c_i} \frac{O_{c_j}}{T_{\pazocal{G}}(c_i, c_j)},
+\end{equation}
+where $O_{c_j}$ is the number of opportunities in tile $c_j$, 
+and $T_{\pazocal{G}}(c_i, c_j)$ is the shortest travel time between centroids $c_i$ and $c_j$ on network $\pazocal{G}$. 
+This captures the intuitive idea that accessibility decreases as travel time increases.  
+
+To better reflect practical conditions, we introduce a time-weighted variant that emphasizes opportunities reachable within 30 minutes, 
+a threshold widely used in transport planning. 
+For each tile $s \in \pazocal{S}$ under scenario $\omega \in \Omega$, we define
+\begin{equation}
+    A_{s,\omega} = \sum_{k \in \pazocal{O}_s} \max\left(0, \frac{30 - T_{sk}^\omega}{30}\right),
+\end{equation}
+where $T_{sk}^\omega$ is the travel time from centroid $c_s$ to opportunity $k$ in scenario $\omega$.  
+
+In this formulation, an opportunity contributes a full score when it can be reached immediately, 
+but its value decreases linearly with travel time and becomes zero once the 30-minute limit is exceeded. 
+Compared with the gravity-based measure, this approach places greater emphasis on nearby opportunities, 
+making it more sensitive to accessibility changes caused by rail disruptions and bus travel time uncertainty.
+
+
+% --------------------------------- 4.2
+\subsection{Problem Formulation}\label{sec:problemFormulation}
+% --------------------------------- 4.3
+\subsubsection{Two-Stage Stochastic Optimization Model for PT Network Redesign}
+
+% +++++++++++++++++++++++++++++++ Part1.Objective Function
+% \textbf{Objective Function}  
+We formulate the network redesign problem as a two-stage stochastic program. 
+In the first stage, infrastructure decisions include the construction of candidate stops, represented by binary variables $z_i$ ($z_i=1$ if stop $i \in \pazocal N^c$ is built), and the establishment of dedicated bus lanes, represented by binary variables $b_{ij}$ ($b_{ij}=1$ if a lane is created on edge $(i,j) \in \pazocal E^b \cup \pazocal E^c$). 
+The associated fixed costs are $c_i^{\text{stop}}$ for constructing stop $i$ and $c_{ij}^{\text{lane}}$ for installing lane $(i,j)$.  
+%
+In the second stage, operational decisions are made adaptively for each disruption scenario $\omega \in \Omega$. 
+The service frequency of line $\ell \in \pazocal L$ is denoted by $f^{\ell,\omega}$ (vehicles per hour), while its cycle time is given by
+\[
+C_{\ell}^{\omega} = \sum_{(i,j) \in \pazocal E^b \cup \pazocal E^c} \hat{t}_{ij}^{\ell,\omega} x_{ij}^{\ell},
+\]
+where $\hat{t}_{ij}^{\ell,\omega}$ is the travel time on edge $(i,j)$ under scenario $\omega$ and $x_{ij}^\ell$ indicates whether the edge is included in line $\ell$. 
+Accessibility in tile $s \in \pazocal S$ is denoted by $A^{s,\omega}$, with $\bar{A}^{s,\omega}$ representing its baseline value before redesign. 
+Operational costs are proportional to vehicle-hours, with $c^{\text{op}}$ denoting the unit cost per vehicle-hour. 
+The parameter $\lambda$ balances operational costs against the benefits of improved accessibility.  
+
+The overall objective is to minimize the sum of first-stage infrastructure investments and the expected second-stage operational costs, adjusted by accessibility improvements:
+\begin{equation}
+\min \left\{ f(z,x,b) + \mathbb{E}_{\xi}[Q(z,x,f,b,\xi)] \right\},
+\label{eq:obj}
+\end{equation}
+with
+\begin{align}
+f(z,x,b) &= \sum_{i \in \pazocal N^c} c_i^{\text{stop}} \, z_i 
++ \sum_{(i,j) \in \pazocal E^b \cup \pazocal E^{c}} c_{ij}^{\text{lane}} \, b_{ij}, 
+\label{eq:obj1} \\
+Q(z,x,f,b,\xi) &= \sum_{\ell \in \pazocal L} c^{\text{op}} \, C_{\ell}^{\omega} f^{\ell,\omega} 
+- \lambda \cdot \sum_{s \in \pazocal S} \left(A^{s,\omega} - \bar{A}^{s,\omega}\right).
+\label{eq:obj2}
+\end{align}
+
+The first-stage component $f(z,x,b)$ accounts for infrastructure costs, while the second-stage recourse term $Q(z,x,f,b,\xi)$ captures the trade-off between operational expenditures and accessibility improvements under disruption scenarios.
+
+
+% +++++++++++++++++++++++++++++++ Part2.Constraints
+\textbf{Subject to}
+
+% ----------------- 4.3.1
+\subsubsection{Linearization}
+% =============================================
+% 5. Experiments
+% =============================================
+\section{Numerical Results}
+% --------------------------------- 5.1
+\subsection{Disruption Case Study}
+% --------------------------------- 5.2
+\subsection{Performance of Our Solution}
+% =============================================
+% 6. Conclusion
+% =============================================
+\section{Conclusion and Future Work}
+
+
+\newpage
+%\enlargethispage{-7mm}
+\section{Main Text}
+\label{main}
+
+Here introduce the paper, and put a nome¬nclature if necessary, in a box with the same font size as the rest of the paper. The paragraphs continue from here and are only separated by headings, subheadings, images and formulae. The section headings are arranged by numbers, bold and 10 pt. Here follows further instructions for authors.
+
+\begin{nomenclature}
+\begin{deflist}[A]
+\defitem{A}\defterm{radius of}
+\defitem{B}\defterm{position of}
+\defitem{C}\defterm{further nomenclature continues down the page inside the text box}
+\end{deflist}
+\end{nomenclature}\vspace*{-12pt}
+
+\subsection{ Structure}
+Files must be in LaTeX format only and should be formatted for direct printing, using the CRC LaTeX template provided. Figures and tables should be embedded and not supplied separately. 
+
+Please make sure that you use as much as possible normal fonts in your documents. Special fonts, such as fonts used in the Far East (Japanese, Chinese, Korean, etc.) may cause problems during processing. To avoid unnecessary errors you are strongly advised to use the `spellchecker' function of TeX Editor. Follow this order when typing manuscripts: Title, Authors, Affiliations, Abstract, Keywords, Main text (including figures and tables), Acknowledgements, References, Appendix. Collate acknowledgements in a separate section at the end of the article and do not include them on the title page, as a footnote to the title or otherwise.
+
+Bulleted lists may be included and should look like this:
+\begin{itemize}[]
+\item First point
+\item Second point
+\item And so on
+\end{itemize}
+
+Ensure that you return to the `Els-body-text' style, the style that you will mainly be using for large blocks of text, when you have completed your bulleted list. 
+
+Please do not alter the formatting and style layouts which have been set up in this template document. As indicated in the template, papers should be prepared in single column format suitable for direct printing onto paper with trim size $192 \times 262$ mm. Do not number pages on the front, as page numbers will be added separately for the preprints and the Proceedings. Leave a line clear between paragraphs. All the required style templates are provided in the file ``LaTeX Template'' with the appropriate name supplied, e.g. choose 1. Els1st-order-head for your first order heading text, els-abstract-text for the abstract text etc.
+
+\subsection{ Tables}
+
+All tables should be numbered with Arabic numerals. Every table should have a caption. Headings should be placed above tables, left justified. Only horizontal lines should be used within a table, to distinguish the column headings from the body of the table, and immediately above and below the table. Tables must be embedded into the text and not supplied separately. Below is an example which the authors may find useful.
+
+\begin{table}[h]
+\caption{An example of a table.}
+\begin{tabular*}{\hsize}{@{\extracolsep{\fill}}lll@{}}
+\toprule
+An example of a column heading & Column A ({\it{t}}) & Column B ({\it{t}})\\
+\colrule
+And an entry &   1 &  2\\
+And another entry  & 3 &  4\\
+And another entry &  5 &  6\\
+\botrule
+\end{tabular*}
+\end{table}
+
+%\enlargethispage{12pt}
+
+\subsection{ Construction of references}
+
+References must be listed at the end of the paper. Do not begin them on a new page unless this is absolutely necessary. Authors should ensure that every reference in the text appears in the list of references and vice versa. Indicate references by \cite{clark} or \cite{Deal} or \cite{Fachinger2006} in the text. 
+
+Some examples of how your references should be listed are given at the end of this template in the `References' section, which will allow you to assemble your reference list according to the correct format and font size.
+
+Reference generation by using bibliography style commands for LaTeX template only.
+
+The author may use ``elsarticle-harv.bst'' as per the style required in document. The sample bib file could be referred. 
+If the author may using bibstyle for providing references author must comment the bibliography section in TeX file, Bibtex will generate the reference automatically.
+
+If the author may not able to view the references in output same could be done by copying the bibliography section from ``filename.bbl'' file and paste in TeX file.
+
+
+
+\subsection{Section headings}
+Section headings should be left justified, bold, with the first letter capitalized and numbered consecutively, starting with the Introduction. Sub-section headings should be in capital and lower-case italic letters, numbered 1.1, 1.2, etc,~and left justified, with second~and subsequent lines indented. All headings should have a minimum of two text lines after them before a page or column break.
+Ensure the text area is not blank except for the last page.
+
+\subsection{General guidelines for the preparation of your text}
+Avoid hyphenation at the end of a line. Symbols denoting vectors and matrices should be indicated in bold type. Scalar variable names should normally be expressed using italics. Weights and measures should be expressed in SI units. All non-standard abbreviations or symbols must be defined when first mentioned, or a glossary provided.
+
+\subsection{File naming and delivery}
+Please title your files in this order `procedia acronym\_conference acronym\_authorslastname'.  Submit both the source file and the PDF to the Guest Editor.
+
+Artwork filenames should comply with the syntax ``aabbbbbb.ccc'', where:
+\begin{itemize}
+\item a = artwork component type
+\item b = manuscript reference code
+\item c = standard file extension
+
+Component types:
+\item gr = figure
+\item pl = plate
+\item sc = scheme
+\item fx = fixed graphic
+\end{itemize}
+
+
+\subsection{Footnotes}
+Footnotes should be avoided if possible. Necessary footnotes should be denoted in the text by consecutive superscript letters\footnote{Footnote text.}. The footnotes should be typed single spaced, and in smaller type size (8 pt), at the foot of the page in which they are mentioned, and separated from the main text by a one line space extending at the foot of the column. The `Els-footnote' style is available in the ``TeX Template'' for the text of the footnote.
+
+Please do not change the margins of the template as this can result in the footnote falling outside printing range.
+
+
+\section{Illustrations}
+All figures should be numbered with Arabic numerals (1,2,3,$\,\ldots.$). Every figure should have a caption. All\break photographs, schemas, graphs and diagrams are to be referred to as figures. Line drawings should be good\break quality scans or true electronic output. Low-quality scans are not acceptable. Figures must be embedded into the text and not supplied separately. In MS word input the figures must be properly coded. Preferred format of figures are PNG, JPEG, GIF etc. Lettering and symbols should be clearly defined either in the caption or in a legend provided as part of the figure. Figures should be placed at the top or bottom of a page wherever possible, as close as possible to the first reference to them in the paper. Please ensure that all the figures are of 300 DPI resolutions as this will facilitate good output.
+
+The figure number and caption should be typed below the illustration in 8 pt and left justified [{\bfseries\itshape Note:} one-line captions of length less than column width (or full typesetting width or oblong) centered]. For more guidelines and\break information to help you submit high quality artwork please visit: http://www.elsevier.com/artworkinstructions\break Artwork has no text along the side of it in the main body of the text. However, if two images fit next to each other, these may be placed next to each other to save space. For example, see Fig.~1.
+\begin{figure}[t]\vspace*{4pt}
+%\centerline{\includegraphics{fx1}\hspace*{5mm}\includegraphics{fx1}}
+\centerline{\includegraphics{gr1}}
+\caption{(a) first picture; (b) second picture.}
+\end{figure}
+
+
+\section{Equations}
+Equations and formulae should be typed in MathType, and numbered consecutively with Arabic numerals in parentheses on the right hand side of the page (if referred to explicitly in the text). They should also be separated from the surrounding text by one space
+\begin{equation}
+\begin{array}{lcl}
+\displaystyle X_r &=& \displaystyle\dot{Q}^{''}_{rad}\left/\left(\dot{Q}^{''}_{rad} + \dot{Q}^{''}_{conv}\right)\right.\\[6pt]
+\displaystyle \rho &=& \displaystyle\frac{\vec{E}}{J_c(T={\rm const.})\cdot\left(P\cdot\left(\displaystyle\frac{\vec{E}}{E_c}\right)^m+(1-P)\right)}
+\end{array}
+\end{equation}
+
+
+\section{Online license transfer}
+All authors are required to complete the Procedia exclusive license transfer agreement before the article can be published, which they can do online. This transfer agreement enables Elsevier to protect the copyrighted material for the authors, but does not relinquish the authors' proprietary rights. The copyright transfer covers the exclusive rights to reproduce and distribute the article, including reprints, photographic reproductions, microfilm or any other reproductions of similar nature and translations. Authors are responsible for obtaining from the copyright holder, the permission to reproduce any figures for which copyright exists.
+
+\section*{Acknowledgements}
+
+Acknowledgements and Reference heading should be left justified, bold, with the first letter capitalized but have no numbers. Text below continues as normal.
+
+%% The Appendices part is started with the command \appendix;
+%% appendix sections are then done as normal sections
+%% \appendix
+
+%% \section{}
+%% \label{}
+
+\appendix
+\section{An example appendix}
+Authors including an appendix section should do so before References section. Multiple appendices should all have headings in the style used above. They will automatically be ordered A, B, C etc.
+
+\subsection{Example of a sub-heading within an appendix}
+There is also the option to include a subheading within the Appendix if you wish.
+%% References
+%%
+%% Following citation commands can be used in the body text:
+%% Usage of \cite is as follows:
+%%   \cite{key}         ==>>  [#]
+%%   \cite[chap. 2]{key} ==>> [#, chap. 2]
+%%
+
+%The citation must be used in following style: \cite{article-minimal} \cite{article-full} \cite{article-crossref} \cite{whole-journal}.
+%% References with BibTeX database:
+
+\bibliography{xampl}
+\bibliographystyle{elsarticle-harv}
+
+
+%% Authors are advised to use a BibTeX database file for their reference list.
+%% The provided style file elsarticle-num.bst formats references in the required Procedia style
+
+%% For references without a BibTeX database:
+
+ \begin{thebibliography}{}
+
+%% \bibitem must have the following form:
+%%   \bibitem{key}...
+%%
+
+\bibitem[Clark et al.(1962)]{clark}Clark, T., Woodley, R., De Halas, D., 1962. Gas-Graphite Systems, in ``{\it Nuclear Graphite}''. 
+In: Nightingale, R. (Ed.). Academic Press, New York, pp. 387.
+
+\bibitem[Deal and Grove(2009) ]{Deal}Deal, B., Grove, A., 1965. General Relationship for the Thermal Oxidation of Silicon. Journal of Applied Physics 36.2, 37--70.
+
+\bibitem[Deep(2009)]{Deep}Deep-Burn Project: Annual Report for 2009, Idaho National Laboratory, Sept. 2009.
+
+\bibitem[Fachinger(2004)]{Fachinger2004}Fachinger, J., den Exter, M., Grambow, B., Holgerson, S., Landesmann, C., Titov, M., Podruhzina, T., 2004. ``Behavior of spent HTR fuel elements in aquatic phases of repository host rock formations,'' 2nd International Topical Meeting on High Temperature Reactor Technology. Beijing, China, paper \#B08. 
+
+\bibitem[Fachinger(2006)]{Fachinger2006}Fachinger, J., 2006. Behavior
+of HTR Fuel Elements in Aquatic Phases of Repository Host Rock Formations. Nuclear Engineering \& Design 236.3,      54.
+
+ \end{thebibliography}
+
+\clearpage
+
+%%%% This page is for instructions only, once the article is finalize please omit the below text before creating the final PDF
+\normalMode
+
+\section*{Instructions to Authors for LaTeX template:}
+
+\section{ZIP mode for LaTeX template:}
+
+The zip package is created as per the guide lines present on the URL http://www.elsevier.com/author-schemas/ preparing-crc-journal-articles-with-latex for creating the LaTeX zip file of Procedia LaTeX template.  The zip generally contains the following files:
+\begin{Itemize}[]\leftskip-17.7pt\labelsep3.3pt
+\item ecrc.sty
+\item  elsarticle.cls
+\item elsdoc.pdf
+\item .bst file
+\item Manuscript templates for use with these bibliographic styles
+\item  Generic and journal specific logos, etc.
+\end{Itemize}
+
+The LaTeX package is the main LaTeX template. All LaTeX support files are required for LaTeX pdf generation from the LaTeX template package. 
+
+{\bf Reference style .bst file used for collaboration support:} In the LaTeX template packages of all Procedia titles a new ``.bst'' file is used which supports collaborations downloaded from the path http://www.elsevier.com/author-schemas/the-elsarticle-latex-document-class
+
+\end{document}
+
+%%
+%% End of file.
