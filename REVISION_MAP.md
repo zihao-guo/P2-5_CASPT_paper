@@ -6,7 +6,7 @@ The authoritative source is `res/P2_5_Zihao_2026_CAIEVERSION.zip`, especially `c
 | --- | --- | --- |
 | Introduction and related-work discussion | Introduction, condensed | Additional related work reproduces the literature discussion and comparison table; the original introduction remains in the archive |
 | Network, passenger assignment, objectives and constraints | Methodology, including compact constraints | Framework figure and detailed line-structure and fleet constraints; original full derivation remains in the archive |
-| Encoding, initialization, crossover, mutation and selection | Solution algorithm, condensed | Additional details of the solution algorithm; algorithmic framework and evaluation |
+| Encoding, initialization, crossover, mutation and selection | Solution algorithm, condensed | Additional details of the solution algorithm, including the original NSGA-III pseudocode and decode-and-assign evaluation |
 | Log-normal travel times and prediction errors | Evaluation method | Stochastic modelling of travel times and prediction errors, including prediction-error data |
 | Mandl aggregate and frequency-only results | Full five-line-count table, Pareto-front plot and single-realization distributions | Full result table, distributions, and OD-level exceedance plots |
 | Forecast-error sensitivity | Evaluation and results, condensed | Forecast-value metrics and results |

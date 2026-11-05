@@ -342,6 +342,37 @@ Constraints~\eqref{st:term_existence}--\eqref{st:term_distinct} synchronize line
 
 
 \section{Additional details of the solution algorithm}
+\begin{algorithm}[htbp]
+\small
+\caption{NSGA-III based Adaptive PT Network Optimization}
+\label{alg:NSGA3}
+\begin{algorithmic}[1]
+    \renewcommand{\algorithmicrequire}{\textbf{Input:}}
+    \renewcommand{\algorithmicensure}{\textbf{Output:}}
+    
+    \REQUIRE $\pazocal{G}=(\pazocal{N}, \pazocal{E})$, $\pazocal{K}$, $\pazocal{L}$, $V_{\max}$, $q_k$, $\hat{t}_{ij}$, $\textit{PopSize}$, $\textit{MaxIter}$, $N_{\textit{ref}}$, $P_c$, $P_m$, $J_{\min}$
+    \ENSURE Approximate Pareto set $\pazocal{P}^*$
+    
+    \STATE Initialize a population $\pazocal{P}$ of size $\textit{PopSize}$ via \S\ref{sec:encoding} and \S\ref{sec:init_population} (using parameter $J_\text{min}$) \label{line:initialization}
+    \STATE Evaluate $(Z_1, Z_2, Z_3)$ for all $p \in \pazocal{P}$ via decode-and-assign (\S\ref{sec:evaluation}) \label{line:eval_init}
+    
+    \FOR{$iter = 1$ \TO $\textit{MaxIter}$}
+        \STATE Select parents from $\pazocal{P}$ \label{line:parent_selection}
+        \STATE Generate offspring $\pazocal{Q}$ by crossover (\S\ref{sec:crossover}) with $P_c$ and mutation (\S\ref{sec:mutation}) with $P_m$ \label{line:variation}
+        
+        % \STATE Repair infeasible lines using BFS path completion (Alg.~\ref{alg:bfs_repair})
+        \STATE Apply feasibility-oriented repair to offspring when line-level structural infeasibility (e.g., disconnection or discontinuity) is detected (Alg.~\ref{alg:bfs_repair})
+        \STATE Evaluate $(Z_1, Z_2, Z_3)$ for all $q \in \pazocal{Q}$ via decode-and-assign (\S\ref{sec:evaluation}) \label{line:evaluation}
+        
+        \STATE $\pazocal{R} \gets \pazocal{P} \cup \pazocal{Q}$
+        \STATE Perform non-dominated sorting on $\pazocal{R}$ \label{line:nd_sort}
+        \STATE Apply NSGA-III selection with $N_{\textit{ref}}$ reference points to obtain next $\pazocal{P}$ (\S\ref{sec:env_selection}) \label{line:env_select}
+    \ENDFOR
+    
+    \STATE \textbf{return} the non-dominated solutions in $\pazocal{P}$ as $\pazocal{P}^*$
+\end{algorithmic}
+\end{algorithm}
+\FloatBarrier
 \subsection{Solution Encoding}\label{sec:encoding}
 
 % ********************* 线路组成
@@ -474,6 +505,24 @@ Environmental selection follows the standard NSGA-III mechanism, employing a set
 % --------------------------------------------------- 
 % --------------------------------------------------- Appendix 1_Proof of Proposition
 % ---------------------------------------------------
+
+\subsection{Objective Evaluation via Decode-and-Assign}
+\label{sec:evaluation}
+% [4.3 内容]
+% 关键部分！
+% Step 1: Construct Virtual Graph from Decision Variables
+% Step 2: Passenger Assignment (Dijkstra) -> "Induced Flows"
+% Step 3: Compute Z1, Z2, Z3
+The evaluation phase (Alg.~\ref{alg:NSGA3}, line~\ref{line:evaluation}) maps each chromosome into the objective space through a systematic decode-and-assign procedure. \rev{zg}{Following Observation~1,}{For a fixed network design,} we treat passenger routing as a deterministic response to the network configuration, thereby decoupling routing behavior from the upper-level network design decisions. 
+%
+For each individual, the algorithm first constructs a comprehensive virtual-node graph $\pazocal G'$ that integrates in-vehicle travel times and waiting times $w^\ell$, the latter being derived from the allocated vehicle units $n^\ell$.
+%
+To evaluate the travel-time deterioration $Z_1$, the algorithm solves a shortest-path problem (Dijkstra) for every OD pair $(o_k, d_k) \in \pazocal K$ on $\pazocal G'$. The resulting shortest path yields the predicted OD travel time $\hat t_k$. Feasibility is enforced by construction: $\pazocal G'$ includes only arcs corresponding to active line segments in the decoded network design, and OD paths are initialized through access/egress connections between physical stops and their associated line-specific virtual nodes.
+%
+This shortest-path evaluation is performed for each candidate network, consistently reflecting the current decoded topology and headways.
+%
+Simultaneously, the operational cost $Z_2$ and network dissimilarity $Z_3$ are computed. Specifically, $Z_3$ is quantified using a line-specific Jaccard similarity, where each network element is defined as a triplet $(\min(i,j), \max(i,j), \ell)$. This representation ensures that identical physical links served by different lines are treated as distinct entities, accurately capturing the topological shifts in the service network.
+
 
 \section{Proof and discussion of pairwise stability}
 \label{app:temporal_stability_proof}
