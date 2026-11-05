@@ -361,6 +361,12 @@ Transfer edges are not created at origin or destination nodes.
 
 
 \FloatBarrier
+\subsection{Passenger assignment under a fixed design}
+\begin{observation}
+\label{obs:det_routing}
+Given a fixed PT network design, including line structures $(e_{ij}^\ell,a_i^\ell,b_i^\ell)$ and fleet allocations $n^\ell$, we evaluate the service offered to each OD pair through the minimum generalized travel time attainable on the resulting PT network. This shortest-path evaluation is consistent with standard practice in transit network design and line-planning optimization, where candidate networks are often assessed by assigning OD demand to shortest paths or by ensuring that passengers can be served on shortest routes, rather than by embedding a full behavioral route-choice model~\citep{Mumford2019}. The computed shortest path should therefore be interpreted as the best travel-time option made available by the design, not as an operational constraint imposed on individual passengers. Users may still choose other feasible routes, but such behavioral heterogeneity is outside the scope of the present optimization model. With additive link costs, the OD-specific benchmark paths are induced by the design and can be computed via standard shortest-path algorithms.
+\end{observation}
+
 \section{Detailed line-structure and fleet constraints}
 \begin{figure}[pos=htbp]
 \centering\includegraphics[width=0.85\textwidth]{Fig/Framework/rollFramework.png}
@@ -587,7 +593,7 @@ Environmental selection follows the standard NSGA-III mechanism, employing a set
 % Step 1: Construct Virtual Graph from Decision Variables
 % Step 2: Passenger Assignment (Dijkstra) -> "Induced Flows"
 % Step 3: Compute Z1, Z2, Z3
-The evaluation phase (Alg.~\ref{alg:NSGA3}, line~\ref{line:evaluation}) maps each chromosome into the objective space through a systematic decode-and-assign procedure. \rev{zg}{Following Observation~1,}{For a fixed network design,} we treat passenger routing as a deterministic response to the network configuration, thereby decoupling routing behavior from the upper-level network design decisions. 
+The evaluation phase (Alg.~\ref{alg:NSGA3}, line~\ref{line:evaluation}) maps each chromosome into the objective space through a systematic decode-and-assign procedure. Following Observation~\ref{obs:det_routing}, we treat passenger routing as a deterministic response to the network configuration, thereby decoupling routing behavior from the upper-level network design decisions. 
 %
 For each individual, the algorithm first constructs a comprehensive virtual-node graph $\pazocal G'$ that integrates in-vehicle travel times and waiting times $w^\ell$, the latter being derived from the allocated vehicle units $n^\ell$ ($\S$~\ref{sec:virtual_nodes}).
 %
