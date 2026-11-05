@@ -4,4 +4,6 @@
 
 Open this directory in VS Code with LaTeX Workshop and select the desired root (`main.tex` or `suppl/main.tex`). The workspace configuration invokes `scripts/latex-workshop-build.sh`: it runs latexmk on local temporary storage, then copies the completed output and intermediates into the corresponding `build/` directory, which Git ignores. TeX Live with latexmk, pdfLaTeX, Biber and BibTeX is required. Set `\keepcomment` to `1` in the conference source to display marked revisions; set it back to `0` for the submission PDF. The supplement retains its own revision toggle. The original full text remains available in the source archive; passages omitted during condensation are not all represented as deletions in the marked conference file.
 
+See `REVISION_MAP.md` for the location of principal source material and known limits of the marked conference text.
+
 The temporary build stage avoids intermittent pdfTeX flush failures in this OneDrive workspace. For a command-line build, run `scripts/latex-workshop-build.sh "$PWD/main" "$PWD/build"` from the project root; for the extended paper use `scripts/latex-workshop-build.sh "$PWD/suppl/main" "$PWD/suppl/build"`. The PDF used by LaTeX Workshop is in the corresponding `build/` directory.
