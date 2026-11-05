@@ -111,6 +111,54 @@ This document provides supplementary derivations, algorithmic and evaluation det
 \maketitle
 \appendix
 
+
+\section{Detailed line-structure and fleet constraints}
+\rev{zg}{}{The conference paper presents a compact version of the design constraints. The following formulation retains the more detailed line-structure constraints from the original manuscript. Let $\pazocal N$ be the set of stops, $\pazocal E$ the candidate physical links, and $\pazocal L$ the lines; $\overrightarrow{\pazocal E}$ contains both directed arcs for each physical link. Binary variables $y^\ell$, $a_i^\ell$, $b_i^\ell$, and $e_{ij}^\ell$ encode line activation, terminals, and directed path arcs. The integer $n^\ell$ is the number of vehicles on line $\ell$, $\bar n$ is its upper bound, and $V_{\max}$ is the total fleet budget. The order variable $u_i^\ell$ eliminates subtours.}
+
+\begin{align}
+%-------------------- 1. Activation & Terminal Control --------------------
+% Ensure exactly one origin and one destination if line is active
+& \sum_{i \in \pazocal{N}} a_i^\ell = y^\ell, \qquad
+  \sum_{i \in \pazocal{N}} b_i^\ell = y^\ell
+&& \forall \ell \in \pazocal{L} \label{st:term_existence}\\
+% Forbid coincident terminals (Origin != Destination)
+& a_i^\ell + b_i^\ell \le 1
+&& \forall i \in \pazocal{N},\ \forall \ell \in \pazocal{L} \label{st:term_distinct}\\
+%-------------------- 2. Topology & Flow Conservation --------------------
+% Edges can only be selected for active lines (Both directions checked against y)
+& e_{ij}^\ell + e_{ji}^\ell \le y^\ell
+&& \forall \{i,j\} \in \pazocal{E},\ \forall \ell \in \pazocal{L} \label{st:edge_activation}\\
+% Flow conservation: Inflow + IsOrigin = Outflow + IsDestination
+& \sum_{j:\{i,j\} \in \pazocal{E}} e_{ji}^\ell + a_i^\ell
+=
+\sum_{j:\{i,j\} \in \pazocal{E}} e_{ij}^\ell + b_i^\ell
+&& \forall i \in \pazocal{N},\ \forall \ell \in \pazocal{L} \label{st:flow_balance}\\
+% Simple Path Constraint: Max Out-degree <= 1 AND Max In-degree <= 1
+& \sum_{j:\{i,j\} \in \pazocal{E}} e_{ij}^\ell \le 1, \qquad
+  \sum_{j:\{i,j\} \in \pazocal{E}} e_{ji}^\ell \le 1
+&& \forall i \in \pazocal{N},\ \forall \ell \in \pazocal{L} \label{st:simple_path}\\
+%-------------------- 3. Subtour Elimination (MTZ) --------------------
+% MTZ constraint applied to both potential directions of an undirected edge
+& u_i^\ell - u_j^\ell + 1
+\le |\pazocal{N}| \big(1-e_{ij}^\ell\big)
+&& \rev{zg}{\forall \{i,j\} \in \pazocal{E}}{\forall (i,j) \in \overrightarrow{\pazocal E}},\ \forall \ell \in \pazocal{L} \label{st:mtz_fwd}
+\\
+% MTZ Bounds
+& 1 \le u_i^\ell \le |\pazocal{N}|
+&& \forall i \in \pazocal{N},\ \forall \ell \in \pazocal{L} \label{st:mtz_bound}\\
+%-------------------- 4. Resource Allocation --------------------
+& n^\ell \ge y^\ell, \qquad
+  n^\ell \le \bar n \, y^\ell
+&& \forall \ell \in \pazocal{L} \label{st:veh_bounds}\\
+& \sum_{\ell \in \pazocal{L}} n^\ell \le V_{\max}
+&& \label{st:veh_budget}
+\end{align}
+
+Constraints~\eqref{st:term_existence}--\eqref{st:term_distinct} synchronize line activation with terminal selection, mandating that every active line connects exactly one initial terminal to one final terminal, thereby preventing zero-length loops. Constraint~\eqref{st:edge_activation} ensures that an inactive line has no links and an active line uses at most one direction of each physical link in its path representation. Vehicles traverse the physical line in both directions. Flow conservation~\eqref{st:flow_balance} and degree constraints~\eqref{st:simple_path} restrict the line to a non-branching path. The ordering constraints~\eqref{st:mtz_fwd}--\eqref{st:mtz_bound} eliminate disconnected subtours. Resource constraints~\eqref{st:veh_bounds}--\eqref{st:veh_budget} assign vehicles only to active lines and enforce the global fleet budget.
+
+\rev{zg}{}{The ordering inequality applies to both candidate arc directions for each physical link. The physical edge indicator used in the line-labelled Jaccard objective is $x_{ij}^\ell=e_{ij}^\ell+e_{ji}^\ell$, so reversing the path representation alone does not change overlap. The conference paper defines the three objectives and the induced shortest-path passenger evaluation.}
+
+
 \section{Additional details of the solution algorithm}
 \subsection{Solution Encoding}\label{sec:encoding}
 
