@@ -495,13 +495,13 @@ lines proportionally to their initial one-way travel times $t^\ell$ (computed ba
 Each individual encodes a complete PT network design, comprising a set of line path representations and the associated vehicle allocations.
 Starting from an initial population, the algorithm evolves solutions in a generational manner.
 At each generation, offspring are produced through selection, variation, and evaluation, followed by the NSGA-III reference-point-based \textit{environmental selection}, which prioritizes non-dominated solutions while maintaining diversity along the Pareto front.
-The conference paper summarizes the overall procedure.
+\rev{zg}{}{The conference paper summarizes the overall procedure.}
 
 % -------------------- 4.2.1
 \subsubsection{Population Initialization}
 \label{sec:init_population}
 
-During population initialization ,
+During population initialization (Alg.~\ref{alg:NSGA3}, line~\ref{line:initialization}),
 each individual is generated using the line construction rules described in $\S$~\ref{sec:encoding}.
 PT lines are either constructed from scratch or obtained by locally perturbing routes reconstructed from the existing network.
 Given a set of lines, vehicle allocations are initialized by assigning one vehicle to each active line to guarantee basic service availability.
@@ -547,7 +547,7 @@ Whenever a line topology is inherited from a parent, its vehicle allocation is i
 % No interpolation across different line structures is performed.
 
 % If any inherited line becomes structurally infeasible (e.g., disconnected or discontinuous), a localized repair mechanism is triggered using a feasibility-oriented repair procedure.
-If any inherited line becomes structurally infeasible (e.g., disconnected or discontinuous), a feasibility-oriented restoration operator is applied to recover a valid simple-path representation using a feasibility-oriented repair procedure.
+If any inherited line becomes structurally infeasible (e.g., disconnected or discontinuous), a feasibility-oriented restoration operator is applied to recover a valid simple-path representation (Alg.~\ref{alg:bfs_repair}).
 % Repairs are applied only to the affected lines and only when infeasibility is detected, by reconnecting disrupted segments using deterministic or randomized Breadth-First Search (BFS) on the substrate graph.
 % This repair step is strictly feasibility-oriented and does not optimize route cost or passenger travel time.
 %
@@ -560,7 +560,7 @@ With probability $P_m$, a mutation perturbs a single line $\ell$ via local struc
 These operations introduce stochastic variations in line topology while preserving the overall chromosome structure.
 %
 If the mutation results in a disconnected or discontinuous line,
-feasibility is restored by reconnecting the affected segments using a feasibility-oriented repair procedure.
+feasibility is restored by reconnecting the affected segments (Alg.~\ref{alg:bfs_repair}).
 This repair step is feasibility-oriented and does not explicitly consider objective values.
 %
 Finally, global fleet conservation ($\sum_{\ell\in\pazocal{L}} n^\ell = V_{\max}$)
