@@ -66,7 +66,7 @@
 
 % for revising
 \usepackage{ulem} % 提供 \sout 命令
-\newcommand{\keepcomment}{0} % 1 - Keep comments, 0 - Hide comments
+\newcommand{\keepcomment}{1} % 1 - Keep comments, 0 - Hide comments
 \ifnum\keepcomment=1
 	\usepackage[colorinlistoftodos,textsize=scriptsize]{todonotes} % todo
     \newcommand{\stkout}[1]{\ifmmode\text{\sout{\ensuremath{#1}}}\else\sout{#1}\fi}
