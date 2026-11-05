@@ -1233,11 +1233,11 @@ We deliberately grade the entire front rather than any single selected design: t
 
 We quantify whether the forecast helps the redesign, and by how much. Holding the realized \rev{aa}{scenario}{link travel times} $\{t_{ij}^{\omega}\}$ fixed, we vary \emph{only} the forecast link times $\hat{t}_{ij}^{\omega}(\alpha)$ handed to the optimizer ($\hat t_{ij}^{\omega}(\alpha)=t_{ij}^{\omega}\exp(\alpha\eta_{ij}^{\omega})$) and score the returned Pareto front on the true realized times $t_{ij}^{\omega}$. Since only the error scale $\alpha$ changes, any difference is attributable to forecast quality alone. Each front is graded by its hypervolume $HV$, the volume it dominates in the space of the three performance metrics $(\mathrm{IS}_{20},\mathrm{OCR},\mathrm{LO})$ defined in Appendix~\ref{A.PerformanceMetrics}, measured from the single fixed reference point of App.~\ref{app:metrics}; a larger $HV$ is better\rev{aa}{ and needs no weighting of the three metrics}{}. For each seed $s\in\{1,\dots,S\}$ (with $S=30$ random seeds) and each variability level $\textit{cv}$ we compute three fronts:
 \begin{itemize}
-    \item \emph{No forecast}: \rev{aa}{}{the optimizer uses the} nominal link times $t_{ij}^{0}$\rev{aa}{, giving the \emph{floor}}{We call the corresponding hypervolume} $HV^{\mathrm{NF}}_{s,\textit{cv}}$ \rev{aa}{(lower bound)}{\emph{floor}, since it corresponds to the lower bound}.
+    \item \emph{No forecast}: \rev{aa}{}{the optimizer uses the} nominal link times $t_{ij}^{0}$. \rev{aa}{, giving the \emph{floor}}{We call the corresponding hypervolume} $HV^{\mathrm{NF}}_{s,\textit{cv}}$ \rev{zg}{(lower bound)}{the no-forecast reference, or \emph{floor}}.
 
-    \item \emph{Perfect foresight} ($\alpha=0$): the optimizer uses the true realized times $t_{ij}^{\omega}=\hat{t}_{ij}^{\omega}(0)$. We denote the corresponding hypervolume by $HV^{\mathrm{PF}}_{s,\textit{cv}}\equiv HV_{s,\textit{cv},0}$ and call it the \emph{ceiling}, since it represents the upper bound.
+    \item \emph{Perfect foresight} ($\alpha=0$): the optimizer uses the true realized times $t_{ij}^{\omega}=\hat{t}_{ij}^{\omega}(0)$. We denote the corresponding hypervolume by $HV^{\mathrm{PF}}_{s,\textit{cv}}\equiv HV_{s,\textit{cv},0}$ \rev{zg}{and call it the \emph{ceiling}, since it represents the upper bound.}{and call it the perfect-foresight reference, or \emph{ceiling}.}
 
-    \item \emph{Error-$\alpha$ forecast}: the forecast $\hat{t}_{ij}^{\omega}(\alpha)$ defined above ($\alpha=1$ the empirical DCRNN level, $\alpha>1$ a stress test), giving the intermediate hypervolume $HV_{s,\textit{cv},\alpha}$.
+    \item \emph{Error-$\alpha$ forecast}: the forecast $\hat{t}_{ij}^{\omega}(\alpha)$ defined above ($\alpha=1$ the empirical DCRNN level, $\alpha>1$ a stress test), \rev{zg}{giving the intermediate hypervolume}{giving the hypervolume} $HV_{s,\textit{cv},\alpha}$.
 \end{itemize}
 Because a seed fixes both the realized scenario and the sampled errors $\eta$, each $HV_{s,\textit{cv},\alpha}$ is a single realization, and all reported 95\% confidence intervals reflect variation across the $S$ seeds. We measure the climb from floor to ceiling in two steps.
 
@@ -1247,7 +1247,7 @@ Because a seed fixes both the realized scenario and the sampled errors $\eta$, e
 \begin{equation}
 \bar R_{c,\alpha}=\frac{\tfrac1S\sum_s\big(HV_{s,\textit{cv},\alpha}-HV^{\mathrm{NF}}_{s,\textit{cv}}\big)}{\tfrac1S\sum_s\big(HV^{\mathrm{PF}}_{s,\textit{cv}}-HV^{\mathrm{NF}}_{s,\textit{cv}}\big)},
 \end{equation}
-with a 95\% confidence interval and $\bar R_{c,0}=1$ by construction. At the lowest variability ($cv=0.05$) the floor and ceiling are statistically indistinguishable (Fig.~\ref{fig:forecast_headroom}), so $R$ is undefined and we omit this level from Fig.~\ref{fig:forecast_retained}.
+with a 95\% confidence interval and $\bar R_{c,0}=1$ by construction. \rev{zg}{At the lowest variability ($cv=0.05$) the floor and ceiling are statistically indistinguishable (Fig.~\ref{fig:forecast_headroom}), so $R$ is undefined and we omit this level from Fig.~\ref{fig:forecast_retained}.}{At $cv=0.05$, the floor and ceiling are statistically indistinguishable (Fig.~\ref{fig:forecast_headroom}); their small difference makes the estimated ratio unstable, so this level is omitted from Fig.~\ref{fig:forecast_retained}.}
 
 \subsubsection{\rev{zg}{}{Forecast-value results}}\label{app:forecast_sensitivity}
 
