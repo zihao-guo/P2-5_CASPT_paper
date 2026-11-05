@@ -6,6 +6,7 @@
 \usepackage{array}
 \usepackage{caption} % Required for customizing captions
 \captionsetup{labelfont=bf, font=small, skip=2pt}
+\usepackage{multirow}
 \usepackage{booktabs} % for nicer horizontal rules
 \usepackage{amsmath,amssymb}
 \usepackage{lmodern}
@@ -143,7 +144,7 @@ The main contribution of this paper is to assess the potential of predict-then-o
 
 \section{Methodology}
 \subsection{Predict-then-optimize framework}
-\rev{zg}{As illustrated in Fig.~\ref{fig:framework}, our methodology follows a predict-then-optimize framework that explicitly integrates current observations into prediction.}{Our methodology follows a predict-then-optimize framework that explicitly integrates current observations into prediction.} The prediction model is first trained offline on historical data to learn travel times on road links. During operation, it receives current observations from the latest time steps and outputs a short-term prediction of link travel times $\hat t_{ij}$, which are then supplied to the optimization model for potential network redesign. The resulting network design is then evaluated against realized travel times $t_{ij}$ to assess the actual performance of our adaptive network under realistic conditions. To ensure timely responsiveness, this procedure is repeated periodically, i.e., once per hour. At the start of each time slot, the new network is announced in advance (e.g., 1h), so passengers can plan a route that remains valid for their entire trip and is never changed mid-journey; we assume here that the longest trip is shorter than one time slot (1h).
+\rev{zg}{As illustrated in the framework figure in the source, our methodology follows a predict-then-optimize framework that explicitly integrates current observations into prediction.}{Our methodology follows a predict-then-optimize framework that explicitly integrates current observations into prediction.} The prediction model is first trained offline on historical data to learn travel times on road links. During operation, it receives current observations from the latest time steps and outputs a short-term prediction of link travel times $\hat t_{ij}$, which are then supplied to the optimization model for potential network redesign. The resulting network design is then evaluated against realized travel times $t_{ij}$ to assess the actual performance of our adaptive network under realistic conditions. To ensure timely responsiveness, this procedure is repeated periodically, i.e., once per hour. At the start of each time slot, the new network is announced in advance (e.g., 1h), so passengers can plan a route that remains valid for their entire trip and is never changed mid-journey; we assume here that the longest trip is shorter than one time slot (1h).
 
 
 \rev{zg}{}{One possible monitoring rule compares the forecast with nominal link travel times. Let $E$ be the substrate edge set and $t_{ij}^{0}$ the nominal time of link $(i,j)$. The mean relative forecast deviation is}
@@ -153,10 +154,7 @@ The main contribution of this paper is to assess the potential of predict-then-o
 \end{equation}}
 \rev{zg}{}{If $\bar\Delta$ exceeds a chosen tolerance, an operator may solve the redesign problem for the next slot; otherwise the announced network is retained. The tolerance and operator approval are deployment choices. This rule is proposed as a possible operational mechanism and is not tested as a multi-hour policy in the experiments.}
 
-\begin{figure}[htbp]
-\centering\includegraphics[width=.78\textwidth]{framework.png}
-\caption{\rev{zg}{}{Proactive line redesign framework.}}\label{fig:framework}
-\end{figure}
+
 
 \subsection{Network design and objectives}
 \rev{zg}{}{We represent the road infrastructure as a graph with candidate stops and links. Each line is a simple path on this graph and is assigned vehicles subject to a fleet budget. Passengers are assigned to shortest paths on a virtual graph that represents line-specific travel and waiting times. The model requires all considered origin--destination (OD) pairs to remain connected.}
@@ -211,31 +209,86 @@ Key parameters are set as follows: a fixed dwell time of $d=1$ min per stop is a
 \rev{zg}{}{We use three indicators. IS$_{20}$ is the percentage of OD pairs whose travel time is at least 20\% lower than in the reference network; each OD pair counts equally. OCR is the percentage reduction in the operating-cost proxy $\sum_\ell n^\ell 2t^\ell$ relative to the reference network; positive values indicate savings. LO is the number of shared line-labelled edges divided by the number in either network, expressed as a percentage: 100\% means no edge change. The reported values are means $\pm$ standard deviations over 30 realizations.}
 
 
-\rev{zg}{}{For the sensitivity analysis, the sampled residual is scaled by $\alpha$: $\hat t_{ij}(\alpha)=t_{ij}\exp(\alpha\eta_{ij})$. Realized link times are held fixed across error scales, and Pareto fronts are evaluated on realized conditions using hypervolume.}
+
 
 \section{Numerical results}
 \subsection{Mandl benchmark}
-\rev{zg}{We use predicted travel times $\hat{t}_{ij}$ as input to the optimization problem, and we evaluate the resulting adaptive network against realized link travel times and prediction errors across multiple scenarios.}{We use predicted travel times as input to the optimization problem, and we evaluate the resulting adaptive network against realized link travel times and prediction errors across multiple scenarios.} As travel-time variability increases, both 20\% Improvement Share (IS$_{20}$) and Operational Cost Reduction (OCR) rise systematically, reflecting the increasing value of adaptive redesign under highly fluctuating conditions. Across all variability levels and redesign schemes, Line Overlap (LO) remains high, indicating that these improvements result from targeted adjustments rather than wholesale restructuring. \rev{zg}{}{For the four-line instance, Table~\ref{tab:mandl} compares both methods with the static route-frequency solution of \citet{ahern2022approximate}. At $cv=0$, redesign achieves IS$_{20}=5.79\pm2.99\%$, OCR $=10.20\pm5.31\%$ and LO $=84.34\pm5.44\%$. At $cv=1$, these become $30.57\pm11.60\%$, $39.20\pm12.94\%$ and $77.26\pm5.19\%$, respectively. Thus, against Ahern et al., more OD pairs gain at least 20\% as variability increases, while the reported redesigns retain substantial line overlap.}
+\rev{zg}{We use predicted travel times $\hat{t}_{ij}$ as input to the optimization problem, and we evaluate the resulting adaptive network against realized link travel times and prediction errors across multiple scenarios.}{We use predicted travel times as input to the optimization problem, and we evaluate the resulting adaptive network against realized link travel times and prediction errors across multiple scenarios.} As travel-time variability increases, both 20\% Improvement Share (IS$_{20}$) and Operational Cost Reduction (OCR) rise systematically, reflecting the increasing value of adaptive redesign under highly fluctuating conditions. Across all variability levels and redesign schemes, Line Overlap (LO) remains high, indicating that these improvements result from targeted adjustments rather than wholesale restructuring. \rev{zg}{}{Table~\ref{tab:mandl} compares redesigns of four to twelve lines with the static route-frequency solutions of \citet{ahern2022approximate}. For the four-line instance, At $cv=0$, redesign achieves IS$_{20}=5.79\pm2.99\%$, OCR $=10.20\pm5.31\%$ and LO $=84.34\pm5.44\%$. At $cv=1$, these become $30.57\pm11.60\%$, $39.20\pm12.94\%$ and $77.26\pm5.19\%$, respectively. Thus, against Ahern et al., more OD pairs gain at least 20\% as variability increases, while the reported redesigns retain substantial line overlap.}
 
 \rev{zg}{The frequency-only baseline $\pazocal{G}_{\text{PT}}^{\text{freq}}$ improves service under variability, but it captures substantially less of the OD-level improvement than full redesign; for example, at $cv=1$, its 20\%-improvement share is roughly half that of our method.}{The frequency-only baseline improves service under variability, but it captures substantially less of the OD-level improvement than full redesign; for example, at $cv=1$, its 20\%-improvement share is $16.47\pm9.53\%$, compared with $30.57\pm11.60\%$ for our method.} While frequency-only adjustment keeps the line topology fixed, the proposed line redesign can reroute service away from deteriorated links. \rev{zg}{}{In a forecast-error sensitivity analysis, realized times are held fixed while the error scale varies: zero gives a perfect forecast, one reproduces empirical error, and larger values stress the model. The results indicate that the opportunity for redesign grows with variability and that the Pareto front changes little across the tested error scales.}
 
 
 \begin{table}[htbp]
-\caption{\rev{zg}{}{Four-line Mandl comparison against the static baseline: mean $\pm$ standard deviation over 30 realizations. IS$_{20}$ is the share of OD pairs with at least 20\% improvement. Frequency-only results at $cv=0$ were not reported in the source.}}\label{tab:mandl}
+\caption{\rev{zg}{}{Performance of redesign compared with the static solutions of \citet{ahern2022approximate} on Mandl's network. Values are mean $\pm$ standard deviation over 30 realizations; CV is the coefficient of variation.}}\label{tab:mandl}
 \centering\setlength{\tabcolsep}{5pt}
-\begin{tabular}{llrrr}\toprule
-$cv$ & Method & IS$_{20}$ (\%) & OCR (\%) & LO (\%) \\
+\begin{tabular}{llrrrrr}\toprule
+Lines & Metric & CV=0 & CV=0.05 & CV=0.25 & CV=0.50 & CV=1.00 \\
 \midrule
-0.00 & Redesign & $5.79\pm2.99$ & $10.20\pm5.31$ & $84.34\pm5.44$ \\
-0.05 & Frequency only & $3.96\pm2.94$ & $12.85\pm4.66$ & $100.00\pm0.00$ \\
-     & Redesign & $8.25\pm4.65$ & $13.28\pm7.37$ & $83.79\pm7.73$ \\
-0.25 & Frequency only & $8.09\pm4.35$ & $14.86\pm5.78$ & $100.00\pm0.00$ \\
-     & Redesign & $15.40\pm5.66$ & $16.86\pm6.74$ & $78.83\pm6.65$ \\
-0.50 & Frequency only & $12.94\pm6.92$ & $19.27\pm9.04$ & $100.00\pm0.00$ \\
-     & Redesign & $24.63\pm7.91$ & $24.06\pm12.01$ & $77.53\pm5.27$ \\
-1.00 & Frequency only & $16.47\pm9.53$ & $29.40\pm15.04$ & $100.00\pm0.00$ \\
-     & Redesign & $30.57\pm11.60$ & $39.20\pm12.94$ & $77.26\pm5.19$ \\
-\bottomrule\end{tabular}
+\multirow{3}{*}{\textbf{4}}
+& IS$_{20}$ (\%)
+& $5.79\pm2.99$ & $8.25\pm4.65$ & $15.40\pm5.66$
+& $24.63\pm7.91$ & $30.57\pm11.60$ \\
+& OCR (\%)
+& $10.20\pm5.31$ & $13.28\pm7.37$ & $16.86\pm6.74$
+& $24.06\pm12.01$ & $39.20\pm12.94$ \\
+& LO (\%)
+& $84.34\pm5.44$ & $83.79\pm7.73$ & $78.83\pm6.65$
+& $77.53\pm5.27$ & $77.26\pm5.19$ \\
+
+\midrule
+
+\multirow{3}{*}{\textbf{6}}
+& IS$_{20}$ (\%)
+& $8.96\pm4.47$ & $9.53\pm3.60$ & $16.31\pm5.10$
+& $23.46\pm7.84$ & $31.50\pm10.46$ \\
+& OCR (\%)
+& $25.94\pm4.71$ & $28.94\pm5.40$ & $32.10\pm5.69$
+& $36.75\pm9.55$ & $48.90\pm10.19$ \\
+& LO (\%)
+& $79.58\pm2.29$ & $81.20\pm2.80$ & $78.16\pm3.94$
+& $79.63\pm4.47$ & $79.16\pm4.08$ \\
+
+\midrule
+
+\multirow{3}{*}{\textbf{8}}
+& IS$_{20}$ (\%)
+& $11.52\pm2.67$ & $13.99\pm3.90$ & $18.62\pm5.64$
+& $26.84\pm8.76$ & $35.71\pm11.53$ \\
+& OCR (\%)
+& $26.97\pm4.45$ & $29.92\pm3.84$ & $31.51\pm5.27$
+& $35.35\pm7.98$ & $45.35\pm9.23$ \\
+& LO (\%)
+& $83.58\pm4.07$ & $84.95\pm3.07$ & $82.51\pm4.03$
+& $80.80\pm5.25$ & $81.14\pm4.23$ \\
+
+\midrule
+
+\multirow{3}{*}{\textbf{10}}
+& IS$_{20}$ (\%)
+& $8.83\pm3.15$ & $9.74\pm4.54$ & $14.27\pm5.61$
+& $21.46\pm8.88$ & $31.21\pm11.56$ \\
+& OCR (\%)
+& $33.62\pm4.18$ & $34.65\pm4.93$ & $37.23\pm5.53$
+& $40.62\pm8.71$ & $52.59\pm9.17$ \\
+& LO (\%)
+& $77.57\pm3.40$ & $78.14\pm2.76$ & $76.96\pm3.22$
+& $78.77\pm4.09$ & $78.34\pm3.46$ \\
+
+\midrule
+
+\multirow{3}{*}{\textbf{12}}
+& IS$_{20}$ (\%)
+& $9.76\pm3.57$ & $10.34\pm3.19$ & $14.74\pm3.51$
+& $21.44\pm6.96$ & $32.44\pm11.91$ \\
+& OCR (\%)
+& $35.94\pm4.95$ & $37.51\pm5.54$ & $39.56\pm5.18$
+& $44.20\pm6.90$ & $54.27\pm9.00$ \\
+& LO (\%)
+& $80.69\pm2.98$ & $80.95\pm3.40$ & $80.61\pm2.78$
+& $81.46\pm3.27$ & $80.77\pm4.11$ \\
+
+\bottomrule
+\end{tabular}
 \end{table}
 
 
@@ -247,24 +300,29 @@ $cv$ & Method & IS$_{20}$ (\%) & OCR (\%) & LO (\%) \\
 \label{fig:frontiers}
 \end{figure}
 
-\rev{zg}{Fig.~\ref{fig:frontiers} plots the 2D projection of the Pareto front, highlighting the trade-off between passenger travel-time $Z_1$ (which in the figure is normalized between~$0$ and~$1$) and operator cost in vehicle-hours ($Z_2$). Each point maps to a specific network design, with the lower-left corner representing the ideal direction for both minimization objectives.}{Figure~\ref{fig:frontiers} plots the two-dimensional projection of the Pareto front, highlighting the trade-off between normalized passenger travel-time deterioration $Z_1$ and the operating-cost proxy $Z_2$. Each point maps to a specific network design, with the lower-left corner representing the preferred direction for both minimization objectives. The third objective, structural continuity, is not shown in this projection and is reported as line overlap in Table~\ref{tab:mandl}.}
+\rev{zg}{Fig.~\ref{fig:frontiers} plots the 2D projection of the Pareto front, highlighting the trade-off between passenger travel-time $Z_1$ (which in the figure is normalized between~$0$ and~$1$) and operator cost in vehicle-hours ($Z_2$). Each point maps to a specific network design, with the lower-left corner representing the ideal direction for both minimization objectives.}{Figure~\ref{fig:frontiers} plots the two-dimensional projection of the Pareto front, highlighting the trade-off between normalized passenger travel-time deterioration $Z_1$ and the operating-cost proxy $Z_2$. Each point maps to a specific network design, with the lower-left corner representing the preferred direction for both minimization objectives. The third objective, structural continuity, is not shown in this projection; line overlap for the redesigned networks is reported in Table~\ref{tab:mandl}.}
+
+
+\begin{figure}[htbp]
+\centering
+\begin{minipage}[t]{.46\textwidth}\centering
+\includegraphics[width=\linewidth]{mandl_distribution_ahern.png}\\(a) Ahern et al.
+\end{minipage}\hfill
+\begin{minipage}[t]{.46\textwidth}\centering
+\includegraphics[width=\linewidth]{mandl_distribution_vermeir.png}\\(b) Vermeir et al.
+\end{minipage}
+\caption{\rev{zg}{}{Trip travel-time distributions under different variability levels in one randomly chosen realization. Panels compare redesign against the static networks of \citet{ahern2022approximate} and \citet{vermeir2021exact}. Positive values indicate shorter trips under redesign.}}\label{fig:od_distributions}
+\end{figure}
+
+For illustration, in this subsection we report the results for a single randomly chosen realization. \rev{zg}{}{Figure~\ref{fig:od_distributions} shows the distribution of travel-time changes; it complements the 30-realization averages in Table~\ref{tab:mandl} and does not represent an average across realizations.}
 
 \subsection{Beijing network}
 We compare our method against a stop-skipping operational baseline on the Beijing network. For each variability level, links whose predicted travel time exceeds the original by more than a preset threshold are classified as degraded. The stop-skipping strategy then removes intermediate stops adjacent to degraded links whenever a direct shortcut is available, while leaving the overall line structure and vehicle allocation unchanged. This baseline represents a simple, local response to travel-time disruption, but structurally constrained: it cannot reroute vehicles or reassign fleet, and skipping stops may disconnect part of the demand at a stop from the network entirely.
 
 
-\begin{figure}[htbp]
-\centering
-\begin{minipage}[t]{.40\textwidth}\centering
-\includegraphics[width=\linewidth]{beijing_cv0.png}\\(a) $cv=0$
-\end{minipage}\hfill
-\begin{minipage}[t]{.40\textwidth}\centering
-\includegraphics[width=\linewidth]{beijing_cv1.png}\\(b) $cv=1$
-\end{minipage}
-\caption{\rev{zg}{}{Adapted Beijing networks at nominal and high travel-time variability. Blue indicates a link removed from at least one original line; red indicates a link added to at least one line, as shown in the figure legends.}}\label{fig:beijing}
-\end{figure}
 
-\rev{zg}{}{Figure~\ref{fig:beijing} illustrates selected designs. A link may be both removed and added if its line assignment changes.}
+
+
 
 \begin{table}[htbp]
 \caption{\rev{zg}{}{Beijing results at $cv=1$ compared with the original network. Travel-time improvement for stop-skipping is calculated on reachable OD pairs.}}\label{tab:beijing}
@@ -307,7 +365,7 @@ This paper systematically studied the potential of proactive bus line redesign, 
 A natural extension is to enrich the forecast-error model with explicit spatial and temporal correlation, allowing network-wide common shocks to be represented. \rev{zg}{A further direction is to incorporate in-vehicle crowding, for instance through a capacitated or congestion-dependent (frequency-based common-line) passenger assignment; this would let the redesign account for the load it induces on each line and report crowding-aware rather than purely uncongested travel-time gains.}{A further direction is to incorporate in-vehicle crowding, for instance through a capacitated or congestion-dependent passenger assignment; this would let the redesign account for the load it induces on each line and report crowding-aware rather than purely uncongested travel-time gains.}
 
 
-\rev{zg}{}{The operational feasibility of the proposed rolling use is context-dependent. Route changes require advance notice, passenger information, and operator and driver coordination. The numerical experiments do not measure the costs of communication, retraining, or changing schedules, nor do they validate passenger responses to changing routes. The method can therefore support an operator's assessment of candidate designs, with deployment decisions and practical constraints considered separately.}
+\rev{zg}{}{Deployment also requires advance notice, passenger information, and operator coordination; these practical costs and passenger responses are not evaluated here.}
 
 \printbibliography
 \end{document}

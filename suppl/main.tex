@@ -283,6 +283,11 @@ Decision Focus -- \textbf{ND}: from-scratch network design; \textbf{FS}: frequen
 
 
 \section{Detailed line-structure and fleet constraints}
+\begin{figure}[pos=htbp]
+\centering\includegraphics[width=0.85\textwidth]{Fig/Framework/rollFramework.png}
+\caption{Proactive Line Redesign Framework.}\label{fig:supp_framework}
+\end{figure}
+
 \rev{zg}{}{The conference paper presents a compact version of the design constraints. The following formulation retains the more detailed line-structure constraints from the original manuscript. Let $\pazocal N$ be the set of stops, $\pazocal E$ the candidate physical links, and $\pazocal L$ the lines; $\overrightarrow{\pazocal E}$ contains both directed arcs for each physical link. Binary variables $y^\ell$, $a_i^\ell$, $b_i^\ell$, and $e_{ij}^\ell$ encode line activation, terminals, and directed path arcs. The integer $n^\ell$ is the number of vehicles on line $\ell$, $\bar n$ is its upper bound, and $V_{\max}$ is the total fleet budget. The order variable $u_i^\ell$ eliminates subtours.}
 
 \begin{align}
@@ -1269,7 +1274,19 @@ The figure shows that proactive redesign becomes beneficial only under large tra
 
 \section{Additional Beijing Network Visualisations}\label{app:beijing_networks}
 
-\rev{zg}{}{Fig.~\ref{fig:app:beijingAllNetworks} complements the Beijing case-study visualisation by reporting the original network and the adapted line layouts at intermediate variability levels. These additional panels show that the redesign remains spatially targeted as $cv$ increases: lines are adjusted around affected corridors while preserving the broad structure of the original service network.}
+\begin{center}
+\captionsetup{type=figure}
+\begin{subfigure}[t]{0.48\textwidth}\centering
+\includegraphics[width=\linewidth]{Fig/Case-Study/Beijing/Beijing_seed99_cv0.png}
+\caption{$cv=0$}\end{subfigure}\hfill
+\begin{subfigure}[t]{0.48\textwidth}\centering
+\includegraphics[width=\linewidth]{Fig/Case-Study/Beijing/Beijing_seed99_cv1.png}
+\caption{$cv=1$}\end{subfigure}
+\caption{\rev{zg}{}{Adapted Beijing networks at nominal and high variability. Blue links are removed and red links added relative to the original line assignments, as shown by the plot legends.}}\label{fig:supp_beijing_extremes}
+\end{center}
+
+
+\rev{zg}{}{Fig.~\ref{fig:app:beijingAllNetworks} complements Fig.~\ref{fig:supp_beijing_extremes} by reporting the original network and the adapted line layouts at intermediate variability levels. These additional panels show that the redesign remains spatially targeted as $cv$ increases: lines are adjusted around affected corridors while preserving the broad structure of the original service network.}
 
 \begin{center}
 \captionsetup{type=figure}
