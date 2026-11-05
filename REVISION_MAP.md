@@ -21,3 +21,5 @@ Table values reproduced from the source have not been regenerated from the exper
 The source gives conflicting descriptions of the OD-improvement exceedance figure: its main explanation describes pointwise averaging over seeds, while its caption describes trimming extreme curves before averaging. A search of the current workspace and the original archive found image files but no matching plotting code or raw result data; the thesis repeats both conflicting descriptions. The supplement therefore identifies this uncertainty instead of asserting either aggregation.
 
 The conference Pareto-front image and both single-realization travel-time distribution images are byte-identical (SHA-256) to their counterparts in the source archive; their data and plots have not been regenerated.
+
+The conference title, author order, affiliations, corresponding author and email addresses were checked against `title_page.tex` in the source archive. The title page in the original manuscript itself is anonymized, while the conference template requests author details.
