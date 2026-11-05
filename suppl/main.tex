@@ -65,7 +65,7 @@
 \usepackage{hyperref}
 
 % for revising
-\usepackage{ulem} % 提供 \sout 命令
+\usepackage[normalem]{ulem} % 提供 \sout 命令
 \newcommand{\keepcomment}{1} % 1 - Keep comments, 0 - Hide comments
 \ifnum\keepcomment=1
 	\usepackage[colorinlistoftodos,textsize=scriptsize]{todonotes} % todo
@@ -100,6 +100,13 @@
 %\newdefinition{rmk}{Remark}
 %\newproof{pf}{Proof}
 %\newproof{pot}{Proof of Theorem \ref{thm}}
+
+% The original CAS template's default footer claims Elsevier submission and
+% prints an empty ORCID footnote. This is a standalone conference supplement.
+\ExplSyntaxOn
+\cs_set:Npn \__first_footerline: { \sffamily\small Supplementary~material }
+\RenewDocumentCommand \printorcid { } { }
+\ExplSyntaxOff
 
 \begin{document}
 \shorttitle{Supplementary material: Public transport line redesign}
