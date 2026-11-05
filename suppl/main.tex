@@ -111,6 +111,176 @@ This document provides supplementary derivations, algorithmic and evaluation det
 \maketitle
 \appendix
 
+\section{Additional related work}\label{sec:relatedWork}
+
+%This section reviews the literature on public transport optimization according to decision levels and adaptation horizons.
+Previous work related to ours typically focuses on either \textit{network design} at strategic and tactical levels, where PT lines are planned from scratch, or \textit{reactive operational control}, which manages daily operations without altering the network structure.
+\textit{Network redesign} occupies an intermediate position by adapting existing networks rather than starting anew.
+Within this domain, \textit{offline redesign} relies on re-optimization for known future scenarios, whereas emerging \textit{proactive redesign} approaches anticipate short-term uncertainty.
+However, these proactive methods often overlook the critical trade-off between responsiveness and structural stability, a gap that this paper specifically addresses.
+
+% % ++++++++++++++++++++ 2.1
+\subsection{Public Transport Network Design under Nominal Conditions}
+\label{sec:preventive}
+
+The PT Network Design Problem (TNDP) consists of designing line routes and their frequencies, balancing user- and operator-centric objectives, and has been studied since the foundational formulations of~\cite{ceder1986bus} through successive reviews~\citep{guihaire2008transit, kepaptsoglou2009transit, duran2022survey} and reference texts~\citep{desaulniers2007public, ceder2016public},\cite{gkiotsalitis2020public}.
+
+Most of these approaches formulate public transport networks \emph{from scratch}, without reference to any pre-existing service configuration; although some formulations begin from a predefined set of candidate lines~\citep{cervantes2023analyzing}, the network topology is typically treated as a fresh design decision rather than an adaptation of an existing operational configuration. These methods are primarily intended for long-term strategic or tactical planning.
+The TNDP is NP-hard~\citep{magnanti1984network}.
+
+User-centric performance has been expressed in numerous ways. In addition to overall travel duration~\citep{john2014improved,heyken2019adaptive}, recent studies also examine network coverage~\citep{cadarso2017rapid}, route efficiency~\citep{suman2019improvement}, and demand fulfillment~\citep{barahimi2021multi}. Operator-centric objectives are focused on limiting operational and capital expenditures~\citep{ahern2022approximate,chen2018continuum,calabro2023adaptive}, or proxies for them, such as the overall length of line routes.
+%
+Balancing these objectives draws on two distinct methodological strands. \emph{Multi-level} formulations capture hierarchical decision-making among different agents: \cite{szeto2014transit} established a bilevel framework in which an upper-level planner minimizes passenger transfers and a lower-level model handles PT assignment; \cite{tian2021service} extended this to a trilevel structure with passenger routing strategies at an intermediate level. \emph{Multi-objective} formulations (as ours) instead seek Pareto-optimal trade-off solutions across conflicting criteria: \cite{cervantes2023analyzing} analyzed the trade-off between travel-time reduction and fare reduction. 
+%Although both paradigms address PT network design, they respond to fundamentally different modeling questions and should not be conflated.
+
+Note that all these methods design PT network based on \emph{nominal} (e.g., average, peak, etc.) \emph{traffic conditions}.
+Therefore, as noted by~\citep{tan2024optimizing}, the resulting networks may be inefficient faced with real-time variations in traffic patterns, deviating from nominal conditions. 
+
+% ++++++++++++++++++++ 2.2
+\subsection{Reactive Operational Control under Disruptions and Uncertainty}
+\label{sec:reactive}
+
+In most real-world operations, the structure of the public transport network remains fixed as originally planned. 
+When deviations from nominal conditions occur due to exogenous factors~\citep{nissen2020does, chen2009analyzing}, 
+operators rely on short-term corrective actions to mitigate supply--demand mismatches.
+Typical examples include stop-skipping~\citep{peled2021quality}, short-turning, 
+speed changing, holding~\citep{tang2018optimal, manasra2019optimization, gkiotsalitis2020public, olvera2023holding}, 
+detouring of interrupted lines~\citep{zheng2023multi}, and replacement buses.
+Each control action has distinct disadvantages.
+Namely, bus holding increases the inconvenience of on-board passengers at the holding stops, short-turning requires passengers to disembark and wait for a subsequent bus trip, rescheduling affects the timetables and the crew/vehicle schedules; speed control cannot be implemented when the required speeds are beyond the safety limits, and stop-skipping results in refused passenger boardings~\citep{gkiotsalitis2021stop}.
+While some works integrate real-time data into operational decision-making, such as schedule adjustment for enhanced reliability~\citep{cao2019real}, these frameworks focus on timetable or speed control within a fixed route structure and do not explicitly consider structural reconfiguration of the network topology under time-varying conditions.
+It should be noted that proactive network redesign, as proposed in this work, may generate analogous and in some respects stronger inconveniences on the operational side, affecting vehicle scheduling and driver rostering, in particular with human-driven PT vehicles; it is thus important to limit excessive structural instability (as discussed in the conference paper).
+
+More importantly, when actual conditions deviate significantly from the nominal ones, such corrective actions may not be sufficient to restore performance~\citep{guo2024restoring}, since the overall structure is maintained as planned.
+%
+Strategies such as stop-skipping and short-turning have also appeared in the context of offline or preplanned redesign, to generate alternative route configurations or long-term service plans under hypothetical disruption scenarios. They are outside the scope of this paper, which instead focuses on proactive redesigning lines for the hour ahead based on short-term forecasts.
+%In contrast, within the operational control context considered here, they represent short-term corrective actions applied dynamically during daily operations to recover service regularity without altering the network topology.
+
+
+% % ++++++++++++++++++++ 2.3
+\subsection{Offline and Preplanned Network Redesign under Known Scenarios}
+\label{sec:offline}
+
+Various approaches can be employed in the bus route adjustment problem to generate adaptive bus routes, including rerouting, short-turning, skip-stopping, and branching~\citep{cao2019autonomous, ma2023integrated, wu2021modular}. 
+In contrast to the network design approaches described in \S{}\ref{sec:preventive}, these studies explicitly start from an \emph{existing} public transport network and allow service or structural modifications under a limited set of anticipated scenarios.
+Previous research on bus route localized adjustments has often aimed at two main objectives: accommodating demand fluctuations and enhancing integration with subway networks.
+
+\cite{guan2023bi} introduced a bilevel planning model to optimize customized bus routes offline based on a spatiotemporal state network. While effective for static planning, this method is impractical for real-time dispatching. Concretely, it relies on a computationally expensive nested algorithm and requires a full re-solve for any new event.
+%
+\cite{zhang2018optimal} investigated long-distance replacement bus services to improve coordination with urban rail networks. While effective under static demand assumptions, this approach is inherently offline and cannot be applied in real-time operational contexts.
+%
+When passenger flow control is implemented in a subway system, \cite{zhou2021integrated} optimized existing bus routes to transport passengers temporarily restricted from entry, in case of disruptions.
+%
+\cite{wang2022optimization} proposed a two-stage method to mitigate disruptions to bus routes under planned construction scenarios, relying on predefined work-zone impacts and static travel-time estimates.
+%
+\cite{wu2024multi} proposed a multi-objective ant colony algorithm to adjust existing bus routes and introduced a sequence-level similarity to prevent the redesigned network from being excessively different from the original. However, their approach remains static and cannot capture time-varying adaptations.
+%
+\cite{zheng2024alternative} proposed localized adaptive bus routes under anticipated disruptions, while \cite{zhang2024improving} addressed large-scale emergency disruptions assuming available spare capacity.
+These assumptions do not hold under recurrent traffic fluctuations, where no redundant lines exist and adaptation must occur within the same constrained topology.
+
+% % ++++++++++++++++++++ 2.4
+\subsection{Network Redesign under Predictive Uncertainty and Structural Consistency}
+\label{sec:proactive}
+
+Traditional network design handles uncertainty primarily by optimizing for expected scenarios (stochastic optimization) or worst-case bounds (robust optimization)~\citep{bertsimas2018data, wang2020robust}; see~\cite{ge2022robustness} for a recent review of robustness and disturbances in public transport.
+However, these approaches typically determine a single network configuration before operations begin, with limited adaptation to realized road conditions (i.e., without reconfiguration). While this ensures stability and ease of operations, it may become ineffective in preserving performance faced with high traffic fluctuations.
+%
+%{However, these approaches typically determine a single network configuration prior to realization, not because they are unable to generate multiple configurations, but because operational contexts require stable, predictable network structures whose restructuring must be justified from an organizational standpoint~\citep{wu2024multi}. As a result, they provide no adaptation to the realized road conditions.}
+%
+Another line of work studies topological metrics to evaluate network resilience~\citep{Massobrio2024, Pu2022}, e.g., they measure vulnerability after a perturbation occurs. These approaches remain purely diagnostic and descriptive, rather than being prescriptive (as the approach we present in this paper), in that they do not provide guidance on the optimization of the network design. 
+%
+%Even modern predict-then-optimize frameworks~\citep{elmachtoub2022smart, mandi2024decision} overlook structural stability. They leverage short-term forecasts to adjust operational decisions—such as routing or scheduling—but ignore the underlying physical topology. Even if structural redesign is permitted, these models maximize performance under predicted conditions without preventing drastic, chaotic changes between redesign stages.
+
+%In short, existing literature fundamentally isolates uncertainty, network design, and structural stability, lacking any approach that dynamically updates a physical network while enforcing structural similarity.
+%
+%To bridge this gap, our framework completely departs from this norm. We do not treat structural consistency as an \emph{ex post} evaluation metric or a weak penalty. Instead, we embed graph-level similarity directly into the optimization model. By forcing the new topology to remain close to the original configuration, we strictly constrain the redesign space under predictive uncertainty.
+
+
+% ++++++++++++++++++++ 2.5
+
+\subsection{Vehicle Routing Problems and Demand-Responsive Transport (DRT)}
+
+In Vehicle Routing Problems (VRPs) and DRT, vehicle routes are constructed on-demand and solution stability has been employed to keep revised plans close to a baseline \citep{touzout2021modelling}. However, this stability applies to routing or scheduling assignments rather than the structure of the PT line network itself. Moreover, DRT and other VRP-based systems do not exhibit a structured network of lines, and therefore fail to achieve sufficient passenger consolidation~\citep{Calabro2022}. Hybrid fixed/flexible services partly bridge this gap~(\cite{calabro2023adaptive}), but still keep the fixed lines inflexible and flexible routes unstructured. By contrast, we study a high-capacity mass-transit system organized around a structured network of fixed lines, where existing lines are reconfigured rather than routes being computed from scratch. Our approach is therefore conceptually distinct from VRP- or DRT-based formulations. A direct comparison with DRT is also inappropriate, since we address high demand levels typical of dense urban cores, for which DRT is generally unsuitable in terms of both computational scalability and service performance~\citep{Calabro2022}.
+
+
+%----
+
+%In Demand-Responsive Transport (DRT) vehicle routes are constructed on-demand based on Vehicle Routing Problems (VRPs). \emph{Solution stability} concepts have been discussed, to limit plan revisions~(\citep{touzout2021modelling}). However, pure DRT generally lacks the fixed-line structure of high-capacity mass transit and therefore typically does not reach the same passenger consolidation levels~\citep{Calabro2022}. Hybrid fixed/flexible services partly bridge this gap~(\cite{calabro2023adaptive}), but still keep the fixed lines inflexible and flexible routes unstructured.
+%Our approach operates on a high-capacity structured line network, reconfiguring existing routes rather than computing itineraries from scratch; it is therefore conceptually distinct from VRP/DRT-based formulations.
+
+
+% ++++++++++++++++++++ 2.6
+
+\subsection{Research gaps}
+%Our literature review reveals several gaps in existing approaches to public transport network adaptation (\rev{zg}{see Table~\ref{tab:innovation_matrix} in the Appendix, which summarizes related work}
+Table~\ref{tab:innovation_matrix} summarizes related work.
+%
+Most existing studies treat PT network design as a deterministic optimization problem, ignoring the inherent uncertainty and variability in urban traffic conditions. Only a few studies consider any form of uncertainty, and few redesign the network in response to short-term forecasts while also modeling travel-time variability in a systematic way.
+%
+An exception is~\cite{guo2025data}, where, however, (i)~future travel times on road links were assumed to be perfectly known (which is unrealistic), so the impact of prediction errors was not considered, while we model the error of a well established prediction model, (ii)~only a single simplified objective was adopted, while we solve a multiobjective optimization, and (iii)~their approach is tested only on a simple hypothetical scenario, while we consider real-world dataset to fit the prediction error models.
+
+\begin{table*}[pos=htbp]
+\centering
+\begin{threeparttable}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{ccccc}
+\toprule
+\textbf{Study}
+& \textbf{Solution Method}
+& \makecell{\textbf{Online/Proactive} \\ \textbf{Redesign}}
+& \makecell{\textbf{Similarity} \\ \textbf{Control}}
+& \textbf{Decision Focus} \\
+\midrule
+\citep{magnanti1984network} & Exact methods & No & No & ND \\
+\citep{john2014improved} & Multi-objective GA & No & No & ND \\
+\citep{heyken2019adaptive} & Scaled network GA & No & No & ND \\
+\citep{cadarso2017rapid} & Branch-and-cut & No & No & ND \\
+\citep{ahern2022approximate} & Gradient-based & No & No & ND \\
+\citep{tan2024optimizing} & Congestion analysis & No & No & FS \\
+\citep{guan2023bi} & Custom bilevel & No & No & OR \\
+\citep{zhang2018optimal} & Tailored GA & No & No & OR \\
+\citep{wang2022optimization} & Two-stage heuristic & No & No & DR \\
+\citep{wu2024multi} & Ant Colony & No & NW & OR \\
+\citep{zheng2024alternative} & Heuristic & No & No & DR \\
+\citep{cao2019autonomous} & Skip-stop heuristic & No & No & VC \\
+\citep{ma2023integrated} & Integer programming & No & No & OR \\
+\citep{tang2018optimal} & Optimal control & No & No & VC \\
+\citep{manasra2019optimization} & Branch-and-bound & No & No & VC \\
+\citep{gkiotsalitis2020public} & Evolutionary & No & No & VC \\
+\citep{olvera2023holding} & Holding optimization & No & No & VC \\
+\citep{zheng2023multi} & Coordination heuristic & No & No & VC \\
+\citep{guo2025data} & Exact methods & Partial & Penalty & NR \\
+\midrule
+\textbf{Our Approach}
+& \textbf{NSGA-III based optimization}
+& \textbf{Yes}
+& \textbf{Jaccard}
+& \textbf{NR} \\
+\bottomrule
+\end{tabular}%
+}
+
+\vspace{2pt}
+\parbox{\textwidth}{\footnotesize
+\textit{Notes:} Online/Proactive Redesign -- \textbf{No}: no online or proactive redesign; \textbf{Partial}: limited redesign capability (e.g., sampling-based or scenario-specific updates); \textbf{Yes}: proactive redesign enabled (e.g., predict-then-optimize).
+Similarity Control -- \textbf{No}: no explicit similarity mechanism; \textbf{NW}: Needleman--Wunsch-based similarity; \textbf{Penalty}: penalty-based similarity; \textbf{Jaccard}: Jaccard-based similarity.
+Decision Focus -- \textbf{ND}: from-scratch network design; \textbf{FS}: frequency setting; \textbf{OR}: offline or preplanned redesign of an existing network; \textbf{DR}: perturbation-oriented redesign or response; \textbf{VC}: vehicle or operational control; \textbf{NR}: network redesign under uncertain travel times.
+}
+
+\caption{Comparative analysis of public transport optimization approaches across decision scope, online/proactive redesign capability, and similarity control mechanisms.}
+\label{tab:innovation_matrix}
+\end{threeparttable}
+\end{table*}
+
+%\rev{zg}{Our work introduces a novel methodology for redesigning routes in response to predicted time-varying road conditions through controlled modifications that balance passenger service quality and operational efficiency.}{Our work introduces a methodology for redesigning PT lines for the hour ahead under fluctuating traffic: it uses short-term forecasts, is triggered when needed (i.e., when traffic conditions are highly perturbed causing user- and operator-performance degradation), and balances passenger travel time against operational cost through controlled structural changes.}
+
+\rev{zg}{To our knowledge, this work is the first to systematically study the potential of proactively redesigning PT lines (e.g., for the hour ahead) under fluctuating traffic.}{This work studies the potential of proactively redesigning PT lines (e.g., for the hour ahead) under fluctuating traffic.} Redesign decisions are based on short-term forecasts, are triggered when needed (i.e., when traffic conditions are highly perturbed causing user- and operator-performance degradation), and balance passenger travel time against operational cost through controlled structural changes.
+
+% =============================================
+% 3.Methodology
+% =============================================
+
+
 
 \section{Detailed line-structure and fleet constraints}
 \rev{zg}{}{The conference paper presents a compact version of the design constraints. The following formulation retains the more detailed line-structure constraints from the original manuscript. Let $\pazocal N$ be the set of stops, $\pazocal E$ the candidate physical links, and $\pazocal L$ the lines; $\overrightarrow{\pazocal E}$ contains both directed arcs for each physical link. Binary variables $y^\ell$, $a_i^\ell$, $b_i^\ell$, and $e_{ij}^\ell$ encode line activation, terminals, and directed path arcs. The integer $n^\ell$ is the number of vehicles on line $\ell$, $\bar n$ is its upper bound, and $V_{\max}$ is the total fleet budget. The order variable $u_i^\ell$ eliminates subtours.}
