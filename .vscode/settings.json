@@ -1,0 +1,22 @@
+{
+  "latex-workshop.latex.outDir": "%DIR%/build",
+  "latex-workshop.latex.tools": [
+    {
+      "name": "latexmk",
+      "command": "/bin/sh",
+      "args": [
+        "%WORKSPACE_FOLDER%/scripts/latex-workshop-build.sh",
+        "%DOC%",
+        "%OUTDIR%"
+      ]
+    }
+  ],
+  "latex-workshop.latex.recipes": [
+    {
+      "name": "latexmk (PDF)",
+      "tools": [
+        "latexmk"
+      ]
+    }
+  ]
+}

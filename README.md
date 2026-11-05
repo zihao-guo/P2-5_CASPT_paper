@@ -1,23 +1,7 @@
-# P3_ACC_CASPT_paper
+# CASPT & TransitData 2027 research-track paper
 
-Research-track submission to **CASPT & TransitData 2027** (Stockholm, 21–24 June 2027):
-*Proactive–Adaptive Public Transport Planning: Bus Network Redesign for Urban Rail Disruptions*.
+`main.tex` is the conference manuscript in the official template; `main.pdf` is its compiled submission-sized version. The eight-page limit includes references and any appendix. The separately compiled `suppl/main.tex` is supplementary material derived from the original paper’s appendices: line encoding, initialization, evolutionary operators, proofs, methodological details, metrics, sensitivity analyses, and additional figures. It is not part of the submission PDF. It uses the original Elsevier template and adapts cross-references to be self-contained; the original complete source remains in the archive under `res/`. The provided `suppl/appendix-in-papers.docx` describes an external extended-version workflow; it does not establish permission to submit or link supplementary material at this conference.
 
-Condensed from the WCTR 2026 manuscript (`res/WCTR2026/TRPRO_WCTR 2026..tex`, unmodified copy of
-`P3_Zihao_2025_WCTR2026.zip`) into the official CASPT2027 LaTeX template.
+Open this directory in VS Code with LaTeX Workshop and select the desired root (`main.tex` or `suppl/main.tex`). The workspace configuration invokes `scripts/latex-workshop-build.sh`: it runs latexmk on local temporary storage, then copies the completed output and intermediates into the corresponding `build/` directory, which Git ignores. TeX Live with latexmk, pdfLaTeX, Biber and BibTeX is required. Set `\keepcomment` to `1` in the conference source to display marked revisions; set it back to `0` for the submission PDF. The supplement retains its own revision toggle. The original full text remains available in the source archive; passages omitted during condensation are not all represented as deletions in the marked conference file.
 
-CASPT requirements followed (https://www.caspt-transitdata2027.conf.kth.se/call-for-papers):
-research track, **up to 8 pages**, official template, EasyChair submission, deadline 16 October 2026.
-
-| Path | What it is |
-|---|---|
-| `main.tex` | The paper (CASPT2027 template preamble; deviations tagged `CASPT-ADAPT`). |
-| `bibliography.bib` | Cited subset of the original `xampl.bib`. |
-| `Figure/` | Figures from the original manuscript. |
-| `main.pdf` | Compiled paper. |
-| `build.sh` | pdflatex + biber; fails if `main.pdf` exceeds 8 pages. |
-| `res/WCTR2026/` | Original manuscript package (reference only). |
-
-Left out for space (still in the original): the separate related-work section (merged into the
-introduction), the notation tables, the full path-structure / node-access constraint listings and
-their linearizations (summarized in words).
+The temporary build stage avoids intermittent pdfTeX flush failures in this OneDrive workspace. For a command-line build, run `scripts/latex-workshop-build.sh "$PWD/main" "$PWD/build"` from the project root; for the extended paper use `scripts/latex-workshop-build.sh "$PWD/suppl/main" "$PWD/suppl/build"`. The PDF used by LaTeX Workshop is in the corresponding `build/` directory.
