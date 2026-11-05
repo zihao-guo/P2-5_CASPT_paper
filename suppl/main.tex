@@ -1329,8 +1329,8 @@ with a 95\% confidence interval and $\bar R_{c,0}=1$ by construction. \rev{zg}{A
 
 \subsection{\rev{zg}{}{Exceedance Probability of OD-Level Improvement Rates by Bus-Line Quantity}}\label{App:D3_ImprovementICDF}
 
-\rev{aa}{}{For each variability level \(\textit{cv}=0.05, 0.25, 0.5, 1\) and each random seed \(\omega \in \Omega\), we compute the empirical complementary cumulative distribution function (CCDF) of the percentage travel-time improvement over the set of OD pairs. Thus, for a threshold \(x\), the CCDF gives the fraction of OD pairs whose percentage improvement is larger than \(x\). The solid lines in Fig.~\ref{fig:appendix_improvement_exceedance_all_routes}  report the pointwise average of these empirical CCDFs over the 30 seeds.
-The figure shows that proactive redesign becomes beneficial only under large travel-time variability, namely for ($cv \geq 0.5$). For lower variability levels, it worsens travel times for a larger fraction of OD pairs than it improves.
+\rev{aa}{}{For each variability level \(\textit{cv}=0.05, 0.25, 0.5, 1\) and each random seed \(\omega \in \Omega\), we compute the empirical complementary cumulative distribution function (CCDF) of the percentage travel-time improvement over the set of OD pairs. Thus, for a threshold \(x\), the CCDF gives the fraction of OD pairs whose percentage improvement is \rev{zg}{larger than}{at least} \(x\). The solid lines in Fig.~\ref{fig:appendix_improvement_exceedance_all_routes} \rev{zg}{report the pointwise average of these empirical CCDFs over the 30 seeds.}{summarize results across seeds. The original manuscript describes both pointwise averaging and trimming of extreme seed curves; the figure alone does not establish which aggregation was used.}
+\rev{zg}{The figure shows that proactive redesign becomes beneficial only under large travel-time variability, namely for ($cv \geq 0.5$).}{The plotted share of improved OD pairs generally increases with variability.} For lower variability levels, it worsens travel times for a larger fraction of OD pairs than it improves.
 }
 
 
@@ -1376,7 +1376,7 @@ The figure shows that proactive redesign becomes beneficial only under large tra
         \label{fig:appendix_improvement_exceedance_12routes}
     \end{subfigure}
 
-    \caption{\rev{zg}{}{Trimmed-mean exceedance probability curves of OD-level improvement rates under different line quantities and variability levels. Each line is computed by first forming one per-seed quantile curve $Q_\omega(p)$ and then averaging the remaining curves after trimming extreme seed curves.}}
+    \caption{\rev{zg}{Trimmed-mean exceedance probability curves of OD-level improvement rates under different line quantities and variability levels. Each line is computed by first forming one per-seed quantile curve $Q_\omega(p)$ and then averaging the remaining curves after trimming extreme seed curves.}{Exceedance curves of OD-level improvement rates under different line quantities and variability levels. The source gives conflicting descriptions of the aggregation across seeds.}}
     \label{fig:appendix_improvement_exceedance_all_routes}
 \end{center}
 

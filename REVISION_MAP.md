@@ -17,3 +17,5 @@ The authoritative source is `res/P2_5_Zihao_2026_CAIEVERSION.zip`, especially `c
 Table values reproduced from the source have not been regenerated from the experimental code in this conversion. The conference manuscript distinguishes the unweighted Beijing OD travel-time aggregate from a demand-weighted metric, following the explicit formula in the original source. The rolling trigger is presented as a possible deployment rule, not as a validated multi-hour experiment.
 
 `python3 scripts/check-result-tables.py` compares the 75 Mandl mean/standard-deviation entries and decimal-valued Beijing table entries against the archived LaTeX source. It checks transcription only, not the underlying experimental computations or the original table’s use of dashes for redesign connectivity.
+
+The source gives conflicting descriptions of the OD-improvement exceedance figure: its main explanation describes pointwise averaging over seeds, while its caption describes trimming extreme curves before averaging. The generating code or data has not been verified, so the supplement identifies this uncertainty instead of asserting either aggregation.
