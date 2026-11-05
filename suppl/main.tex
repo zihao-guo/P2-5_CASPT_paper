@@ -291,7 +291,7 @@ Decision Focus -- \textbf{ND}: from-scratch network design; \textbf{FS}: frequen
 
 \FloatBarrier
 \section{Headways, waiting times, and passenger routing}\label{sec:graphMODEL}
-Let $e_{ij}^\ell$ indicate whether edge $(i,j)$ is used by line $\ell$. 
+\rev{zg}{}{Here $\pazocal{N}$ is the set of candidate stops.} Let $e_{ij}^\ell$ indicate whether edge $(i,j)$ is used by line $\ell$. 
 %
 \rev{zg}{The time from one terminal to the other on line~$\ell$ is:}{For an active line $\ell$, the time from one terminal to the other is:} 
 
@@ -308,7 +308,7 @@ t^\ell
 %
 % Here, $d$ denotes a fixed dwell time per stop. Note that this~$t^\ell$ cannot be known in advance, because we cannot know in advance the true travel times~$t_{ij}$ on link~$(i, j)$. We can only calculate a ``nominal''~$t^{\ell,o}$ and a ``predicted''~$\hat t\ell$, obtained by replacing, in~\eqref{st:tl}, $t_{ij}$ with~$t_{ij}$ and $\hat t_{ij}$, respectively.
 %
-Here, $d$ denotes a fixed dwell time per stop. Since the actual link travel times $t_{ij}$ for edge $(i, j)$ are inherently uncertain, the true line travel time $t^\ell$ cannot be determined \textit{a priori}. We can only calculate a ``predicted''~$\hat t^\ell$, obtained by replacing $t_{ij}$ with~$\hat t_{ij}$ in~\eqref{st:tl}.
+Here, $d$ denotes a fixed dwell time per stop. \rev{zg}{}{For a simple path, the number of used arcs minus one is the number of intermediate stops; terminal dwell is excluded from this expression.} Since the actual link travel times $t_{ij}$ for edge $(i, j)$ are inherently uncertain, the true line travel time $t^\ell$ cannot be determined \textit{a priori}. We can only calculate a ``predicted''~$\hat t^\ell$, obtained by replacing $t_{ij}$ with~$\hat t_{ij}$ in~\eqref{st:tl}.
 
 For each PT line $\ell \in \pazocal{L}$, headway $h^\ell$ can be calculated by $h^\ell = \frac{T^\ell}{n^\ell}$, where $T^\ell$ represents the round trip time along the entire line, and $n^\ell$ denotes the number of vehicles operating on that line~(Eq.~4.4 of~\citep{vuchic1981timed}).  
 Let $t^\ell$ denote the one-way travel time from the origin terminal to the destination terminal of line $\ell$, the round-trip cycle time is $T^\ell = 2t^\ell$.
