@@ -309,7 +309,9 @@ Lines & Metric & CV=0 & CV=0.05 & CV=0.25 & CV=0.50 & CV=1.00 \\
 \caption{\rev{zg}{}{Trip travel-time distributions under different variability levels in one randomly chosen realization. Panels compare redesign against the static networks of \citet{ahern2022approximate} and \citet{vermeir2021exact}. Positive values indicate shorter trips under redesign.}}\label{fig:od_distributions}
 \end{figure}
 
-\rev{zg}{For illustration, in this subsection we report the results for a single randomly chosen realization.}{Figure~\ref{fig:od_distributions} shows trip-time changes in one randomly chosen realization.}
+\begin{samepage}
+\rev{zg}{For illustration, in this subsection we report the results for a single randomly chosen realization.}{Figure~\ref{fig:od_distributions} shows trip-time changes in one randomly chosen realization. At $cv=1$, the plotted shares of travelers with shorter trips are 70.1\% relative to Ahern et al. and 73.3\% relative to Vermeir et al.; at $cv=0.05$, they are 40.1\% and 44.8\%, respectively. These are illustrative single-realization results.}\par
+\end{samepage}
 
 \subsection{Beijing network}
 We compare our method against a stop-skipping operational baseline on the Beijing network. For each variability level, links whose predicted travel time exceeds the original by more than a preset threshold are classified as degraded. The stop-skipping strategy then removes intermediate stops adjacent to degraded links whenever a direct shortcut is available, while leaving the overall line structure and vehicle allocation unchanged. This baseline represents a simple, local response to travel-time disruption, but structurally constrained: it cannot reroute vehicles or reassign fleet, and skipping stops may disconnect part of the demand at a stop from the network entirely.
