@@ -518,7 +518,7 @@ The procedure is repeated until $\textit{PopSize}$ individuals (i.e., PT network
 (i)~structural validity (lines are simple-paths, with no branches nor cycles),
 (ii)~connectivity-based serviceability, i.e., all OD pairs $k\in\pazocal K$ are connected within $\pazocal G_{\text{PT}}$,
 and (iii)~similarity, i.e., individual~$\pazocal G_\text{PT}$ is not extremely different from original PT network~$\pazocal G_\text{PT}^\text{org}$, i.e., the Jaccard similarity index must be above threshold $J_{\min}$.
-These criteria enforce a necessary (but not sufficient) condition for OD reachability; full feasibility and network performance are subsequently evaluated using the decode-and-assign objective.
+These criteria enforce a necessary (but not sufficient) condition for OD reachability; full feasibility and network performance are subsequently evaluated using the decode-and-assign objective. \rev{zg}{}{The original description does not specify how offspring with an unreachable OD pair are rejected or penalized. Repairing individual lines alone does not guarantee network-wide OD connectivity.}
 
 % -------------------- 4.2.2
 \subsubsection{Crossover Operation}\label{sec:crossover}
