@@ -1052,7 +1052,7 @@ NSGA-III maintains an optimal balance between solution diversity (high hypervolu
 
 \FloatBarrier
 \section{Additional network performance results}
-\rev{zg}{}{The following tables retain the detailed results from the original manuscript that are condensed in the conference paper. Table~\ref{tab:routeNumberCV} reports all five tested Mandl line counts; Table~\ref{tab:stop_skipping_comparison} reports the Beijing comparison at all tested skip thresholds and variability levels. The latter also reports disconnected demand; travel-time results for stop-skipping concern the reachable OD pairs.}
+\rev{zg}{}{The following tables retain the detailed results from the original manuscript that are condensed in the conference paper. Table~\ref{tab:routeNumberCV} reports all five tested Mandl line counts, Table~\ref{tab:frequencyBaselineCV} compares frequency-only adjustment with full redesign, and Table~\ref{tab:stop_skipping_comparison} reports the Beijing comparison at all tested skip thresholds and variability levels. The latter also reports disconnected demand; travel-time results for stop-skipping concern the reachable OD pairs.}
 
 \begin{table}[pos=H]
 \centering
@@ -1150,6 +1150,63 @@ The static route-frequency solutions for each number of bus line are taken from~
 \end{threeparttable}
 \caption{Performance comparison of the solutions from~\citet{ahern2022approximate} under different variability levels.}
 \label{tab:routeNumberCV}
+\end{table}
+
+\begin{table}[pos=H]
+\centering
+\small
+\setlength{\tabcolsep}{0pt}
+\renewcommand{\arraystretch}{1.12}
+
+\begin{threeparttable}
+\begin{tabular*}{\textwidth}{@{\extracolsep{\fill}}cccccc@{}}
+\toprule
+\textbf{Method} & \textbf{Metric}
+& \textbf{CV=0.05}
+& \textbf{CV=0.25}
+& \textbf{CV=0.50}
+& \textbf{CV=1.00} \\
+\midrule
+
+\multirow{3}{*}{\textbf{Frequency Only}}
+& 20\% improv. share (\%)
+& $3.96\pm2.94$ & $8.09\pm4.35$
+& $12.94\pm6.92$ & $16.47\pm9.53$ \\
+& Op. Cost Red. (\%)
+& $12.85\pm4.66$ & $14.86\pm5.78$
+& $19.27\pm9.04$ & $29.40\pm15.04$ \\
+& Line Overlap (\%)
+& $100.00\pm0.00$ & $100.00\pm0.00$
+& $100.00\pm0.00$ & $100.00\pm0.00$ \\
+\addlinespace[0.25em]
+\midrule
+
+\multirow{3}{*}{\textbf{Ours}}
+& 20\% improv. share (\%)
+& $8.25\pm4.65$ & $15.40\pm5.66$
+& $24.63\pm7.91$ & $30.57\pm11.60$ \\
+& Op. Cost Red. (\%)
+& $13.28\pm7.37$ & $16.86\pm6.74$
+& $24.06\pm12.01$ & $39.20\pm12.94$ \\
+& Line Overlap (\%)
+& $83.79\pm7.73$ & $78.83\pm6.65$
+& $77.53\pm5.27$ & $77.26\pm5.19$ \\
+
+\bottomrule
+\end{tabular*}
+
+\begin{tablenotes}
+\footnotesize
+\item FO: fixed-route frequency-only adjustment baseline $\pazocal{G}_{\text{PT}}^{\text{freq}}$; Ours: our full network redesign method.
+CV: coefficient of variation.
+20\% improvement share (IS$^{20\%}$): fraction of OD pairs whose travel-time improvement is at least 20\%;
+Op. Cost Red. (OCR): Operational Cost Reduction (reduction in the vehicle-time proxy described in the conference paper).
+The 4-line static line-frequency solution is taken from~\citet{ahern2022approximate}; entries report mean $\pm$ standard deviation over 30 realizations.
+\end{tablenotes}
+
+\end{threeparttable}
+\caption{\rev{zg}{}{Performance comparison of full network redesign and fixed-line frequency adjustment for the 4-line Mandl instance.}}
+\label{tab:frequencyBaselineCV}
 \end{table}
 
 \begin{table}[pos=H]

@@ -20,6 +20,16 @@ conference_values = re.findall(pattern, conference_table)
 if len(original_values) != 75 or original_values != conference_values:
     raise SystemExit("Mandl table differs from archived values or has missing entries")
 
+frequency_start = original.index(r"\multirow{3}{*}{\textbf{Frequency Only}}")
+frequency_end = original.index(r"\bottomrule", frequency_start)
+supplement = (root / "suppl/main.tex").read_text()
+supp_start = supplement.index(r"\multirow{3}{*}{\textbf{Frequency Only}}")
+supp_end = supplement.index(r"\bottomrule", supp_start)
+frequency_values = re.findall(pattern, original[frequency_start:frequency_end])
+supp_values = re.findall(pattern, supplement[supp_start:supp_end])
+if len(frequency_values) != 24 or frequency_values != supp_values:
+    raise SystemExit("Frequency-only comparison table differs from the archived values")
+
 source_start = original.index(r"\multirow{15}{*}{\makecell[c]{Stop-skip.}}")
 source_end = original.index(r"\bottomrule", source_start)
 source_table = original[source_start:source_end]
@@ -47,4 +57,4 @@ for row_name, column in [("Line overlap", 0), ("Operational cost reduction", 1),
     expected = [row[column] for row in source_rows[15:20]]
     if not match or numbers(match.group(1)) != expected:
         raise SystemExit(f"Beijing {row_name} row differs from archive")
-print("Verified 75 Mandl entries and the decimal-valued Beijing comparison entries against the archived source.")
+print("Verified 75 Mandl entries, 24 frequency comparison entries, and the decimal-valued Beijing entries against the archived source.")
