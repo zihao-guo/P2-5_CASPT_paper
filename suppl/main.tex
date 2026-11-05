@@ -289,6 +289,59 @@ Decision Focus -- \textbf{ND}: from-scratch network design; \textbf{FS}: frequen
 
 
 
+\FloatBarrier
+\section{Headways, waiting times, and passenger routing}\label{sec:graphMODEL}
+For each PT line $\ell \in \pazocal{L}$, headway $h^\ell$ can be calculated by $h^\ell = \frac{T^\ell}{n^\ell}$, where $T^\ell$ represents the round trip time along the entire line, and $n^\ell$ denotes the number of vehicles operating on that line~(Eq.~4.4 of~\citep{vuchic1981timed}).  
+Let $t^\ell$ denote the one-way travel time from the origin terminal to the destination terminal of line $\ell$, the round-trip cycle time is $T^\ell = 2t^\ell$.
+Accordingly, the headway of line $\ell$ is given by
+$h^\ell = \frac{2t^\ell}{n^\ell}$.
+%
+We use a fixed dwell time $d$, at each stop to account for the time a bus spends at a stop, including the time needed for passengers to board and alight, and the time lost for accelerating and decelerating.
+While in practice dwell times vary with boarding and alighting counts, constant dwell time is standard at the network design level~\citep{HUYNH2022392, chen2022TRSC, schobel2022cheapest}, where demand is represented as an OD matrix rather than individual trip records and the optimization horizon (one hour) far exceeds individual dwell events. Variable dwell time is primarily relevant in operational-control models (bus bunching, holding) that operate at a finer temporal resolution.
+%
+Assuming random passenger arrivals, the average waiting time for line~$\ell$ is given by
+\begin{equation}
+    w^\ell = \frac{h^\ell}{2}\text{, where }h^\ell \text{denotes the service headway of line~}\ell.
+    \label{eq:headwayTime}
+\end{equation}
+This assumption is standard in public transport modeling~\citep{parbo2018reducing, zhang2018service}. 
+\cite{liu2020does} confirm that such an assumption is appropriate when the headway is relatively small (see their $\S$~3.3.1), and passengers simply go at the stop as soon as possible, without explicitly synchronizing at specific PT departure times; they also show that such a simple behavior is most time the most convenient for users, even better than a more complicated possible user strategies.
+%
+For a transfer at stop $i$ from line~$\ell$ to line~$\ell'$, the generalized transfer cost combines the expected waiting time
+$w^{\ell'} = \frac{h^{\ell'}}{2}$
+with a fixed 5~min transfer penalty, a common value in transit route system design~\citep{baaj1991ai}. Thus, each required transfer contributes $w^{\ell'}+5$~min, consistent with the waiting-time formulation in~\eqref{eq:headwayTime} while also accounting for transfer inconvenience.
+
+% ++++++++++++++++++++ 3.1.1
+\subsection{Virtual Node-Based Transfer Model}\label{sec:virtual_nodes}
+
+To model passenger routing, we construct an auxiliary directed graph $\pazocal{G}^{\text{PAX}} = (\pazocal{V}^{\text{PAX}}, \pazocal{E}^{\text{PAX}})$, referred to as the virtual-node graph; the same object is denoted $\pazocal{G}'$ in the solution algorithm of \S\ref{sec:alg}.
+%
+The node set $\pazocal{V}^{\text{PAX}}$ comprises physical stop nodes $i \in \pazocal{V}^{\text{sub}}$ and line-specific virtual nodes $v_i^\ell$ for each line $\ell$ serving stop $i$. 
+As illustrated in Fig.~\ref{fig:brt_example}, yellow nodes denote physical stops, while colored nodes represent line-specific virtual nodes; connections between colored nodes indicate potential passenger transfers.
+%
+The edge set $\pazocal{E}^{\text{PAX}}$ incorporates three distinct directed link types, each associated with a specific temporal cost. 
+\textbf{(1) In-vehicle edges:} Connect virtual nodes $v_i^\ell$ and $v_j^\ell$ along the same line $\ell$. Their weights represent in-vehicle travel times.
+\textbf{(2) Transfer edges:} Connect virtual nodes of different lines (e.g., $v_i^\ell$ to $v_i^{\ell'}$) at the same physical node. 
+\textbf{(3) Access\& Egress edges:} Connect physical nodes to virtual nodes (e.g., $i$ to $v_i^\ell$). These represent initial boarding waiting times.
+% \rev{zg}{}{\textbf{(4) Egress edges:} Connect each line-specific virtual node back to its physical stop (e.g., $v_i^\ell$ to $i$), allowing a passenger to alight from line $\ell$ at stop $i$. They carry zero cost, since alighting incurs no additional waiting, and they ensure that every OD path terminates at the physical destination node, so that shortest paths on $\pazocal{G}^{\text{PAX}}$ from $o_k$ to $d_k$ are well defined.}
+\rev{zg}{The weights of (2) and (3) correspond to passenger waiting times, which are defined in~\eqref{eq:headwayTime} in $\S$~\ref{sec:graphMODEL}.}{The weight of each transfer edge in (2) equals the transfer waiting time plus the fixed 5~min transfer penalty defined above, whereas the weights of access/egress edges in (3) correspond to initial boarding waiting times; the waiting-time components are defined in~\eqref{eq:headwayTime} in $\S$~\ref{sec:graphMODEL}.}
+Transfer edges are not created at origin or destination nodes.
+
+% ========================= Figure
+\begin{figure}
+   \centering
+   \includegraphics[width=0.55\textwidth]{Fig/Framework/2.png}
+   \caption{Example of a four-station PT network with asymmetric routes.}
+   \label{fig:brt_example}
+\end{figure}
+% ========================= FigureEND
+% %
+% To model transfers, for each physical node $i \in \pazocal{N}$ and each PT line $\ell \in \pazocal{L}$ serving it, a corresponding virtual node $v_{i}^\ell$ is generated. Virtual node identifier $v_i^\ell$ follows the encoding rule:
+% $v_{i}^\ell = \ell \times 10^{s} + i$
+% where $s$ is the minimum integer such that $10^s$ exceeds the maximum physical node identifier, ensuring uniqueness.
+
+
+\FloatBarrier
 \section{Detailed line-structure and fleet constraints}
 \begin{figure}[pos=htbp]
 \centering\includegraphics[width=0.85\textwidth]{Fig/Framework/rollFramework.png}
@@ -341,7 +394,7 @@ Constraints~\eqref{st:term_existence}--\eqref{st:term_distinct} synchronize line
 \rev{zg}{}{The ordering inequality applies to both candidate arc directions for each physical link. The physical edge indicator used in the line-labelled Jaccard objective is $x_{ij}^\ell=e_{ij}^\ell+e_{ji}^\ell$, so reversing the path representation alone does not change overlap. The conference paper defines the three objectives and the induced shortest-path passenger evaluation.}
 
 
-\section{Additional details of the solution algorithm}
+\section{Additional details of the solution algorithm}\label{sec:alg}
 \begin{algorithm}[htbp]
 \small
 \caption{NSGA-III based Adaptive PT Network Optimization}
@@ -515,9 +568,9 @@ Environmental selection follows the standard NSGA-III mechanism, employing a set
 % Step 3: Compute Z1, Z2, Z3
 The evaluation phase (Alg.~\ref{alg:NSGA3}, line~\ref{line:evaluation}) maps each chromosome into the objective space through a systematic decode-and-assign procedure. \rev{zg}{Following Observation~1,}{For a fixed network design,} we treat passenger routing as a deterministic response to the network configuration, thereby decoupling routing behavior from the upper-level network design decisions. 
 %
-For each individual, the algorithm first constructs a comprehensive virtual-node graph $\pazocal G'$ that integrates in-vehicle travel times and waiting times $w^\ell$, the latter being derived from the allocated vehicle units $n^\ell$.
+For each individual, the algorithm first constructs a comprehensive virtual-node graph $\pazocal G'$ that integrates in-vehicle travel times and waiting times $w^\ell$, the latter being derived from the allocated vehicle units $n^\ell$ ($\S$~\ref{sec:virtual_nodes}).
 %
-To evaluate the travel-time deterioration $Z_1$, the algorithm solves a shortest-path problem (Dijkstra) for every OD pair $(o_k, d_k) \in \pazocal K$ on $\pazocal G'$. The resulting shortest path yields the predicted OD travel time $\hat t_k$. Feasibility is enforced by construction: $\pazocal G'$ includes only arcs corresponding to active line segments in the decoded network design, and OD paths are initialized through access/egress connections between physical stops and their associated line-specific virtual nodes.
+To evaluate the travel-time deterioration $Z_1$, the algorithm solves a shortest-path problem (Dijkstra) for every OD pair $(o_k, d_k) \in \pazocal K$ on $\pazocal G'$. The resulting shortest path yields the predicted OD travel time $\hat t_k$. Feasibility is enforced by construction: $\pazocal G'$ includes only arcs corresponding to active line segments in the decoded network design, and OD paths are initialized through access/egress connections between physical stops and their associated line-specific virtual nodes (\S\ref{sec:virtual_nodes}).
 %
 This shortest-path evaluation is performed for each candidate network, consistently reflecting the current decoded topology and headways.
 %
