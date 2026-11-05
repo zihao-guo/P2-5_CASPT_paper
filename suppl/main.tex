@@ -414,6 +414,8 @@ Constraints~\eqref{st:term_existence}--\eqref{st:term_distinct} synchronize line
 
 
 \section{Additional details of the solution algorithm}\label{sec:alg}
+The optimization model presented \rev{zg}{in Section~3}{in the conference paper} is a mixed-integer formulation featuring discrete network design choices and nonlinear objective terms. While the delay penalty in $Z_1$ is piecewise linear, the fractional Jaccard objective $Z_3$ introduces nonconvexity and global variable coupling. \rev{zg}{Since an exact linearization of this ratio would require auxiliary constraints that severely compromise scalability, we retain the fractional structure.}{We retain the fractional structure rather than introducing an exact linearization.} Given the tri-objective nature of the problem and the nonconvex trade-offs, we adopt an NSGA-III framework (Algorithm~\ref{alg:NSGA3}) to approximate the Pareto front. \rev{zg}{}{Each chromosome represents the lines and their vehicle allocations; evolutionary operators explore discrete redesigns, while reference points help retain diverse objective trade-offs.}
+
 \begin{algorithm}[htbp]
 \small
 \caption{NSGA-III based Adaptive PT Network Optimization}
