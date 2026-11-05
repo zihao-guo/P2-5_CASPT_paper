@@ -102,6 +102,13 @@
 \titleformat{\section}{\normalfont\fontsize{14}{17}\bfseries}{\thesection}{1em}{}
 \titleformat{\subsection}{\normalfont\fontsize{12}{14}\bfseries}{\thesubsection}{1em}{}
 \titleformat{\subsubsection}{\normalfont\fontsize{11}{13}\bfseries}{\thesubsubsection}{1em}{}
+\renewcommand{\topfraction}{0.95}
+\renewcommand{\bottomfraction}{0.85}
+\renewcommand{\textfraction}{0.05}
+\renewcommand{\floatpagefraction}{0.85}
+\setcounter{topnumber}{3}
+\setcounter{bottomnumber}{2}
+\setcounter{totalnumber}{5}
 \begin{document}
 {\centering
 {\fontsize{16}{19}\selectfont\textbf{\textsc{Predict-then-Optimize Framework for Public Transport Line Redesign under Fluctuating Traffic Conditions}}}\par
@@ -157,7 +164,7 @@ The main contribution of this paper is to assess the potential of predict-then-o
 
 \rev{zg}{}{Vehicles operating on line $\ell$ are assumed to traverse its path in both directions, with symmetric travel times. If $t^\ell$ is its one-way travel time and $n^\ell$ vehicles are assigned, its headway is $h^\ell=2t^\ell/n^\ell$. Assuming random passenger arrivals, average waiting time is $w^\ell=h^\ell/2$. A transfer to another line adds that line's expected waiting time and a fixed five-minute penalty. The virtual graph makes these boarding and transfer costs explicit when evaluating passenger paths.}
 
-We formulate our public transport network adaptation problem as a three-objective optimization. The first objective, $Z_1$, minimizes passenger travel time deterioration, where $q_k$ represents the travel demand flow. The use of $\max(\hat t_k-t_k^0,0)$ guarantees that only travel-time increases relative to the nominal benchmark are penalized, thereby avoiding situations where improvements for certain OD pairs compensate for deterioration in others. \rev{zg}{The second objective $Z_2$ minimizes operational costs through total vehicle-hours.}{The second objective $Z_2$ minimizes a vehicle-time proxy for operational cost.} \rev{zg}{The third objective $Z_3$ minimizes network structural changes using the Jaccard index, calculated as the ratio between the number of shared edges (i.e., those present both in the original and in the re-designed network) and the total number of edges (i.e., the union of the edges in the two networks).}{The third objective $Z_3$ minimizes network structural changes using the Jaccard index, calculated as the ratio between the number of shared edges and the total number of edges.} Structural continuity is handled as an objective ($Z_3$).
+We formulate our public transport network adaptation problem as a three-objective optimization. The first objective, $Z_1$, minimizes passenger travel time deterioration, where $q_k$ represents the travel demand flow. The use of $\max(\hat t_k-t_k^0,0)$ guarantees that only travel-time increases relative to the nominal benchmark are penalized, thereby avoiding situations where improvements for certain OD pairs compensate for deterioration in others. The second objective $Z_2$ minimizes operational costs through total vehicle-hours. The third objective $Z_3$ minimizes network structural changes using the Jaccard index, calculated as the ratio between the number of shared edges (i.e., those present both in the original and in the re-designed network) and the total number of edges (i.e., the union of the edges in the two networks). Structural continuity is handled as an objective ($Z_3$). \rev{zg}{}{Structural continuity means keeping the redesigned lines similar to the lines already in service, so that passengers and operators need to adapt to fewer route changes. For example, if the original and redesigned networks each have 10 line-labelled links and share 8, their union has 12 links: the Jaccard overlap is $8/12$, and $Z_3=1-8/12$. A smaller $Z_3$ means greater overlap and proportionally less change. It is an objective, not a fixed minimum-overlap constraint, so its trade-off with travel time and cost is shown by the Pareto solutions.}
 \rev{zg}{$Z_3=1-\frac{\sum_{\ell,(i,j)}\min(e_{ij}^\ell,e_{ij}^{\ell,0})}{\sum_{\ell,(i,j)}\max(e_{ij}^\ell,e_{ij}^{\ell,0})}$}{\begin{equation}
 \min (Z_1,Z_2,Z_3)=\left(\sum_k q_k\max(\hat t_k-t_k^0,0),\ \sum_{\ell}n^\ell 2\hat t^\ell,\ 1-\frac{\sum_{\ell,\{i,j\}}\min(x_{ij}^\ell,x_{ij}^{\ell,0})}{\sum_{\ell,\{i,j\}}\max(x_{ij}^\ell,x_{ij}^{\ell,0})}\right).
 \label{eq:objectives}
@@ -186,7 +193,7 @@ Given the tri-objective nature of the problem and the nonconvex trade-offs, we a
 
 \rev{zg}{}{Initial networks are constructed from scratch or by locally perturbing the existing routes. Candidates are screened for simple-path validity, connectivity of the considered OD pairs, and a minimum initial Jaccard similarity $J_{\min}=0.5$. This initialization threshold should not be confused with an enforced overlap threshold for every subsequent solution: structural continuity is an optimization objective.}
 
-\rev{zg}{}{Crossover exchanges whole lines between two parents, carrying each line's vehicle allocation with its route. Mutation modifies a line locally through node insertion, deletion, or segment reconnection. Feasibility-oriented repair restores invalid line structures and adjusts fleet allocations; it is not guided by objective improvement. The experiments use crossover probability $0.85$, mutation probability $0.35$, and 125 reference points. The algorithm returns non-dominated alternatives rather than a single universally optimal design.}
+The crossover exchanges complete lines between parents as the primary recombination mechanism; any subsequent modifications are limited to feasibility restoration. Whenever a line topology is inherited from a parent, its vehicle allocation is inherited jointly, thereby preserving the coupling between bus route geometry and service frequency. With probability $P_m$, a mutation perturbs a single line $\ell$ via local structural modifications, including node insertion, node deletion, or segment reconnection. \rev{zg}{}{Feasibility-oriented repair restores invalid line structures and adjusts fleet allocations; it is not guided by objective improvement. The experiments use crossover probability $0.85$, mutation probability $0.35$, and 125 reference points. The algorithm returns non-dominated alternatives rather than a single universally optimal design.}
 
 \section{Evaluation method}
 Our optimization uses predicted link travel times $\hat t_{ij}$, while actual link travel times $t_{ij}$ are unknown at decision time. We therefore evaluate whether the generated line plans remain effective in the presence of prediction errors. We use the Diffusion Convolutional Recurrent Neural Network (DCRNN)~\citep{li2017diffusion} as a representative spatio-temporal predictor to generate empirical one-hour-ahead prediction errors. The objective is not to benchmark forecasting models, but to expose the line-plan generation method to realistic forecast errors. \rev{zg}{}{Log-relative errors $\eta_{ij}=\log(\hat t_{ij}/t_{ij})$ are sampled with replacement from empirical errors; simulated forecasts are $\hat t_{ij}=t_{ij}\exp(\eta_{ij})$. Realized link times follow a log-normal model.}
@@ -204,7 +211,7 @@ Key parameters are set as follows: a fixed dwell time of $d=1$ min per stop is a
 \rev{zg}{}{We use three indicators. IS$_{20}$ is the percentage of OD pairs whose travel time is at least 20\% lower than in the reference network; each OD pair counts equally. OCR is the percentage reduction in the operating-cost proxy $\sum_\ell n^\ell 2t^\ell$ relative to the reference network; positive values indicate savings. LO is the number of shared line-labelled edges divided by the number in either network, expressed as a percentage: 100\% means no edge change. The reported values are means $\pm$ standard deviations over 30 realizations.}
 
 
-\rev{zg}{}{For the sensitivity analysis, the sampled log-relative residual is multiplied by a factor $\alpha$, so that $\hat t_{ij}(\alpha)=t_{ij}\exp(\alpha\eta_{ij})$. This construction keeps predicted times positive. The same realized link times are used across error scales, separating the effect of forecast quality from changes in the realized traffic scenario. Pareto fronts are evaluated on realized conditions using hypervolume across the performance indicators. This analysis does not compare alternative forecasting architectures.}
+\rev{zg}{}{For the sensitivity analysis, the sampled residual is scaled by $\alpha$: $\hat t_{ij}(\alpha)=t_{ij}\exp(\alpha\eta_{ij})$. Realized link times are held fixed across error scales, and Pareto fronts are evaluated on realized conditions using hypervolume.}
 
 \section{Numerical results}
 \subsection{Mandl benchmark}
@@ -257,7 +264,7 @@ We compare our method against a stop-skipping operational baseline on the Beijin
 \caption{\rev{zg}{}{Adapted Beijing networks at nominal and high travel-time variability. Blue indicates a link removed from at least one original line; red indicates a link added to at least one line, as shown in the figure legends.}}\label{fig:beijing}
 \end{figure}
 
-\rev{zg}{}{Figure~\ref{fig:beijing} illustrates the spatial nature of the redesign for two variability settings. A link can be shown as both removed and added when it changes its line assignment, because structural similarity is evaluated using line-labelled edges. The figure illustrates selected designs; the quantitative comparisons below summarize the reported experiments.}
+\rev{zg}{}{Figure~\ref{fig:beijing} illustrates selected designs. A link may be both removed and added if its line assignment changes.}
 
 \begin{table}[htbp]
 \caption{\rev{zg}{}{Beijing results at $cv=1$ compared with the original network. Travel-time improvement for stop-skipping is calculated on reachable OD pairs.}}\label{tab:beijing}
