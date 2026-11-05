@@ -698,6 +698,193 @@ NSGA-III maintains an optimal balance between solution diversity (high hypervolu
 % Under this uniform evaluation standard, NSGA-III attains the largest HV$^\ast$, indicating the most favorable Pareto approximation among the compared methods.
 
 
+
+\FloatBarrier
+\section{Additional network performance results}
+\rev{zg}{}{The following tables retain the detailed results from the original manuscript that are condensed in the conference paper. Table~\ref{tab:routeNumberCV} reports all five tested Mandl line counts; Table~\ref{tab:stop_skipping_comparison} reports the Beijing comparison at all tested skip thresholds and variability levels. The latter also reports disconnected demand; travel-time results for stop-skipping concern the reachable OD pairs.}
+
+\begin{table}[pos=H]
+\centering
+\footnotesize
+\setlength{\tabcolsep}{0pt}
+\renewcommand{\arraystretch}{1.05}
+
+\begin{threeparttable}
+\begin{tabular*}{\textwidth}{@{\extracolsep{\fill}}ccccccc@{}}
+\toprule
+\textbf{No. of lines} & \textbf{Metric}
+& \textbf{CV=0}
+& \textbf{CV=0.05}
+& \textbf{CV=0.25}
+& \textbf{CV=0.50}
+& \textbf{CV=1.00} \\
+\midrule
+
+\multirow{3}{*}{\textbf{4}}
+& 20\% improv. share (IS) (\%)
+& $5.79\pm2.99$ & $8.25\pm4.65$ & $15.40\pm5.66$
+& $24.63\pm7.91$ & $30.57\pm11.60$ \\
+& Op. Cost Red. (\%)
+& $10.20\pm5.31$ & $13.28\pm7.37$ & $16.86\pm6.74$
+& $24.06\pm12.01$ & $39.20\pm12.94$ \\
+& Line Overlap (\%)
+& $84.34\pm5.44$ & $83.79\pm7.73$ & $78.83\pm6.65$
+& $77.53\pm5.27$ & $77.26\pm5.19$ \\
+\addlinespace[0.25em]
+\midrule
+
+\multirow{3}{*}{\textbf{6}}
+& 20\% improv. share (IS) (\%)
+& $8.96\pm4.47$ & $9.53\pm3.60$ & $16.31\pm5.10$
+& $23.46\pm7.84$ & $31.50\pm10.46$ \\
+& Op. Cost Red. (\%)
+& $25.94\pm4.71$ & $28.94\pm5.40$ & $32.10\pm5.69$
+& $36.75\pm9.55$ & $48.90\pm10.19$ \\
+& Line Overlap (\%)
+& $79.58\pm2.29$ & $81.20\pm2.80$ & $78.16\pm3.94$
+& $79.63\pm4.47$ & $79.16\pm4.08$ \\
+\addlinespace[0.25em]
+\midrule
+
+\multirow{3}{*}{\textbf{8}}
+& 20\% improv. share (IS) (\%)
+& $11.52\pm2.67$ & $13.99\pm3.90$ & $18.62\pm5.64$
+& $26.84\pm8.76$ & $35.71\pm11.53$ \\
+& Op. Cost Red. (\%)
+& $26.97\pm4.45$ & $29.92\pm3.84$ & $31.51\pm5.27$
+& $35.35\pm7.98$ & $45.35\pm9.23$ \\
+& Line Overlap (\%)
+& $83.58\pm4.07$ & $84.95\pm3.07$ & $82.51\pm4.03$
+& $80.80\pm5.25$ & $81.14\pm4.23$ \\
+\addlinespace[0.25em]
+\midrule
+
+\multirow{3}{*}{\textbf{10}}
+& 20\% improv. share (IS) (\%)
+& $8.83\pm3.15$ & $9.74\pm4.54$ & $14.27\pm5.61$
+& $21.46\pm8.88$ & $31.21\pm11.56$ \\
+& Op. Cost Red. (\%)
+& $33.62\pm4.18$ & $34.65\pm4.93$ & $37.23\pm5.53$
+& $40.62\pm8.71$ & $52.59\pm9.17$ \\
+& Line Overlap (\%)
+& $77.57\pm3.40$ & $78.14\pm2.76$ & $76.96\pm3.22$
+& $78.77\pm4.09$ & $78.34\pm3.46$ \\
+\addlinespace[0.25em]
+\midrule
+
+\multirow{3}{*}{\textbf{12}}
+& 20\% improv. share (IS) (\%)
+& $9.76\pm3.57$ & $10.34\pm3.19$ & $14.74\pm3.51$
+& $21.44\pm6.96$ & $32.44\pm11.91$ \\
+& Op. Cost Red. (\%)
+& $35.94\pm4.95$ & $37.51\pm5.54$ & $39.56\pm5.18$
+& $44.20\pm6.90$ & $54.27\pm9.00$ \\
+& Line Overlap (\%)
+& $80.69\pm2.98$ & $80.95\pm3.40$ & $80.61\pm2.78$
+& $81.46\pm3.27$ & $80.77\pm4.11$ \\
+
+\bottomrule
+\end{tabular*}
+
+\begin{tablenotes}
+\scriptsize
+\item No. of lines: number of bus lines; CV: coefficient of variation.
+20\% improvement share (IS$^{20\%}$): fraction of OD pairs whose travel-
+time improvement is at least 20\%;
+Op. Cost Red. (OCR): Operational Cost Reduction (reduction in total
+vehicle-time proxy described in the conference paper).
+The static route-frequency solutions for each number of bus line are taken from~\citet{ahern2022approximate}; entries report mean $\pm$ standard deviation over 30 realizations.
+\end{tablenotes}
+
+\end{threeparttable}
+\caption{Performance comparison of the solutions from~\citet{ahern2022approximate} under different variability levels.}
+\label{tab:routeNumberCV}
+\end{table}
+
+\begin{table}[pos=H]
+\centering
+\scriptsize
+\setlength{\tabcolsep}{3pt}
+\renewcommand{\arraystretch}{1.12}
+\begin{threeparttable}
+    \begin{tabular}{c c c c c c c c}
+    \toprule
+    \makecell[c]{\textbf{Method}}
+    & \makecell[c]{\textbf{Thr.}\\ \scriptsize Skip threshold}
+    & \makecell[c]{\textbf{CV}\\ \scriptsize Coeff. var.}
+    & \makecell[c]{\textbf{LO}\\ \scriptsize Line Overlap (\%)}
+    & \makecell[c]{\textbf{OCR}\\ \scriptsize Op. cost red. (\%)}
+    & \makecell[c]{\textbf{Avg.TTI}\\ \scriptsize Travel-time impr. (\%)}
+    & \makecell[c]{\textbf{Unreach. OD}\\ \scriptsize Unreachable OD (\%)}
+    & \makecell[c]{\textbf{Unserv. Dem.}\\ \scriptsize Unserved demand (\%)} \\
+    \midrule
+
+    \multirow{15}{*}{\makecell[c]{Stop-skip.}}
+    & \multirow{5}{*}{\makecell[c]{25\%}}
+        & 0.00 & 91.16 & 1.24  & 3.26  & 4.89  & 3.89  \\
+    & & 0.05 & 91.71 & 1.15  & 2.73  & 4.29  & 3.46  \\
+    & & 0.25 & 56.02 & 6.58  & 12.43 & 29.12 & 27.39 \\
+    & & 0.50 & 47.58 & 6.95  & 14.08 & 35.28 & 32.99 \\
+    & & 1.00 & 42.18 & 12.71 & 14.71 & 38.93 & 36.04 \\
+    \cmidrule{2-8}
+
+    & \multirow{5}{*}{\makecell[c]{50\%}}
+        & 0.00 & 95.52 & 0.61  & $-$0.10 & 1.71  & 1.53  \\
+    & & 0.05 & 95.24 & 0.63  & 1.94  & 1.71  & 1.53  \\
+    & & 0.25 & 80.32 & 4.59  & 10.19 & 11.70 & 11.40 \\
+    & & 0.50 & 56.13 & 8.69  & 19.42 & 28.63 & 27.56 \\
+    & & 1.00 & 47.83 & 12.39 & 19.71 & 35.28 & 32.99 \\
+    \cmidrule{2-8}
+
+    & \multirow{5}{*}{\makecell[c]{100\%}}
+        & 0.00 & 98.30 & 0.32  & 0.45  & 0.03  & 0.02  \\
+    & & 0.05 & 98.30 & 0.35  & 0.49  & 0.03  & 0.02  \\
+    & & 0.25 & 93.87 & 1.63  & 4.08  & 2.77  & 2.09  \\
+    & & 0.50 & 78.57 & 6.68  & 17.77 & 12.23 & 11.61 \\
+    & & 1.00 & 55.88 & 13.49 & 15.11 & 28.05 & 26.84 \\
+    \midrule
+
+    \multirow{5}{*}{\makecell[c]{\textbf{Ours}}}
+    & \multirow{5}{*}{\makecell[c]{--}}
+        & 0.00 & 90.08 & 0.50  & 11.40 & -- & -- \\
+    & & 0.05 & 87.34 & 1.53  & 11.60 & -- & -- \\
+    & & 0.25 & 86.51 & 3.85  & 16.99 & -- & -- \\
+    & & 0.50 & 86.39 & 12.02 & 18.44 & -- & -- \\
+    & & 1.00 & 85.42 & 22.56 & 25.78 & -- & -- \\
+    \bottomrule
+    \end{tabular}
+
+    \begin{tablenotes}
+    \scriptsize
+    \item CV: coefficient of variation. Thr.: skip threshold used by the stop-skipping baseline.
+    LO: Line Overlap. OCR: Operational Cost Reduction, measured as the reduction in the vehicle-time proxy.
+    TTI: Travel-Time Improvement, computed as the percentage reduction in the sum of OD travel times relative to the original network.
+    Unreach.\ OD and Unserv.\ Dem. report the fraction of OD pairs and demand, respectively, whose connectivity is broken by stop-skipping. These metrics are not applicable to our method, which removes no stops and preserves full OD connectivity.
+    \end{tablenotes}
+\end{threeparttable}
+\caption{\rev{zg}{}{Comparison of our method and stop-skipping under varying travel-time variability on the Beijing network.}}
+\label{tab:stop_skipping_comparison}
+\end{table}
+
+\FloatBarrier
+\subsection{Trip travel-time distributions}
+For illustration, in this subsection we report the results for a single randomly chosen realization.
+\rev{zg}{}{Figure~\ref{fig:supp_od_distribution} shows the original manuscript's trip-time distributions for two static Mandl baselines. These panels illustrate one realization, whereas the tables report averages and standard deviations over realizations; the figure should not be interpreted as an aggregate uncertainty estimate.}
+\begin{figure}[pos=htbp]
+\centering
+\begin{subfigure}[b]{0.48\textwidth}
+\centering\includegraphics[width=\linewidth]{Fig/Analysis/6.2.3/multiple_cv_comparison—Ahern.png}
+\caption{Comparison with the Ahern et al. static design.}
+\end{subfigure}\hfill
+\begin{subfigure}[b]{0.48\textwidth}
+\centering\includegraphics[width=\linewidth]{Fig/Analysis/6.2.3/multiple_cv_comparison—VER.png}
+\caption{Comparison with the Vermeir et al. static design.}
+\end{subfigure}
+\caption{\rev{zg}{}{Trip travel-time distributions at different variability levels in one randomly chosen realization.}}
+\label{fig:supp_od_distribution}
+\end{figure}
+
+\FloatBarrier
 \section{Network Performance Metrics}\label{A.PerformanceMetrics}
 
 This appendix details the performance indicators used in the experiments.
