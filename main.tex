@@ -133,8 +133,8 @@ Public Transport (PT) networks are typically planned for nominal, scheduled cond
 
 
 \rev{zg}{ Existing approaches to cope with recurrent perturbations can be broadly classified as \emph{preventive}, \emph{reactive}, or \emph{proactive}, depending on the decision horizon and intervention level.}{}
-Preventive strategies enhance robustness ex ante through structural measures, such as dedicated bus lanes that isolate buses from mixed traffic~\citep{russo2022dedicated}. However, limited street space and high infrastructure costs often make such measures infeasible in dense urban areas~\citep{li2009evaluation}\rev{zg}{, and preventive capacity tends to be inflexible and underutilized}{}.
-% Original citation for the deleted clause: \citep{ITF2024, ITF2025}.
+Preventive strategies enhance robustness ex ante through structural measures, such as dedicated bus lanes that isolate buses from mixed traffic~\citep{russo2022dedicated}. However, limited street space and high infrastructure costs often make such measures infeasible in dense urban areas~\citep{li2009evaluation}, and preventive capacity tends to be inflexible and underutilized\rev{zg}{ (ITF, 2024, 2025)}{}.
+% Original citation for this clause: \citep{ITF2024, ITF2025}.
  Reactive strategies attempt, at the operational level, to restore service after perturbations have occurred, for instance via stop-skipping, holding, or detouring~\citep{peled2021quality,tang2018optimal}\rev{zg}{; Zheng et al. (2023)}{}.\rev{zg}{ These actions deteriorate under high uncertainty, inconvenience passengers, and are insufficient to manage cascading perturbations when no alternative network structure is available.}{}
 % Original citations for the deleted clause: \citep[\S{}2]{GkiotsalitisCats2021}; \citep{mahdavi2024resilience}.
 % Original additional citation after detouring: \citep{zheng2023multi}.
@@ -293,7 +293,7 @@ Lines & Metric & CV=0 & CV=0.05 & CV=0.25 & CV=0.50 & CV=1.00 \\
 
 
 \begin{figure}[htbp]
-\centering\includegraphics[width=\textwidth]{mandl_frontiers.png}
+\centering\includegraphics[width=.9\textwidth]{mandl_frontiers.png}
 \caption{\rev{zg}{}{Travel-time, cost ($Z_1$, $Z_2$) Pareto fronts for the 4-line Mandl instance under four travel-time variability levels.}}
 \label{fig:frontiers}
 \end{figure}
@@ -303,10 +303,10 @@ Fig.~\ref{fig:frontiers} plots the 2D projection of the Pareto front, highlighti
 
 \begin{figure}[htbp]
 \centering
-\begin{minipage}[t]{.46\textwidth}\centering
+\begin{minipage}[t]{.42\textwidth}\centering
 \includegraphics[width=\linewidth]{mandl_distribution_ahern.png}\\(a) Ahern et al.
 \end{minipage}\hfill
-\begin{minipage}[t]{.46\textwidth}\centering
+\begin{minipage}[t]{.42\textwidth}\centering
 \includegraphics[width=\linewidth]{mandl_distribution_vermeir.png}\\(b) Vermeir et al.
 \end{minipage}
 \caption{Trip Time Distribution Comparison Under Various Variability Conditions in a randomly chosen realization. \rev{zg}{}{Panels compare redesign against the static networks of \citet{ahern2022approximate} and \citet{vermeir2021exact}. Positive values indicate shorter trips under redesign.}}\label{fig:od_distributions}
