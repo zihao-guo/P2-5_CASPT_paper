@@ -14,7 +14,7 @@ The authoritative source is `res/P2_5_Zihao_2026_CAIEVERSION.zip`, especially `c
 | Temporal stability proof and performance metrics | Structural continuity objective and metrics, condensed | Pairwise stability proof; network and multi-objective performance metrics |
 | Conclusion and limitations | Conclusion, condensed | Original full wording remains in the archive |
 
-Table values reproduced from the source have not been regenerated from the experimental code in this conversion. The conference manuscript distinguishes the unweighted Beijing OD travel-time aggregate from a demand-weighted metric, following the explicit formula in the original source. The rolling trigger is presented as a possible deployment rule, not as a validated multi-hour experiment.
+Table values reproduced from the source have not been regenerated from the experimental code in this conversion. The conference manuscript distinguishes the unweighted Beijing OD travel-time aggregate from a demand-weighted metric, following the explicit formula in the original source. The anticipated redesign is described as an operational concept; the experiments evaluate a single redesign, not a validated multi-hour deployment.
 
 `python3 scripts/check-result-tables.py` compares the 75 Mandl mean/standard-deviation entries, 24 frequency-only comparison entries and decimal-valued Beijing table entries against the archived LaTeX source. It checks transcription only, not the underlying experimental computations or the original table’s use of dashes for redesign connectivity.
 
