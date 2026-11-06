@@ -209,72 +209,73 @@ We use predicted travel times $\hat{t}_{ij}$ as input to the optimization proble
 
 \begin{table}[htbp]
 \caption{Performance comparison of the solutions from~\citet{ahern2022approximate} under different variability levels. \rev{zg}{}{Values are mean $\pm$ standard deviation over 30 realizations; CV is the coefficient of variation.}}\label{tab:mandl}
-\centering\setlength{\tabcolsep}{5pt}
+\centering\small\setlength{\tabcolsep}{5pt}
+\newcommand{\meanstd}[2]{\ensuremath{#1}\,{\footnotesize\ensuremath{\pm#2}}}
 \begin{tabular}{llrrrrr}\toprule
 Lines & Metric & CV=0 & CV=0.05 & CV=0.25 & CV=0.50 & CV=1.00 \\
 \midrule
 \multirow{3}{*}{\textbf{4}}
 & IS$_{20}$ (\%)
-& $5.79\pm2.99$ & $8.25\pm4.65$ & $15.40\pm5.66$
-& $24.63\pm7.91$ & $30.57\pm11.60$ \\
+& \meanstd{5.79}{2.99} & \meanstd{8.25}{4.65} & \meanstd{15.40}{5.66}
+& \meanstd{24.63}{7.91} & \meanstd{30.57}{11.60} \\
 & OCR (\%)
-& $10.20\pm5.31$ & $13.28\pm7.37$ & $16.86\pm6.74$
-& $24.06\pm12.01$ & $39.20\pm12.94$ \\
+& \meanstd{10.20}{5.31} & \meanstd{13.28}{7.37} & \meanstd{16.86}{6.74}
+& \meanstd{24.06}{12.01} & \meanstd{39.20}{12.94} \\
 & LO (\%)
-& $84.34\pm5.44$ & $83.79\pm7.73$ & $78.83\pm6.65$
-& $77.53\pm5.27$ & $77.26\pm5.19$ \\
+& \meanstd{84.34}{5.44} & \meanstd{83.79}{7.73} & \meanstd{78.83}{6.65}
+& \meanstd{77.53}{5.27} & \meanstd{77.26}{5.19} \\
 
 \midrule
 
 \multirow{3}{*}{\textbf{6}}
 & IS$_{20}$ (\%)
-& $8.96\pm4.47$ & $9.53\pm3.60$ & $16.31\pm5.10$
-& $23.46\pm7.84$ & $31.50\pm10.46$ \\
+& \meanstd{8.96}{4.47} & \meanstd{9.53}{3.60} & \meanstd{16.31}{5.10}
+& \meanstd{23.46}{7.84} & \meanstd{31.50}{10.46} \\
 & OCR (\%)
-& $25.94\pm4.71$ & $28.94\pm5.40$ & $32.10\pm5.69$
-& $36.75\pm9.55$ & $48.90\pm10.19$ \\
+& \meanstd{25.94}{4.71} & \meanstd{28.94}{5.40} & \meanstd{32.10}{5.69}
+& \meanstd{36.75}{9.55} & \meanstd{48.90}{10.19} \\
 & LO (\%)
-& $79.58\pm2.29$ & $81.20\pm2.80$ & $78.16\pm3.94$
-& $79.63\pm4.47$ & $79.16\pm4.08$ \\
+& \meanstd{79.58}{2.29} & \meanstd{81.20}{2.80} & \meanstd{78.16}{3.94}
+& \meanstd{79.63}{4.47} & \meanstd{79.16}{4.08} \\
 
 \midrule
 
 \multirow{3}{*}{\textbf{8}}
 & IS$_{20}$ (\%)
-& $11.52\pm2.67$ & $13.99\pm3.90$ & $18.62\pm5.64$
-& $26.84\pm8.76$ & $35.71\pm11.53$ \\
+& \meanstd{11.52}{2.67} & \meanstd{13.99}{3.90} & \meanstd{18.62}{5.64}
+& \meanstd{26.84}{8.76} & \meanstd{35.71}{11.53} \\
 & OCR (\%)
-& $26.97\pm4.45$ & $29.92\pm3.84$ & $31.51\pm5.27$
-& $35.35\pm7.98$ & $45.35\pm9.23$ \\
+& \meanstd{26.97}{4.45} & \meanstd{29.92}{3.84} & \meanstd{31.51}{5.27}
+& \meanstd{35.35}{7.98} & \meanstd{45.35}{9.23} \\
 & LO (\%)
-& $83.58\pm4.07$ & $84.95\pm3.07$ & $82.51\pm4.03$
-& $80.80\pm5.25$ & $81.14\pm4.23$ \\
+& \meanstd{83.58}{4.07} & \meanstd{84.95}{3.07} & \meanstd{82.51}{4.03}
+& \meanstd{80.80}{5.25} & \meanstd{81.14}{4.23} \\
 
 \midrule
 
 \multirow{3}{*}{\textbf{10}}
 & IS$_{20}$ (\%)
-& $8.83\pm3.15$ & $9.74\pm4.54$ & $14.27\pm5.61$
-& $21.46\pm8.88$ & $31.21\pm11.56$ \\
+& \meanstd{8.83}{3.15} & \meanstd{9.74}{4.54} & \meanstd{14.27}{5.61}
+& \meanstd{21.46}{8.88} & \meanstd{31.21}{11.56} \\
 & OCR (\%)
-& $33.62\pm4.18$ & $34.65\pm4.93$ & $37.23\pm5.53$
-& $40.62\pm8.71$ & $52.59\pm9.17$ \\
+& \meanstd{33.62}{4.18} & \meanstd{34.65}{4.93} & \meanstd{37.23}{5.53}
+& \meanstd{40.62}{8.71} & \meanstd{52.59}{9.17} \\
 & LO (\%)
-& $77.57\pm3.40$ & $78.14\pm2.76$ & $76.96\pm3.22$
-& $78.77\pm4.09$ & $78.34\pm3.46$ \\
+& \meanstd{77.57}{3.40} & \meanstd{78.14}{2.76} & \meanstd{76.96}{3.22}
+& \meanstd{78.77}{4.09} & \meanstd{78.34}{3.46} \\
 
 \midrule
 
 \multirow{3}{*}{\textbf{12}}
 & IS$_{20}$ (\%)
-& $9.76\pm3.57$ & $10.34\pm3.19$ & $14.74\pm3.51$
-& $21.44\pm6.96$ & $32.44\pm11.91$ \\
+& \meanstd{9.76}{3.57} & \meanstd{10.34}{3.19} & \meanstd{14.74}{3.51}
+& \meanstd{21.44}{6.96} & \meanstd{32.44}{11.91} \\
 & OCR (\%)
-& $35.94\pm4.95$ & $37.51\pm5.54$ & $39.56\pm5.18$
-& $44.20\pm6.90$ & $54.27\pm9.00$ \\
+& \meanstd{35.94}{4.95} & \meanstd{37.51}{5.54} & \meanstd{39.56}{5.18}
+& \meanstd{44.20}{6.90} & \meanstd{54.27}{9.00} \\
 & LO (\%)
-& $80.69\pm2.98$ & $80.95\pm3.40$ & $80.61\pm2.78$
-& $81.46\pm3.27$ & $80.77\pm4.11$ \\
+& \meanstd{80.69}{2.98} & \meanstd{80.95}{3.40} & \meanstd{80.61}{2.78}
+& \meanstd{81.46}{3.27} & \meanstd{80.77}{4.11} \\
 
 \bottomrule
 \end{tabular}

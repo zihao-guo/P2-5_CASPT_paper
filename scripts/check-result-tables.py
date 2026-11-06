@@ -16,7 +16,9 @@ start = paper.index(r"\multirow{3}{*}{\textbf{4}}")
 conference_table = paper[start:paper.index(r"\bottomrule", start)]
 pattern = r"\$(\d+\.\d+\\pm\d+\.\d+)\$"
 original_values = re.findall(pattern, original_table)
-conference_values = re.findall(pattern, conference_table)
+conference_values = [mean + r"\pm" + std for mean, std in re.findall(
+    r"\\meanstd\{(\d+\.\d+)\}\{(\d+\.\d+)\}", conference_table
+)]
 if len(original_values) != 75 or original_values != conference_values:
     raise SystemExit("Mandl table differs from archived values or has missing entries")
 
