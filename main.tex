@@ -42,6 +42,10 @@
   \KOMAoptions{parskip=half}}
 \makeatother
 \usepackage{xcolor}
+% Keep paragraph and float spacing compact within the conference template.
+\setlength{\parskip}{3pt plus 1pt minus 1pt}
+\setlength{\textfloatsep}{7pt plus 2pt minus 2pt}
+\setlength{\intextsep}{7pt plus 2pt minus 2pt}
 \usepackage{longtable,booktabs,array}
 \usepackage{calc} % for calculating minipage widths
 % Correct order of tables after \paragraph or \subparagraph
@@ -168,15 +172,49 @@ We formulate our public transport network adaptation problem as a three-objectiv
 
 
 
-We now report the constraints that, together with the objective~\eqref{eq:objectives}, formalize the upper-level network design problem. Passenger route variables are treated as induced (follower) variables and are discussed separately. \rev{zg}{}{Let $N$ be the stop set, $e_{ij}^\ell$ indicate the directed path arc from $i$ to $j$, $y^\ell$ indicate line activation, $a_i^\ell$ and $b_i^\ell$ identify its terminals, and $u_i^\ell$ be a stop-order variable. Binary variables encode arcs, terminals and activation; $n^\ell$ is an integer and $\bar n$ its per-line upper bound. For each line and candidate stop or arc,}
-\rev{zg}{}{\begin{align}
-\sum_i a_i^\ell&=\sum_i b_i^\ell=y^\ell, & a_i^\ell+b_i^\ell&\le1,\\
-\sum_j e_{ji}^\ell+a_i^\ell&=\sum_j e_{ij}^\ell+b_i^\ell, & \sum_j e_{ij}^\ell,\;\sum_j e_{ji}^\ell&\le1,\\
-u_i^\ell-u_j^\ell+1&\le |N|(1-e_{ij}^\ell), & 1\le u_i^\ell&\le |N|,\\
-e_{ij}^\ell+e_{ji}^\ell&\le y^\ell, & y^\ell\le n^\ell&\le \bar n y^\ell,\quad \sum_\ell n^\ell\le V_{\max}.
-\label{eq:constraints}
-\end{align}}
-Constraints~\eqref{eq:constraints} establish the topological structure and operational limits of the designed network. \rev{zg}{}{Terminal selection, flow conservation and degree limits enforce a non-branching path; the ordering inequality eliminates subtours in both directions. For each physical link, $x_{ij}^\ell=e_{ij}^\ell+e_{ji}^\ell$; the original-network value is defined analogously.} Finally, resource allocation is governed by the last constraints, which assign vehicles only to active lines and enforce the global fleet budget.
+We now report the constraints that, together with the objective~\eqref{eq:objectives}, formalize the upper-level network design problem. Passenger route variables are treated as induced (follower) variables and are discussed separately. $\pazocal{N}$: Set of nodes, indexed by $i,j \in \pazocal{N}$; $\pazocal{E}$: Set of feasible edges in the network; $y^\ell$: 1 if line $\ell$ is activated (operated); $e_{ij}^\ell$: 1 if edge $(i,j)$ is used by line $\ell$ in new network; $a_i^\ell, b_i^\ell$: 1 if node $i$ is the start/end terminal of line $\ell$; $n^\ell$: Number of vehicles on line $\ell$ (fleet size); $u_i^\ell$: Auxiliary variable for subtour elimination (MTZ): it denotes the order in which stop~$i$ appears in line $\ell$. \rev{zg}{}{Variables $y,e,a,b$ are binary, $n,u$ integer, and $\bar n$ is the per-line vehicle upper bound.}
+
+\textbf{Line Structure Constraints}
+
+\begin{align}
+%-------------------- 1. Activation & Terminal Control --------------------
+% Ensure exactly one origin and one destination if line is active
+& \sum_{i \in \pazocal{N}} a_i^\ell = y^\ell, \qquad
+  \sum_{i \in \pazocal{N}} b_i^\ell = y^\ell
+&& \forall \ell \in \pazocal{L} \label{st:term_existence}\\
+% Forbid coincident terminals (Origin != Destination)
+& a_i^\ell + b_i^\ell \le 1
+&& \forall i \in \pazocal{N},\ \forall \ell \in \pazocal{L} \label{st:term_distinct}\\
+%-------------------- 2. Topology & Flow Conservation --------------------
+% Edges can only be selected for active lines (Both directions checked against y)
+& e_{ij}^\ell + e_{ji}^\ell \le y^\ell
+&& \forall \{i,j\} \in \pazocal{E},\ \forall \ell \in \pazocal{L} \label{st:edge_activation}\\
+% Flow conservation: Inflow + IsOrigin = Outflow + IsDestination
+& \sum_{j:\{i,j\} \in \pazocal{E}} e_{ji}^\ell + a_i^\ell
+=
+\sum_{j:\{i,j\} \in \pazocal{E}} e_{ij}^\ell + b_i^\ell
+&& \forall i \in \pazocal{N},\ \forall \ell \in \pazocal{L} \label{st:flow_balance}\\
+% Simple Path Constraint: Max Out-degree <= 1 AND Max In-degree <= 1
+& \sum_{j:\{i,j\} \in \pazocal{E}} e_{ij}^\ell \le 1, \qquad
+  \sum_{j:\{i,j\} \in \pazocal{E}} e_{ji}^\ell \le 1
+&& \forall i \in \pazocal{N},\ \forall \ell \in \pazocal{L} \label{st:simple_path}\\
+%-------------------- 3. Subtour Elimination (MTZ) --------------------
+% MTZ constraint applied to both potential directions of an undirected edge
+& u_i^\ell - u_j^\ell + 1
+\le |\pazocal{N}| \big(1-e_{ij}^\ell\big)
+&& \forall \{i,j\} \in \pazocal{E},\ \forall \ell \in \pazocal{L} \label{st:mtz_fwd}
+\\
+% MTZ Bounds
+& 1 \le u_i^\ell \le |\pazocal{N}|
+&& \forall i \in \pazocal{N},\ \forall \ell \in \pazocal{L} \label{st:mtz_bound}\\
+%-------------------- 4. Resource Allocation --------------------
+& n^\ell \ge y^\ell, \qquad
+  n^\ell \le \bar n \, y^\ell
+&& \forall \ell \in \pazocal{L} \label{st:veh_bounds}\\
+& \sum_{\ell \in \pazocal{L}} n^\ell \le V_{\max}
+&& \label{st:veh_budget}
+\end{align}
+Constraints~\eqref{st:term_existence}--\eqref{st:veh_budget} establish the topological structure and operational limits of the designed network. Constraints~\eqref{st:term_existence}--\eqref{st:term_distinct} synchronize line activation with terminal selection, mandating that every active line ($y^\ell=1$) connects exactly one initial terminal to one final terminal, thereby preventing zero-length loops. Bus route continuity and linearity are enforced by the flow conservation in~\eqref{st:flow_balance} combined with the degree Constraints in~\eqref{st:simple_path}; the latter restrict nodes to a maximum of one predecessor and one successor, strictly imposing a non-branching simple path topology. Acyclic integrity is further guaranteed by Constraints~\eqref{st:mtz_fwd}--\eqref{st:mtz_bound}, which adapt the Miller-Tucker-Zemlin (MTZ) formulation to eliminate disconnected subtours that might otherwise satisfy flow balance\rev{zg}{: if link $(i,j)$ is used in line~$\ell$, then node $j$ should appear after $i$ along the line (its order of appearance ($u_j$) must be higher than $i$)}{}. \rev{zg}{}{The ordering inequality applies to both candidate directions. For each physical link, $x_{ij}^\ell=e_{ij}^\ell+e_{ji}^\ell$; the original-network value is defined analogously.} Finally, resource allocation is governed by Constraints~\eqref{st:veh_bounds}--\eqref{st:veh_budget}, which assign vehicles only to active lines and enforce the global fleet budget.
 
 To model passenger routing, we construct an auxiliary directed graph $\pazocal{G}^{\text{PAX}} = (\pazocal{V}^{\text{PAX}}, \pazocal{E}^{\text{PAX}})$, referred to as the virtual-node graph. The node set $\pazocal{V}^{\text{PAX}}$ comprises physical stop nodes $i \in \pazocal{V}^{\text{sub}}$ and line-specific virtual nodes $v_i^\ell$ for each line $\ell$ serving stop $i$. \rev{zg}{}{Its arcs represent in-vehicle travel, access and transfers; shortest paths yield OD travel times. The model assumes uncongested passenger assignment: it does not model crowding or passenger-flow-dependent travel times.}
 
@@ -206,6 +244,12 @@ We use predicted travel times $\hat{t}_{ij}$ as input to the optimization proble
 
 \rev{zg}{The frequency-only baseline $\pazocal{G}_{\text{PT}}^{\text{freq}}$ improves service under variability, but it captures substantially less of the OD-level improvement than full redesign; for example, at $cv=1$, its 20\%-improvement share is roughly half that of our method.}{The frequency-only baseline improves service under variability, but it captures substantially less of the OD-level improvement than full redesign; for example, at $cv=1$, its 20\%-improvement share is $16.47\pm9.53\%$, compared with $30.57\pm11.60\%$ for our method.} \rev{zg}{The results suggest topology change is beneficial when congestion patterns create larger spatial mismatches in the original network.}{} While frequency-only adjustment keeps the line topology fixed, the proposed line redesign can reroute service away from deteriorated links. \rev{zg}{}{In a forecast-error sensitivity analysis, realized times are held fixed while forecasts $\hat t_{ij}(\alpha)=t_{ij}\exp(\alpha\eta_{ij})$ vary with the error scale $\alpha$: zero gives a perfect forecast, one reproduces empirical error, and larger values stress the model. The hypervolume results indicate that the opportunity for redesign grows with variability and that the empirical-error forecast retains nearly all available forecast value, with uncertainty across realizations.}
 
+
+\begin{figure}[htbp]
+\centering\includegraphics[width=.8\textwidth]{mandl_frontiers.png}
+\caption{\rev{zg}{}{Travel-time, cost ($Z_1$, $Z_2$) Pareto fronts for the 4-line Mandl instance under four travel-time variability levels.}}
+\label{fig:frontiers}
+\end{figure}
 
 \begin{table}[htbp]
 \caption{Performance comparison of the solutions from~\citet{ahern2022approximate} under different variability levels. \rev{zg}{}{Values are mean $\pm$ standard deviation over 30 realizations; CV is the coefficient of variation.}}\label{tab:mandl}
@@ -284,21 +328,17 @@ Lines & Metric & CV=0 & CV=0.05 & CV=0.25 & CV=0.50 & CV=1.00 \\
 
 
 
-\begin{figure}[htbp]
-\centering\includegraphics[width=.9\textwidth]{mandl_frontiers.png}
-\caption{\rev{zg}{}{Travel-time, cost ($Z_1$, $Z_2$) Pareto fronts for the 4-line Mandl instance under four travel-time variability levels.}}
-\label{fig:frontiers}
-\end{figure}
+
 
 Fig.~\ref{fig:frontiers} plots the 2D projection of the Pareto front, highlighting the trade-off between passenger travel-time $Z_1$ (which in the figure is normalized between~$0$ and~$1$) and operator cost in vehicle-hours ($Z_2$). Each point maps to a specific network design, with the lower-left corner representing the ideal direction for both minimization objectives. \rev{zg}{}{Circles represent redesigns and crosses frequency-only solutions. The third objective, structural continuity, is not shown in this projection; line overlap for the redesigned networks is reported in Table~\ref{tab:mandl}.}
 
 
 \begin{figure}[htbp]
 \centering
-\begin{minipage}[t]{.42\textwidth}\centering
+\begin{minipage}[t]{.40\textwidth}\centering
 \includegraphics[width=\linewidth]{mandl_distribution_ahern.png}\\(a) Ahern et al.
 \end{minipage}\hfill
-\begin{minipage}[t]{.42\textwidth}\centering
+\begin{minipage}[t]{.40\textwidth}\centering
 \includegraphics[width=\linewidth]{mandl_distribution_vermeir.png}\\(b) Vermeir et al.
 \end{minipage}
 \caption{Trip Time Distribution Comparison Under Various Variability Conditions in a randomly chosen realization. \rev{zg}{}{Panels compare redesign against the static networks of \citet{ahern2022approximate} and \citet{vermeir2021exact}. Positive values indicate shorter trips under redesign.}}\label{fig:od_distributions}
