@@ -8,7 +8,7 @@ The authoritative source is `res/P2_5_Zihao_2026_CAIEVERSION.zip`, especially `c
 | Network, passenger assignment, objectives and constraints | Methodology, including the original line-structure constraints and selected notation | Line travel-time, headway and waiting-time equations, virtual-node transfer model and figure, original shortest-path assignment observation, framework figure, and detailed line-structure and fleet constraints |
 | Encoding, initialization, crossover, mutation and selection | Solution algorithm, condensed | Additional details of the solution algorithm, including the original NSGA-III pseudocode and decode-and-assign evaluation |
 | Log-normal travel times and prediction errors | Evaluation method | Stochastic modelling of travel times and prediction errors, including prediction-error data |
-| Mandl aggregate and frequency-only results | Full five-line-count table, Pareto-front plot and single-realization distributions | Full result and frequency-only comparison tables, distributions, and OD-level exceedance plots |
+| Mandl aggregate and frequency-only results | Full five-line-count table and Pareto-front plot; points to supplementary distributions | Full result and frequency-only comparison tables, distributions, and OD-level exceedance plots |
 | Forecast-error sensitivity | Evaluation and results, condensed | Forecast-value metrics and results |
 | Beijing results | High-variability baseline table and redesign table | Full skip-threshold table and original and adapted network visualisations |
 | Temporal stability proof and performance metrics | Structural continuity objective and metrics, condensed | Pairwise stability proof; network and multi-objective performance metrics |
@@ -20,6 +20,6 @@ Table values reproduced from the source have not been regenerated from the exper
 
 The source gives conflicting descriptions of the OD-improvement exceedance figure: its main explanation describes pointwise averaging over seeds, while its caption describes trimming extreme curves before averaging. A search of the current workspace and the original archive found image files but no matching plotting code or raw result data; the thesis repeats both conflicting descriptions. The supplement therefore identifies this uncertainty instead of asserting either aggregation.
 
-The conference Pareto-front image and both single-realization travel-time distribution images are byte-identical (SHA-256) to their counterparts in the source archive; their data and plots have not been regenerated.
+The conference Pareto-front image and both supplementary single-realization travel-time distribution images are byte-identical (SHA-256) to their counterparts in the source archive; their data and plots have not been regenerated.
 
 The conference title, author order, affiliations, corresponding author and email addresses were checked against `title_page.tex` in the source archive. The title page in the original manuscript itself is anonymized, while the conference template requests author details.
