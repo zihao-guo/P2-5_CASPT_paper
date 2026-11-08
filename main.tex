@@ -44,7 +44,7 @@
 \makeatother
 \usepackage{xcolor}
 % Keep paragraph and float spacing compact within the conference template.
-\setlength{\parskip}{3pt plus 1pt minus 1pt}
+\setlength{\parskip}{1pt plus 0.5pt minus 0.5pt}
 \setlength{\textfloatsep}{7pt plus 2pt minus 2pt}
 \setlength{\intextsep}{7pt plus 2pt minus 2pt}
 \usepackage{longtable,booktabs,array}
@@ -158,7 +158,7 @@ As illustrated in Fig.~\ref{fig:time_window}, our methodology follows a predict-
 
 \begin{figure}[htbp]
 \centering
-\includegraphics[width=.85\textwidth]{fig/framework.png}
+\includegraphics[width=.80\textwidth]{fig/framework.png}
 \caption{Proactive Line Redesign Framework.}
 \label{fig:time_window}
 \end{figure}
@@ -174,7 +174,7 @@ We formulate our public transport network adaptation problem as a three-objectiv
 \min (Z_1,Z_2,Z_3)=\left(\sum_k q_k\max(\hat t_k-t_k^0,0),\ \sum_{\ell}n^\ell 2\hat t^\ell,\ 1-\frac{\sum_{\ell,\{i,j\}}\min(x_{ij}^\ell,x_{ij}^{\ell,0})}{\sum_{\ell,\{i,j\}}\max(x_{ij}^\ell,x_{ij}^{\ell,0})}\right).
 \label{eq:objectives}
 \end{equation}}
-\rev{zg}{In Eq.~\eqref{eq:objectives}, $e_{ij}^{\ell,0}$ and $e_{ij}^\ell$ denote whether line $\ell$ uses substrate link $(i,j)$ in the original and the redesigned network, respectively.}{Here $\hat t_k$ is the predicted shortest travel time for OD pair $k$ on the redesigned network; $t_k^0$ is its travel time on the original network under nominal link times. For the Jaccard term, $x_{ij}^\ell$ denotes use of physical link $\{i,j\}$ by line $\ell$, and $x_{ij}^{\ell,0}$ its original value. Each line-labelled physical edge is counted once, irrespective of path orientation.} \rev{zg}{}{Here $n^\ell$ is the vehicle allocation and $\hat t^\ell$ the predicted one-way line travel time; $Z_2$ is a design-level vehicle-time proxy.} Observe that when solving our optimization problem, the realized link travel times $t_{ij}$ are not available, we will thus optimize the decision variables based on prediction $\hat{t}_{ij}$ and then evaluate, ex-post in the results, the objective function evaluated using the realized link travel times $t_{ij}$.
+\rev{zg}{In Eq.~\eqref{eq:objectives}, $e_{ij}^{\ell,0}$ and $e_{ij}^\ell$ denote whether line $\ell$ uses substrate link $(i,j)$ in the original and the redesigned network, respectively.}{Here $\hat t_k$ is the predicted shortest travel time for OD pair $k$ on the redesigned network; $t_k^0$ is its travel time on the original network under nominal link times. For the Jaccard term, $x_{ij}^\ell$ denotes use of physical link $\{i,j\}$ by line $\ell$, and $x_{ij}^{\ell,0}$ its original value. Each line-labelled physical edge is counted once, irrespective of path orientation.} \rev{zg}{}{Here $n^\ell$ is the vehicle allocation and $\hat t^\ell$ the predicted one-way line travel time; $Z_2$ is a vehicle-time proxy.} Observe that when solving our optimization problem, the realized link travel times $t_{ij}$ are not available, we will thus optimize the decision variables based on prediction $\hat{t}_{ij}$ and then evaluate, ex-post in the results, the objective function evaluated using the realized link travel times $t_{ij}$.
 
 
 
@@ -183,7 +183,9 @@ We formulate our public transport network adaptation problem as a three-objectiv
 We now report the constraints that, together with the objective~\eqref{eq:objectives}, formalize the upper-level network design problem. Passenger route variables are treated as induced (follower) variables and are discussed separately. $\pazocal{N}$: Set of nodes, indexed by $i,j \in \pazocal{N}$; $\pazocal{E}$: Set of feasible edges in the network; $y^\ell$: 1 if line $\ell$ is activated (operated); $e_{ij}^\ell$: 1 if edge $(i,j)$ is used by line $\ell$ in new network; $a_i^\ell, b_i^\ell$: 1 if node $i$ is the start/end terminal of line $\ell$; $n^\ell$: Number of vehicles on line $\ell$ (fleet size); $u_i^\ell$: Auxiliary variable for subtour elimination (MTZ): it denotes the order in which stop~$i$ appears in line $\ell$. \rev{zg}{}{Variables $y,e,a,b$ are binary, $n,u$ integer, and $\bar n$ is the per-line vehicle upper bound.}
 
 \textbf{Line Structure Constraints}
-
+\begingroup
+\allowdisplaybreaks[4]
+\setlength{\jot}{0pt}
 \begin{align}
 %-------------------- 1. Activation & Terminal Control --------------------
 % Ensure exactly one origin and one destination if line is active
@@ -222,32 +224,33 @@ We now report the constraints that, together with the objective~\eqref{eq:object
 & \sum_{\ell \in \pazocal{L}} n^\ell \le V_{\max}
 && \label{st:veh_budget}
 \end{align}
+\endgroup
 Constraints~\eqref{st:term_existence}--\eqref{st:veh_budget} establish the topological structure and operational limits of the designed network. Constraints~\eqref{st:term_existence}--\eqref{st:term_distinct} synchronize line activation with terminal selection, mandating that every active line ($y^\ell=1$) connects exactly one initial terminal to one final terminal, thereby preventing zero-length loops. Bus route continuity and linearity are enforced by the flow conservation in~\eqref{st:flow_balance} combined with the degree Constraints in~\eqref{st:simple_path}; the latter restrict nodes to a maximum of one predecessor and one successor, strictly imposing a non-branching simple path topology. Acyclic integrity is further guaranteed by Constraints~\eqref{st:mtz_fwd}--\eqref{st:mtz_bound}, which adapt the Miller-Tucker-Zemlin (MTZ) formulation to eliminate disconnected subtours that might otherwise satisfy flow balance\rev{zg}{: if link $(i,j)$ is used in line~$\ell$, then node $j$ should appear after $i$ along the line (its order of appearance ($u_j$) must be higher than $i$)}{}. \rev{zg}{}{The ordering inequality applies to both candidate directions. For each physical link, $x_{ij}^\ell=e_{ij}^\ell+e_{ji}^\ell$; the original-network value is defined analogously.} Finally, resource allocation is governed by Constraints~\eqref{st:veh_bounds}--\eqref{st:veh_budget}, which assign vehicles only to active lines and enforce the global fleet budget.
 
 To model passenger routing, we construct an auxiliary directed graph $\pazocal{G}^{\text{PAX}} = (\pazocal{V}^{\text{PAX}}, \pazocal{E}^{\text{PAX}})$, referred to as the virtual-node graph. The node set $\pazocal{V}^{\text{PAX}}$ comprises physical stop nodes $i \in \pazocal{V}^{\text{sub}}$ and line-specific virtual nodes $v_i^\ell$ for each line $\ell$ serving stop $i$. \rev{zg}{}{Its arcs represent in-vehicle travel, access and transfers; shortest paths yield OD travel times.}
 
 \subsection{Solution algorithm}
-Given the tri-objective nature of the problem and the nonconvex trade-offs, we adopt an NSGA-III framework\rev{zg}{ (Algorithm~1)}{} to approximate the Pareto front.\footnote{\rev{zg}{}{For algorithmic details, see Suppl.~D.}} The evolutionary search operates on network design variables (line topologies $e_{ij}^\ell$ and fleet allocations $n^\ell$). Each individual encodes a complete PT network design, comprising a set of line path representations and the associated vehicle allocations. \rev{zg}{}{Like genes in a chromosome, each line and its assigned vehicles form a block: exchanging or modifying these blocks explores different network designs. Related genetic approaches also exchange routes in transit network design and frequency setting~\citep{arbex2015trb}. NSGA-III can search these discrete designs while retaining diverse trade-offs among the three objectives~\citep{deb2014nsga3}.} At each generation, offspring are produced through selection, variation, and evaluation, followed by the NSGA-III reference-point-based \textit{environmental selection}, which prioritizes non-dominated solutions while maintaining diversity along the Pareto front.
+Given the tri-objective nature of the problem and the nonconvex trade-offs, we adopt an NSGA-III framework\rev{zg}{ (Algorithm~1)}{} to approximate the Pareto front.\footnote{\rev{zg}{}{For algorithmic details, see Suppl.~D.}} The evolutionary search operates on network design variables (line topologies $e_{ij}^\ell$ and fleet allocations $n^\ell$). Each individual encodes a complete PT network design, comprising a set of line path representations and the associated vehicle allocations. \rev{zg}{}{Like genes, each line and its vehicles form a block; genetic operators can exchange routes~\citep{arbex2015trb}. NSGA-III retains diverse trade-offs among the three objectives~\citep{deb2014nsga3}.} At each generation, offspring are produced through selection, variation, and evaluation, followed by the NSGA-III reference-point-based \textit{environmental selection}, which prioritizes non-dominated solutions while maintaining diversity along the Pareto front.
 
 
 PT lines are either constructed from scratch or obtained by locally perturbing routes reconstructed from the existing network. The crossover exchanges complete lines between parents as the primary recombination mechanism; any subsequent modifications are limited to feasibility restoration. Whenever a line topology is inherited from a parent, its vehicle allocation is inherited jointly, thereby preserving the coupling between bus route geometry and service frequency. \rev{zg}{}{After crossover, fleet repair enforces the total vehicle budget and at least one vehicle per line.} With probability $P_m$, a mutation perturbs a single line $\ell$ via local structural modifications, including node insertion, node deletion, or segment reconnection. \rev{zg}{}{A local mutation also transfers one vehicle between two lines, preserving the total fleet; repeated mutations and crossover can nevertheless produce larger changes relative to the static network.}
 
 \section{Evaluation method}
-Our optimization uses predicted link travel times $\hat t_{ij}$, while actual link travel times $t_{ij}$ are unknown at decision time. We therefore evaluate whether the generated line plans remain effective even in presence of inevitable prediction errors. We use the Diffusion Convolutional Recurrent Neural Network (DCRNN)~\citep{li2017diffusion} as a representative spatio-temporal predictor to generate empirical one-hour-ahead prediction errors. The objective is not to benchmark forecasting models, but to expose the line-plan generation method to realistic forecast errors. \rev{zg}{}{Log-relative errors $\eta_{ij}=\log(\hat t_{ij}/t_{ij})$ are sampled with replacement from empirical errors; simulated forecasts are $\hat t_{ij}=t_{ij}\exp(\eta_{ij})$.  } The shape we choose for this random variable is a log-normal distribution, which effectively captures the skewed nature of travel time data~\citep{guessous2014estimating} and accounts for extreme delay scenarios that can occur in reality, although not often. \rev{zg}{}{For Mandl, the median is fixed at the nominal link time as $cv$ changes. We use the median rather than the mean to retain a typical nominal time; the mean consequently increases with $cv$.}
+Our optimization uses predicted link travel times $\hat t_{ij}$, while actual link travel times $t_{ij}$ are unknown at decision time. We therefore evaluate whether the generated line plans remain effective even in presence of inevitable prediction errors. We use the Diffusion Convolutional Recurrent Neural Network (DCRNN)~\citep{li2017diffusion} as a representative spatio-temporal predictor to generate empirical one-hour-ahead prediction errors. The objective is not to benchmark forecasting models, but to expose the line-plan generation method to realistic forecast errors. \rev{zg}{}{Log-relative errors $\eta_{ij}=\log(\hat t_{ij}/t_{ij})$ are sampled from empirical errors, giving forecasts $\hat t_{ij}=t_{ij}\exp(\eta_{ij})$.  } The shape we choose for this random variable is a log-normal distribution, which effectively captures the skewed nature of travel time data~\citep{guessous2014estimating} and accounts for extreme delay scenarios that can occur in reality, although not often. \rev{zg}{}{For Mandl, the log-normal median is fixed at the nominal link time; the mean increases with $cv$.}
 
 
 Due to the absence of historical traffic data for Mandl's Swiss network, the DCRNN is trained on the METR-LA dataset~\citep{li2017diffusion}, which contains traffic speed measurements from 207 sensors in Los Angeles County collected at 5-minute intervals over four months. For the real-world Beijing case study, instead, we utilize the Q-Traffic dataset~\citep{liao2018deep}, which provides traffic speed and road network data for the 6th Ring Road in Beijing, China. Errors are not differentiated based on the links where they were calculated; consequently, we do not represent link-specific heterogeneity or spatio-temporal correlation.
 
-Mandl's Swiss network, initially used by~\citet{mandl1980evaluation}, consisting of 15 nodes, 21 links, and a symmetric demand of 15,570 passenger trips, is employed as a canonical benchmark for comparison with existing PT network design methods~\citep{liang2025novel,ahern2022approximate}. To further assess the method's applicability under realistic operating conditions, we consider a real-world urban public transport network in a region in Beijing, China, recently analyzed by~\citet{wu2024multi}, which comprises 301 bus stops, 3,758 road sections, and 29 bus lines. Its origin--destination demand matrix is constructed from smart card data collected during peak hours by aggregating trips between boarding station $i$ and alighting station $j$. Key parameters are set as follows: a fixed dwell time of $d=1$ min per stop is assumed following~\citet{chen2022TRSC}. For Mandl's network, the maximum fleet size ($V_{\max}$) is capped at 40, following the service-frequency setting of~\citet{ahern2022approximate} to maintain comparable headways. For the Beijing network, $V_{\max}$ is set to 150 to accommodate a constant 12-minute headway across this large PT system. \rev{zg}{}{We consider coefficients of variation $cv=0,0.05,0.25,0.50,1.00$, where $cv$ is the standard deviation divided by the mean; the Mandl stochastic experiments use 30 realizations of link travel times and prediction errors. The optimization uses predicted times, and designs are evaluated using realized times. A compromise solution is selected from the Pareto front by its Euclidean distance to the component-wise median objective vector. Algorithm parameter values are provided in Suppl.~G.1.}
+Mandl's Swiss network, initially used by~\citet{mandl1980evaluation}, consisting of 15 nodes, 21 links, and a symmetric demand of 15,570 passenger trips, is employed as a canonical benchmark for comparison with existing PT network design methods~\citep{liang2025novel,ahern2022approximate}. To further assess the method's applicability under realistic operating conditions, we consider a real-world urban public transport network in a region in Beijing, China, recently analyzed by~\citet{wu2024multi}, which comprises 301 bus stops, 3,758 road sections, and 29 bus lines. Its origin--destination demand matrix is constructed from smart card data collected during peak hours by aggregating trips between boarding station $i$ and alighting station $j$. Key parameters are set as follows: a fixed dwell time of $d=1$ min per stop is assumed following~\citet{chen2022TRSC}. For Mandl's network, the maximum fleet size ($V_{\max}$) is capped at 40, following the service-frequency setting of~\citet{ahern2022approximate} to maintain comparable headways. For the Beijing network, $V_{\max}$ is set to 150 to accommodate a constant 12-minute headway across this large PT system. \rev{zg}{}{We consider $cv=0,0.05,0.25,0.50,1.00$ (standard deviation divided by mean) and 30 Mandl realizations. A representative Pareto solution is selected; algorithm parameters are in Suppl.~G.1.}
 
 
-\rev{zg}{}{The Mandl experiments compare redesigned networks with static route-frequency solutions and a frequency-only adjustment, in which line structures remain fixed while vehicle allocation changes. The Beijing comparison uses the original network and stop-skipping variants. A one-hour maximum computational time per instance is used for the offline experiments.} \rev{zg}{}{We use three indicators:}
+\rev{zg}{}{Mandl redesigns are compared with static and frequency-only solutions; Beijing redesigns with the original network and stop-skipping. Computation is limited to one hour per instance.} \rev{zg}{}{We use three indicators:}
 \begin{enumerate}[nosep,leftmargin=*]
-\item \rev{zg}{}{20\% Improvement Share (IS$_{20}$): the percentage of OD pairs whose travel time is at least 20\% lower than in the reference network; each OD pair counts equally.}
-\item \rev{zg}{}{Operational Cost Reduction (OCR): the percentage reduction in the operating-cost proxy $\sum_\ell n^\ell 2t^\ell$ relative to the reference network; positive values indicate savings.}
-\item \rev{zg}{}{Line Overlap (LO): the number of shared line-labelled edges divided by the number of distinct line-labelled edges in at least one network, expressed as a percentage: 100\% means no edge change.}
+\item \rev{zg}{}{20\% Improvement Share (IS$_{20}$): percentage of OD pairs with travel time at least 20\% lower than the reference; each pair counts equally.}
+\item \rev{zg}{}{Operational Cost Reduction (OCR): percentage reduction in the vehicle-time cost proxy $\sum_\ell n^\ell 2t^\ell$ relative to the reference.}
+\item \rev{zg}{}{Line Overlap (LO): percentage of shared line-labelled edges in the union of the two networks; 100\% means no edge change.}
 \end{enumerate}
-\rev{zg}{}{For IS$_{20}$ and OCR, the redesigned and reference networks are evaluated under the same realized link times.}
+\rev{zg}{}{IS$_{20}$ and OCR compare networks under the same realized link times.}
 
 
 
@@ -256,7 +259,7 @@ Mandl's Swiss network, initially used by~\citet{mandl1980evaluation}, consisting
 \subsection{\rev{zg}{Main performance results on Mandl's benchmark\quad}{Small-scale validation on Mandl's benchmark}}
 We use predicted travel times $\hat{t}_{ij}$ as input to the optimization problem, and we evaluate the resulting adaptive network against realized link travel times and prediction errors across multiple scenarios. As travel-time variability increases, both 20\% Improvement Share (IS$_{20}$) and Operational Cost Reduction (OCR) rise systematically, reflecting the increasing value of adaptive redesign under highly fluctuating conditions. Across all variability levels and redesign schemes, Line Overlap (LO) remains high, indicating that these improvements result from targeted adjustments rather than wholesale restructuring. \rev{zg}{}{Table~\ref{tab:mandl} compares redesigned networks with the static route-frequency solutions of \citet{ahern2022approximate}.}
 
-The frequency-only baseline $\pazocal{G}_{\text{PT}}^{\text{freq}}$ improves service under variability, but it captures substantially less of the OD-level improvement than full redesign; for example, at $cv=1$, its 20\%-improvement share is roughly half that of our method. \rev{zg}{The results suggest topology change is beneficial when congestion patterns create larger spatial mismatches in the original network.}{} While frequency-only adjustment keeps the line topology fixed, the proposed line redesign can reroute service away from deteriorated links. \rev{zg}{}{In a forecast-error sensitivity analysis, realized times are held fixed while forecasts $\hat t_{ij}(\alpha)=t_{ij}\exp(\alpha\eta_{ij})$ vary with the error scale $\alpha$: zero gives a perfect forecast, one reproduces empirical error, and larger values stress the model. The hypervolume results indicate that the opportunity for redesign grows with variability and that the empirical-error forecast retains nearly all available forecast value, with uncertainty across realizations.}
+The frequency-only baseline $\pazocal{G}_{\text{PT}}^{\text{freq}}$ improves service under variability, but it captures substantially less of the OD-level improvement than full redesign; for example, at $cv=1$, its 20\%-improvement share is roughly half that of our method. \rev{zg}{The results suggest topology change is beneficial when congestion patterns create larger spatial mismatches in the original network.}{} While frequency-only adjustment keeps the line topology fixed, the proposed line redesign can reroute service away from deteriorated links. \rev{zg}{}{Forecast-error sensitivity is reported in Suppl.~I.1.}
 
 
 \begin{figure}[htbp]
@@ -267,7 +270,7 @@ The frequency-only baseline $\pazocal{G}_{\text{PT}}^{\text{freq}}$ improves ser
 \end{figure}
 
 \begin{table}[htbp]
-\caption{Performance comparison of the solutions from~\citet{ahern2022approximate} under different variability levels. \rev{zg}{}{Values are mean $\pm$ standard deviation over 30 realizations; CV is the coefficient of variation.}}\label{tab:mandl}
+\caption{Performance comparison of the solutions from~\citet{ahern2022approximate} under different variability levels. \rev{zg}{}{Values are mean $\pm$ standard deviation over 30 realizations. Results for all line counts are in Suppl.~H.}}\label{tab:mandl}
 \centering\small\setlength{\tabcolsep}{5pt}
 \newcommand{\meanstd}[2]{\ensuremath{#1}\,{\footnotesize\ensuremath{\pm#2}}}
 \begin{tabular}{llrrrrr}\toprule
@@ -286,19 +289,6 @@ Lines & Metric & CV=0 & CV=0.05 & CV=0.25 & CV=0.50 & CV=1.00 \\
 
 \midrule
 
-\multirow{3}{*}{\textbf{6}}
-& IS$_{20}$ (\%)
-& \meanstd{8.96}{4.47} & \meanstd{9.53}{3.60} & \meanstd{16.31}{5.10}
-& \meanstd{23.46}{7.84} & \meanstd{31.50}{10.46} \\
-& OCR (\%)
-& \meanstd{25.94}{4.71} & \meanstd{28.94}{5.40} & \meanstd{32.10}{5.69}
-& \meanstd{36.75}{9.55} & \meanstd{48.90}{10.19} \\
-& LO (\%)
-& \meanstd{79.58}{2.29} & \meanstd{81.20}{2.80} & \meanstd{78.16}{3.94}
-& \meanstd{79.63}{4.47} & \meanstd{79.16}{4.08} \\
-
-\midrule
-
 \multirow{3}{*}{\textbf{8}}
 & IS$_{20}$ (\%)
 & \meanstd{11.52}{2.67} & \meanstd{13.99}{3.90} & \meanstd{18.62}{5.64}
@@ -309,19 +299,6 @@ Lines & Metric & CV=0 & CV=0.05 & CV=0.25 & CV=0.50 & CV=1.00 \\
 & LO (\%)
 & \meanstd{83.58}{4.07} & \meanstd{84.95}{3.07} & \meanstd{82.51}{4.03}
 & \meanstd{80.80}{5.25} & \meanstd{81.14}{4.23} \\
-
-\midrule
-
-\multirow{3}{*}{\textbf{10}}
-& IS$_{20}$ (\%)
-& \meanstd{8.83}{3.15} & \meanstd{9.74}{4.54} & \meanstd{14.27}{5.61}
-& \meanstd{21.46}{8.88} & \meanstd{31.21}{11.56} \\
-& OCR (\%)
-& \meanstd{33.62}{4.18} & \meanstd{34.65}{4.93} & \meanstd{37.23}{5.53}
-& \meanstd{40.62}{8.71} & \meanstd{52.59}{9.17} \\
-& LO (\%)
-& \meanstd{77.57}{3.40} & \meanstd{78.14}{2.76} & \meanstd{76.96}{3.22}
-& \meanstd{78.77}{4.09} & \meanstd{78.34}{3.46} \\
 
 \midrule
 
@@ -346,11 +323,11 @@ Lines & Metric & CV=0 & CV=0.05 & CV=0.25 & CV=0.50 & CV=1.00 \\
 
 
 \begin{samepage}
-Fig.~\ref{fig:frontiers} plots the 2D projection of the Pareto front, highlighting the trade-off between passenger travel-time $Z_1$ (which in the figure is normalized between~$0$ and~$1$) and operator cost in vehicle-hours ($Z_2$). Each point maps to a specific network design, with the lower-left corner representing the ideal direction for both minimization objectives. \rev{zg}{}{The third objective, structural continuity, is not shown in this projection; line overlap for the redesigned networks is reported in Table~\ref{tab:mandl}.}
+Fig.~\ref{fig:frontiers} plots the 2D projection of the Pareto front, highlighting the trade-off between passenger travel-time $Z_1$ (which in the figure is normalized between~$0$ and~$1$) and operator cost in vehicle-hours ($Z_2$). Each point maps to a specific network design, with the lower-left corner representing the ideal direction for both minimization objectives. \rev{zg}{}{Structural continuity is reported in Table~\ref{tab:mandl}.}
 \end{samepage}
 
 
-\rev{zg}{}{Trip-time distributions for one realization, compared with the static designs of \citet{ahern2022approximate} and \citet{vermeir2021exact}, are provided in Suppl.~H.2.}
+\rev{zg}{}{Trip-time distributions are provided in Suppl.~H.2.}
 
 \subsection{Large-scale validation on the Beijing network}
 We compare our method against a \emph{stop-skipping} operational baseline on the Beijing network. For each variability level, links whose predicted travel time exceeds the original by more than \rev{zg}{a preset threshold}{a preset percentage} are classified as degraded. The stop-skipping strategy then removes intermediate stops adjacent to degraded links whenever a direct shortcut is available, while leaving the overall line structure and vehicle allocation unchanged. \rev{zg}{The threshold thus controls aggressiveness: a 25\% threshold skips stops whenever a link's predicted time grows by more than a quarter; a 100\% threshold acts only when it doubles.}{} This baseline represents a simple, local response to travel-time disruption, but structurally constrained: it cannot reroute vehicles or reassign fleet, and skipping stops may disconnect part of the demand at a stop from the network entirely, obliging users to walk to different stops. In addition to the previous metrics, we also compute the following: \textbf{Avg. Travel Time Improvement (Avg.TTI):} percentage reduction in aggregate travel time across all OD pairs $k$ relative to the original network.
@@ -395,17 +372,17 @@ Average travel-time improvement (\%) & 11.40 & 11.60 & 16.99 & 18.44 & 25.78 \\
 \bottomrule\end{tabular}
 \end{table}
 
-\rev{zg}{}{The total fleet remains 150 vehicles, with at most 16 vehicle positions shifted between lines in the selected solutions. At $cv\le 0.5$, most lines retain their original vehicle counts. This stability helps reduce potential disruption to drivers from reassignment between lines (see Suppl.~H.1). Figure~\ref{fig:beijing_networks} illustrates the network changes for a representative realization.}
+\rev{zg}{}{The fleet remains 150, with at most 16 net vehicle shifts between lines. For $cv\le 0.5$, most line counts are unchanged, limiting potential driver reassignment (Suppl.~H.1). Figure~\ref{fig:beijing_networks} shows network changes for a representative realization.}
 
 \begin{figure}[htbp]
 \centering
-\begin{minipage}[t]{.47\textwidth}\centering
+\begin{minipage}[t]{.43\textwidth}\centering
 \includegraphics[width=\linewidth]{fig/beijing_cv0.png}\\(a) $cv=0$
 \end{minipage}\hfill
-\begin{minipage}[t]{.47\textwidth}\centering
+\begin{minipage}[t]{.43\textwidth}\centering
 \includegraphics[width=\linewidth]{fig/beijing_cv1.png}\\(b) $cv=1$
 \end{minipage}
-\caption{\rev{zg}{}{Adapted Beijing networks at nominal and high variability in one realization. Blue links are removed and red links added relative to the original network.}}
+\caption{\rev{zg}{}{Beijing redesigns at $cv=0$ and $cv=1$. Blue: removed links; red: added links.}}
 \label{fig:beijing_networks}
 \end{figure}
 
@@ -427,5 +404,6 @@ A further direction is to
 %relax the uncongested user-optimal assignment (Observation~\ref{obs:det_routing}) by 
 incorporate in-vehicle crowding, for instance through a capacitated or congestion-dependent (frequency-based common-line) passenger assignment; this would let the redesign account for the load it induces on each line and report crowding-aware rather than purely uncongested travel-time gains.
 
+\setlength{\bibitemsep}{0pt}
 \printbibliography
 \end{document}

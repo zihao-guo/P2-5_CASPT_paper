@@ -19,8 +19,15 @@ original_values = re.findall(pattern, original_table)
 conference_values = [mean + r"\pm" + std for mean, std in re.findall(
     r"\\meanstd\{(\d+\.\d+)\}\{(\d+\.\d+)\}", conference_table
 )]
-if len(original_values) != 75 or original_values != conference_values:
-    raise SystemExit("Mandl table differs from archived values or has missing entries")
+expected_conference = original_values[0:15] + original_values[30:45] + original_values[60:75]
+line_counts = re.findall(r"\\multirow\{3\}\{\*\}\{\\textbf\{(\d+)\}\}", conference_table)
+if len(original_values) != 75 or line_counts != ["4", "8", "12"] or conference_values != expected_conference:
+    raise SystemExit("Mandl table differs from archived 4-, 8-, or 12-line values")
+supplement = (root / "suppl/main.tex").read_text()
+supp_mandl_start = supplement.index(r"\multirow{3}{*}{\textbf{4}}")
+supp_mandl_end = supplement.index(r"\bottomrule", supp_mandl_start)
+if re.findall(pattern, supplement[supp_mandl_start:supp_mandl_end]) != original_values:
+    raise SystemExit("Supplementary Mandl table does not contain all archived values")
 
 frequency_start = original.index(r"\multirow{3}{*}{\textbf{Frequency Only}}")
 frequency_end = original.index(r"\bottomrule", frequency_start)
@@ -59,4 +66,4 @@ for row_name, column in [("Line overlap", 0), ("Operational cost reduction", 1),
     expected = [row[column] for row in source_rows[15:20]]
     if not match or numbers(match.group(1)) != expected:
         raise SystemExit(f"Beijing {row_name} row differs from archive")
-print("Verified 75 Mandl entries, 24 frequency comparison entries, and the decimal-valued Beijing entries against the archived source.")
+print("Verified 45 main and 75 supplementary Mandl entries, 24 frequency entries, and the decimal-valued Beijing entries against the archive.")

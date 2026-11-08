@@ -281,7 +281,7 @@ Decision Focus -- \textbf{ND}: from-scratch network design; \textbf{FS}: frequen
 
 %\rev{zg}{Our work introduces a novel methodology for redesigning routes in response to predicted time-varying road conditions through controlled modifications that balance passenger service quality and operational efficiency.}{Our work introduces a methodology for redesigning PT lines for the hour ahead under fluctuating traffic: it uses short-term forecasts, is triggered when needed (i.e., when traffic conditions are highly perturbed causing user- and operator-performance degradation), and balances passenger travel time against operational cost through controlled structural changes.}
 
-\rev{zg}{To our knowledge, this work is the first to systematically study the potential of proactively redesigning PT lines (e.g., for the hour ahead) under fluctuating traffic.}{This work studies the potential of proactively redesigning PT lines (e.g., for the hour ahead) under fluctuating traffic.} Redesign decisions are based on short-term forecasts, are triggered when needed (i.e., when traffic conditions are highly perturbed causing user- and operator-performance degradation), and balance passenger travel time against operational cost through controlled structural changes.
+To our knowledge, this work is the first to systematically study the potential of proactively redesigning PT lines (e.g., for the hour ahead) under fluctuating traffic. Redesign decisions are based on short-term forecasts, are triggered when needed (i.e., when traffic conditions are highly perturbed causing user- and operator-performance degradation), and balance passenger travel time against operational cost through controlled structural changes.
 
 % =============================================
 % 3.Methodology
@@ -293,7 +293,7 @@ Decision Focus -- \textbf{ND}: from-scratch network design; \textbf{FS}: frequen
 \section{Headways, waiting times, and passenger routing}\label{sec:graphMODEL}
 \rev{zg}{}{Here $\pazocal{N}$ is the set of candidate stops and $\pazocal{L}$ the set of lines.} \rev{zg}{where $t_{ij}$ and $\hat t_{ij}$ denote the realized and predicted travel times, respectively.}{Let $t_{ij}$ and $\hat t_{ij}$ denote the realized and predicted travel times on link $(i,j)$, respectively.} Let $e_{ij}^\ell$ indicate whether edge $(i,j)$ is used by line $\ell$. 
 %
-\rev{zg}{The time from one terminal to the other on line~$\ell$ is:}{For an active line $\ell$, the time from one terminal to the other is:} 
+The time from one terminal to the other on line~$\ell$ is:
 
 \begin{align}
 t^\ell
@@ -420,7 +420,7 @@ Constraints~\eqref{st:term_existence}--\eqref{st:term_distinct} synchronize line
 
 
 \section{Additional details of the solution algorithm}\label{sec:alg}
-The optimization model presented \rev{zg}{in Section~3}{in the conference paper} is a mixed-integer formulation featuring discrete network design choices and nonlinear objective terms. While the delay penalty in $Z_1$ is piecewise linear, the fractional Jaccard objective $Z_3$ introduces nonconvexity and global variable coupling. \rev{zg}{Since an exact linearization of this ratio would require auxiliary constraints that severely compromise scalability, we retain the fractional structure.}{We retain the fractional structure rather than introducing an exact linearization.} Given the tri-objective nature of the problem and the nonconvex trade-offs, we adopt an NSGA-III framework (Algorithm~\ref{alg:NSGA3}) to approximate the Pareto front. \rev{zg}{}{Each chromosome represents the lines and their vehicle allocations; evolutionary operators explore discrete redesigns, while reference points help retain diverse objective trade-offs.}
+The optimization model presented \rev{zg}{in Section~3}{in the conference paper} is a mixed-integer formulation featuring discrete network design choices and nonlinear objective terms. While the delay penalty in $Z_1$ is piecewise linear, the fractional Jaccard objective $Z_3$ introduces nonconvexity and global variable coupling. Since an exact linearization of this ratio would require auxiliary constraints that severely compromise scalability, we retain the fractional structure. Given the tri-objective nature of the problem and the nonconvex trade-offs, we adopt an NSGA-III framework (Algorithm~\ref{alg:NSGA3}) to approximate the Pareto front. \rev{zg}{}{Each chromosome represents the lines and their vehicle allocations; evolutionary operators explore discrete redesigns, while reference points help retain diverse objective trade-offs.}
 
 \begin{algorithm}[htbp]
 \small
@@ -610,7 +610,7 @@ Simultaneously, the operational cost $Z_2$ and network dissimilarity $Z_3$ are c
 \rev{zg}{}{For any two redesigns, $J(E^{(k)},E^{(k+n)})\geq J(E^{(k)},E^{(0)})+J(E^{(k+n)},E^{(0)})-1$. This is a conditional bound and does not impose a minimum overlap by itself.}
 
 \paragraph{Proof.}
-\rev{zg}{Setting $A=\pazocal{E}^{(k)}$, $B=\pazocal{E}^{(0)}$, and $C=\pazocal{E}^{(k+n)}$.}{Set $A=\pazocal{E}^{(k)}$, $B=\pazocal{E}^{(0)}$, and $C=\pazocal{E}^{(k+n)}$.}
+Setting $A=\pazocal{E}^{(k)}$, $B=\pazocal{E}^{(0)}$, and $C=\pazocal{E}^{(k+n)}$.
 The Jaccard distance between two sets $X$ and $Y$ is
 \[
 d_J(X,Y)=1-\frac{|X\cap Y|}{|X\cup Y|}=1-J(X,Y).
@@ -633,7 +633,7 @@ J(A,C)\ge J(A,B)+J(B,C)-1.
 \rev{zg}{, gives the desired result.}{which gives the desired result.}\hfill$\blacksquare$
 
 \paragraph{Remark.}
-\rev{zg}{This implies that if two consecutive designs exhibit a similarity of $\geq 90\%$ relative to the original (consistent with our numerical results), the similarity between these two consecutive designs is guaranteed to be at least 80\%.}{For example, if two designs each have similarity of at least 90\% to the original, their mutual similarity is at least 80\%. This conditional example does not assert that every reported design meets the 90\% threshold.}
+This implies that if two consecutive designs exhibit a similarity of $\geq 90\%$ relative to the original\rev{zg}{ (consistent with our numerical results)}{}, the similarity between these two consecutive designs is guaranteed to be at least 80\%.
 %
 % \rev{zg}{}{
 % The crucial point is that, because the structural objective $Z_3$ is measured against the \emph{original} network $\pazocal{E}^{(0)}$ at \emph{every} step rather than against the preceding design, the right-hand side does not depend on the gap $n$. Variability therefore does not accumulate or propagate as the day progresses: the similarity between redesigns one hour apart and the similarity between redesigns twelve hours apart obey the \emph{same} lower bound. While the worst-case guarantee $2J_{\min}-1$ is loose (and vacuous at $J_{\min}=0.5$), the empirically observed similarity to the original network is much higher than $J_{\min}$: Tables~\ref{tab:routeNumberCV} and~\ref{tab:stop_skipping_comparison} report route overlaps of roughly $0.77$--$0.90$, which by the inequality above guarantees $J(\pazocal{E}^{(k)},\pazocal{E}^{(k+n)}) \ge 0.54$--$0.80$ between \emph{any} two redesigns of the day. The hourly monitoring policy (\S\ref{sec:timeframe}), which resets the network to $\pazocal{G}_\text{PT}^\text{org}$ whenever deviations fall within tolerance, provides a further safeguard against long-term drift.}
