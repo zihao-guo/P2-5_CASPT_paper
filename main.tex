@@ -157,7 +157,7 @@ In the Beijing network under high variability, average travel time improves by u
 As illustrated in Fig.~\ref{fig:time_window}, our methodology follows a predict-then-optimize framework that explicitly integrates current observations into prediction. The prediction model is first trained offline on historical data to learn travel times on road links. During operation, it receives current observations from the latest time steps and outputs a short-term prediction of link travel times $\hat t_{ij}$, which are then supplied to the optimization model for potential network redesign. Adaptation is triggered only when forecasted conditions severely deviate from the nominal ones\rev{zg}{; moreover, such adaptation is anticipated (e.g., 1h in advance) to avoid disrupting journeys of current travelers}{.} The resulting network design is then evaluated against realized travel times $t_{ij}$ to assess the actual performance of our adaptive network under realistic conditions. To ensure timely responsiveness, this procedure is repeated periodically, i.e., once per hour. At the start of each time slot, the new network is announced in advance (e.g., 1h), so passengers can plan a route that remains valid for their entire trip and is never changed mid-journey; we assume here that the longest trip is shorter than one time slot (1h).\rev{zg}{ This also keeps the bus routes easier to manage.}{} The experiments in this paper, however, evaluate the redesign step itself: namely, the quality of a single forecast-conditioned redesign under varying travel-time variability.
 
 
-\begin{figure}[htbp]
+\begin{figure}[!t]
 \centering
 \includegraphics[width=.80\textwidth]{fig/framework.png}
 \caption{Proactive Line Redesign Framework.}
