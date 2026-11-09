@@ -184,7 +184,7 @@ Here $\hat t_k$ is the predicted shortest travel time for OD pair $k$ on the red
 The predicted and realized link travel times are related by $\hat t_{ij}=t_{ij}+\epsilon_{ij}$, where $\epsilon_{ij}=\hat t_{ij}-t_{ij}$ is the prediction error. The realized times $t_{ij}$ and errors $\epsilon_{ij}$ are unknown when the decision is made: the optimization uses only $\hat t_{ij}$. In the experiments, the resulting design is then evaluated ex post using the realized times $t_{ij}$.
 
 
-We now report the constraints that, together with the objective~\eqref{eq:objectives}, formalize the upper-level network design problem. Passenger route variables are treated as induced (follower) variables and are discussed separately. $\pazocal{N}$: Set of nodes, indexed by $i,j \in \pazocal{N}$; $\pazocal{E}$: Set of feasible edges in the network; $y^\ell$: 1 if line $\ell$ is activated (operated); $e_{ij}^\ell$: 1 if edge $(i,j)$ is used by line $\ell$ in new network; $a_i^\ell, b_i^\ell$: 1 if node $i$ is the start/end terminal of line $\ell$; $n^\ell$: Number of vehicles on line $\ell$ (fleet size); $u_i^\ell$: Auxiliary variable for subtour elimination (MTZ): it denotes the order in which stop~$i$ appears in line $\ell$. \rev{zg}{}{Variables $y,e,a,b$ are binary, $n,u$ integer, and $\bar n$ is the per-line vehicle upper bound.}
+We now report the constraints that, together with the objective~\eqref{eq:objectives}, formalize the upper-level network design problem. Passenger route variables are treated as induced (follower) variables and are discussed separately. $\pazocal{N}$: Set of nodes, indexed by $i,j \in \pazocal{N}$; $\pazocal{E}$: Set of feasible edges in the network; $y^\ell$: 1 if line $\ell$ is activated (operated); $e_{ij}^\ell$: 1 if edge $(i,j)$ is used by line $\ell$ in new network; $a_i^\ell, b_i^\ell$: 1 if node $i$ is the start/end terminal of line $\ell$; $n^\ell$: Number of vehicles on line $\ell$ (fleet size); $u_i^\ell$: Auxiliary variable for subtour elimination (MTZ): it denotes the order in which stop~$i$ appears in line $\ell$. Variables $y,e,a,b$ are binary, $n,u$ integer, and $\bar n$ is the per-line vehicle upper bound.
 
 \textbf{Line Structure Constraints}
 \begingroup
@@ -243,17 +243,17 @@ During the search, solutions are initialized either from scratch or by perturbin
 In the evaluation phase, the algorithm maps each structurally valid design to the objective space. It constructs a virtual graph $\pazocal G'$ that integrates in-vehicle times and frequency-based waiting times. Dijkstra's algorithm computes the shortest paths on $\pazocal G'$ to yield the predicted OD travel times for $Z_1$. Simultaneously, the operational cost $Z_2$ and the topological shift $Z_3$ (via line-specific Jaccard similarity) are calculated. Finally, NSGA-III environmental selection employs reference points to retain diverse, non-dominated trade-offs among the three objectives~\citep{deb2014nsga3}.
 
 \section{Evaluation method}
-We use Mandl's Swiss network~\citep{mandl1980evaluation} as a benchmark for comparison with existing PT network design methods~\citep{liang2025novel,ahern2022approximate}. It comprises 15 nodes, 21 links, and a symmetric demand of 15,570 passenger trips. For a large-scale real-world evaluation, we use the Beijing network analyzed by~\citet{wu2024multi}, which comprises 301 bus stops, 3,758 road sections, and 29 bus lines. Its origin--destination demand matrix is constructed from smart card data collected during peak hours by aggregating trips between boarding station $i$ and alighting station $j$. Key parameters are set as follows: a fixed dwell time of $d=1$ min per stop is assumed following~\citet{chen2022TRSC}. For Mandl's network, the maximum fleet size ($V_{\max}$) is capped at 40, following the service-frequency setting of~\citet{ahern2022approximate} to maintain comparable headways. For the Beijing network, $V_{\max}$ is set to 150 to accommodate a constant 12-minute headway across this large PT system. \rev{zg}{}{We consider coefficients of variation $cv=0,0.05,0.25,0.50,1.00$.}
+We use Mandl's Swiss network~\citep{mandl1980evaluation} as a benchmark for comparison with existing PT network design methods~\citep{liang2025novel,ahern2022approximate}. It comprises 15 nodes, 21 links, and a symmetric demand of 15,570 passenger trips. For a large-scale real-world evaluation, we use the Beijing network analyzed by~\citet{wu2024multi}, which comprises 301 bus stops, 3,758 road sections, and 29 bus lines. Its origin--destination demand matrix is constructed from smart card data collected during peak hours by aggregating trips between boarding station $i$ and alighting station $j$. Key parameters are set as follows: a fixed dwell time of $d=1$ min per stop is assumed following~\citet{chen2022TRSC}. For Mandl's network, the maximum fleet size ($V_{\max}$) is capped at 40, following the service-frequency setting of~\citet{ahern2022approximate} to maintain comparable headways. For the Beijing network, $V_{\max}$ is set to 150 to accommodate a constant 12-minute headway across this large PT system. We consider coefficients of variation $cv=0,0.05,0.25,0.50,1.00$.
 
 Because historical traffic data are unavailable for Mandl's Swiss network, we use the METR-LA dataset~\citep{li2017diffusion}, which contains traffic speed measurements from 207 sensors in Los Angeles County collected at 5-minute intervals over four months. For the Beijing network, we use the Q-Traffic dataset~\citep{liao2018deep}, which provides traffic speed and road network data for the 6th Ring Road in Beijing, China.
 
 For both networks, we optimize using predicted link travel times $\hat t_{ij}$, since the realized times $t_{ij}$ are unknown at decision time. We then evaluate the resulting designs using realized travel times across multiple scenarios to assess their performance under prediction errors $\epsilon_{ij}$. Our objective is to expose the line-plan generation method to realistic forecast errors rather than to benchmark forecasting models. We therefore train the well-established Diffusion Convolutional Recurrent Neural Network (DCRNN)~\citep{li2017diffusion} separately on each dataset to obtain empirical one-hour-ahead prediction errors for the corresponding network. \rev{zg}{}{Log-relative errors $\eta_{ij}=\log(\hat t_{ij}/t_{ij})$ are sampled from empirical errors, giving forecasts $\hat t_{ij}=t_{ij}\exp(\eta_{ij})$ and additive errors $\epsilon_{ij}=t_{ij}[\exp(\eta_{ij})-1]$.  }\footnote{For training and prediction-error estimation details, see \suppref{F.2}--\suppref{F.3}; algorithm parameters are provided in \suppref{G.1}.} We model realized link travel times using log-normal distributions. Because occasional severe delays can skew the mean~\citep{guessous2014estimating}, we align the median, rather than the mean, with each link's nominal travel time. This choice keeps typical conditions anchored at the nominal value while the right tail captures rare extreme delays.
 
-\rev{zg}{}{We benchmark the Mandl redesigns against static and frequency-only baselines, and the Beijing redesigns against the original network and a stop-skipping strategy. Computation time is capped at one hour per instance. We evaluate performance using three key indicators:}
+We benchmark the Mandl redesigns against static and frequency-only baselines, and the Beijing redesigns against the original network and a stop-skipping strategy. Computation time is capped at one hour per instance. We evaluate performance using three key indicators:
 \begin{enumerate}[nosep,leftmargin=*]
-\item \rev{zg}{}{20\% Improvement Share (IS$_{20}$): percentage of OD pairs with travel time at least 20\% lower than the reference; each pair counts equally.}
-\item \rev{zg}{}{Operational Cost Reduction (OCR): percentage reduction in total vehicle operating time relative to the reference.}
-\item \rev{zg}{}{Line Overlap (LO): the percentage of shared route segments across both networks, where 100\% indicates an unchanged network structure.}
+\item \textbf{20\% Improvement Share (IS$_{20}$)}: percentage of OD pairs with travel time at least 20\% lower than the reference; each pair counts equally.
+\item \textbf{Operational Cost Reduction (OCR)}: percentage reduction in total vehicle operating time relative to the reference.
+\item \textbf{Line Overlap (LO)}: the percentage of shared route segments across both networks, where 100\% indicates an unchanged network structure.
 \end{enumerate}
 
 
@@ -270,12 +270,12 @@ While Table~\ref{tab:mandl} aggregates overall performance and structural stabil
 \begin{figure}[htbp]
 \centering
 \includegraphics[width=\textwidth]{fig/mandl_frontiers.png}
-\caption{\rev{zg}{}{Travel-time, cost ($Z_1$, $Z_2$) Pareto fronts for the 4-line Mandl instance under four travel-time variability levels. Circles represent redesigns; crosses represent frequency-only solutions.}}
+\caption{Travel-time, cost ($Z_1$, $Z_2$) Pareto fronts for the 4-line Mandl instance under four travel-time variability levels. Circles represent redesigns; crosses represent frequency-only solutions.}
 \label{fig:frontiers}
 \end{figure}
 
 \begin{table}[htbp]
-\caption{Performance of redesigned networks compared with the static network from~\citet{ahern2022approximate} under different variability levels. \rev{zg}{}{Values are mean $\pm$ standard deviation over 30 realizations.}}\label{tab:mandl}
+\caption{Performance of redesigned networks compared with the static network from~\citet{ahern2022approximate} under different variability levels. Values are mean $\pm$ standard deviation over 30 realizations.}\label{tab:mandl}
 \centering\small\setlength{\tabcolsep}{5pt}
 \newcommand{\meanstd}[2]{\ensuremath{#1}\,{\footnotesize\ensuremath{\pm#2}}}
 \begin{tabular}{llrrrrr}\toprule
@@ -333,11 +333,11 @@ Lines & Metric & CV=0 & CV=0.05 & CV=0.25 & CV=0.50 & CV=1.00 \\
 
 
 \subsection{Large-scale validation on the Beijing network}
-For each variability level, we report a central compromise solution from the Pareto set, balancing passenger travel time, operational cost, and network changes. We compare our method against a \emph{stop-skipping} operational baseline on the Beijing network. For each variability level, links whose predicted travel time exceeds the original by more than a preset percentage are classified as degraded. The stop-skipping strategy then removes intermediate stops adjacent to degraded links whenever a direct shortcut is available, while leaving the overall line structure and vehicle allocation unchanged.  This baseline adjusts service locally without rerouting vehicles or reallocating the fleet, and may leave some OD pairs disconnected. In addition to the previous metrics, we also compute the following: \textbf{Avg. Travel Time Improvement (Avg.TTI):} percentage reduction in aggregate travel time across all OD pairs $k$ relative to the original network.
-
-
-
-
+For each variability level, we report a central compromise solution from the Pareto set, balancing passenger travel time, operational cost, and network changes. We compare our method against a \emph{stop-skipping} operational baseline on the Beijing network. 
+%
+For each variability level, links whose predicted travel time exceeds the original by more than a preset percentage are classified as degraded. The stop-skipping strategy then removes intermediate stops adjacent to degraded links whenever a direct shortcut is available, while leaving the overall line structure and vehicle allocation unchanged.  
+%
+This baseline adjusts service locally without rerouting vehicles or reallocating the fleet, and may leave some OD pairs disconnected. In addition to the previous metrics, we also compute the following: \textbf{Avg. Travel Time Improvement (Avg.TTI):} percentage reduction in aggregate travel time across all OD pairs $k$ relative to the original network.
 
 
 \begin{table}[htbp]
@@ -352,13 +352,10 @@ Average travel-time improvement (\%) & 11.40 & 11.60 & 16.99 & 18.44 & 25.78 \\
 \bottomrule\end{tabular}
 \end{table}
 
-
-The results in Table~\ref{tab:beijing_cvs} show that the original network exhibits inherent inefficiencies: our optimization yields an 11.40\% average travel-time improvement even at $cv=0$. This initial gain reflects a static re-optimization of the incumbent network under nominal conditions rather than prediction-driven adaptation. As variability increases, the benefits grow accordingly; Figure~\ref{fig:beijing_networks} illustrates the corresponding line changes for representative redesigns at $cv=0$ and $cv=1$. Table~\ref{tab:beijing} exposes a fundamental tension in stop-skipping: operational benefit comes at the cost of connectivity. At $cv=1$, all stop-skipping thresholds leave a substantial share of OD pairs disconnected, while our redesign preserves full connectivity. 
-
-
-
-
-
+The results in Table~\ref{tab:beijing_cvs} show that the original network, shaped by complex practical constraints, is naturally suboptimal with respect to our specific evaluation metrics: our optimization yields an 11.40\% average travel-time improvement even at $cv=0$. This initial gain reflects a static re-optimization of the incumbent network under nominal conditions rather than prediction-driven adaptation. As variability increases, the benefits grow accordingly; Figure~\ref{fig:beijing_networks} illustrates the corresponding line changes for representative redesigns at $cv=0$ and $cv=1$. 
+%
+Table~\ref{tab:beijing} exposes the fundamental flaw of stop-skipping at high variability ($cv=1$): operational benefits come at the severe cost of disconnecting 28\% to 39\% of OD pairs. In stark contrast, our redesign preserves full connectivity (0\% unreachable ODs) while outperforming stop-skipping in both cost reduction (22.56\% vs.\ $\sim$13\%) and travel time savings (25.78\% vs.\ $\le$19.71\%). 
+\rev{zg}{}{Beyond these topological advantages, the redesign efficiently manages the fixed fleet of 150 vehicles. Most lines retain their original vehicle counts at $cv \le 0.5$, which minimizes the need for unmodeled crew reassignments.}\footnote{Additional results on the Beijing stop-skipping comparison and individual line vehicle allocations are provided in \suppref{H} and \suppref{H.1}, respectively.}
 
 \begin{table}[htbp]
 \caption{Beijing results at $cv=1$ compared with the original network. Travel-time improvement for stop-skipping is calculated on reachable OD pairs.}\label{tab:beijing}
@@ -375,14 +372,14 @@ Redesign & 85.42 & 22.56 & 25.78 & 0 \\
 \bottomrule\end{tabular}
 \end{table}
 
-The redesign also keeps the total fleet at 150 vehicles. For $cv\le 0.5$, most lines retain their vehicle counts, suggesting limited need for vehicle reallocation and potentially for driver reassignment; the latter also depends on crew scheduling, which is not modeled. At $cv=1$, the selected solution shifts a net total of 16 vehicles between lines.\footnote{Additional results on the Beijing stop-skipping comparison and line-by-line vehicle allocation are provided in \suppref{H} and \suppref{H.1}, respectively.}
+
 
 \begin{figure}[htbp]
 \centering
-\begin{minipage}[t]{.35\textwidth}\centering
+\begin{minipage}[t]{.45\textwidth}\centering
 \includegraphics[width=\linewidth]{fig/beijing_cv0.png}\\(a) $cv=0$
 \end{minipage}\hfill
-\begin{minipage}[t]{.35\textwidth}\centering
+\begin{minipage}[t]{.45\textwidth}\centering
 \includegraphics[width=\linewidth]{fig/beijing_cv1.png}\\(b) $cv=1$
 \end{minipage}
 \caption{Beijing redesigns at $cv=0$ and $cv=1$. Blue: removed links; red: added links.}
@@ -399,7 +396,7 @@ Experiments on Mandl's network and a real-world Beijing network demonstrate effe
 %
 Results indicate that, faced with non-negligible link travel-time variability, the proposed approach \rev{zg}{yields substantial OD-level trip travel-time reductions, while achieving operational cost savings and preserving}{yields OD-level trip travel-time reductions, while achieving operational cost savings over the selected baselines and scenarios considered, and preserving} a high degree of structural similarity with the baseline network.
 %
-\rev{zg}{These findings highlight the importance of moving beyond static network design toward continuous, adaptive redesign in dynamic operating environments.}{Overall, the gains grow with travel-time variability and come with high line overlap, indicating that the benefit does not rely on large structural change.}
+These findings highlight the importance of moving beyond static network design toward continuous, adaptive redesign in dynamic operating environments.
 %
 % \rev{zg}{A natural extension is to enrich the forecast-error model with explicit spatial and temporal correlation, allowing network-wide common shocks to be represented.
 % A further direction is to
