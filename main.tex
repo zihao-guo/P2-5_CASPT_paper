@@ -253,7 +253,7 @@ Mandl's Swiss network, initially used by~\citet{mandl1980evaluation}, consisting
 
 \section{Numerical results}
 \subsection{\rev{zg}{Main performance results on Mandl's benchmark\quad}{Small-scale validation on Mandl's benchmark}}
-We use predicted travel times $\hat{t}_{ij}$ as input to the optimization problem, and we evaluate the resulting adaptive network against realized link travel times and prediction errors across multiple scenarios. As travel-time variability increases, both 20\% Improvement Share (IS$_{20}$) and Operational Cost Reduction (OCR) rise systematically, reflecting the increasing value of adaptive redesign under highly fluctuating conditions. Across all variability levels and redesign schemes, Line Overlap (LO) remains high, indicating that these improvements result from targeted adjustments rather than wholesale restructuring. \rev{zg}{}{Table~\ref{tab:mandl} compares redesigned networks with the static route-frequency solutions of \citet{ahern2022approximate}.}
+We use predicted travel times $\hat{t}_{ij}$ as input to the optimization problem, and we evaluate the resulting adaptive network against realized link travel times and prediction errors across multiple scenarios. Table~\ref{tab:mandl} compares redesigned networks with the static route-frequency solutions of \citet{ahern2022approximate}. As shown in the table, 20\% Improvement Share (IS$_{20}$) and Operational Cost Reduction (OCR) increase with travel-time variability, reflecting the increasing value of adaptive redesign under highly fluctuating conditions. Line Overlap (LO) remains high: even at $cv=1$, its mean ranges from 77.26\% to 81.14\% across the three line counts, indicating that the redesigns retain much of the original line structure.
 
 The frequency-only baseline $\pazocal{G}_{\text{PT}}^{\text{freq}}$ improves service under variability, but it captures substantially less of the OD-level improvement than full redesign; for example, at $cv=1$, its 20\%-improvement share is roughly half that of our method. \rev{zg}{The results suggest topology change is beneficial when congestion patterns create larger spatial mismatches in the original network.}{} While frequency-only adjustment keeps the line topology fixed, the proposed line redesign can reroute service away from deteriorated links. \rev{zg}{}{Forecast-error sensitivity is reported in \suppref{I.1}.}
 
@@ -319,7 +319,7 @@ Lines & Metric & CV=0 & CV=0.05 & CV=0.25 & CV=0.50 & CV=1.00 \\
 
 
 \begin{samepage}
-Fig.~\ref{fig:frontiers} plots the 2D projection of the Pareto front, highlighting the trade-off between passenger travel-time $Z_1$ (which in the figure is normalized between~$0$ and~$1$) and operator cost in vehicle-hours ($Z_2$). Each point maps to a specific network design, with the lower-left corner representing the ideal direction for both minimization objectives. \rev{zg}{}{As shown in Table~\ref{tab:mandl}, even at $cv=1$, mean line overlap remains between 77.26\% and 81.14\% across the three network sizes, indicating that the redesign retains much of the original line structure.}
+Fig.~\ref{fig:frontiers} plots the 2D projection of the Pareto front, highlighting the trade-off between passenger travel-time $Z_1$ (which in the figure is normalized between~$0$ and~$1$) and operator cost in vehicle-hours ($Z_2$). Each point maps to a specific network design, with the lower-left corner representing the ideal direction for both minimization objectives.
 \end{samepage}
 
 
