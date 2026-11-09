@@ -401,7 +401,7 @@ Given a fixed PT network design, including line structures $(e_{ij}^\ell,a_i^\el
 % MTZ constraint applied to both potential directions of an undirected edge
 & u_i^\ell - u_j^\ell + 1
 \le |\pazocal{N}| \big(1-e_{ij}^\ell\big)
-&& \forall i,j\in\pazocal{N}:\ \{i,j\}\in\pazocal{E},\ \forall \ell \in \pazocal{L} \label{st:mtz_fwd}
+&& \forall \{i,j\} \in \pazocal{E},\ \forall \ell \in \pazocal{L} \label{st:mtz_fwd}
 \\
 % MTZ Bounds
 & 1 \le u_i^\ell \le |\pazocal{N}|
@@ -416,7 +416,7 @@ Given a fixed PT network design, including line structures $(e_{ij}^\ell,a_i^\el
 
 Constraints~\eqref{st:term_existence}--\eqref{st:term_distinct} synchronize line activation with terminal selection, mandating that every active line connects exactly one initial terminal to one final terminal, thereby preventing zero-length loops. Constraint~\eqref{st:edge_activation} ensures that an inactive line has no links and an active line uses at most one direction of each physical link in its path representation. Vehicles traverse the physical line in both directions. Flow conservation~\eqref{st:flow_balance} and degree constraints~\eqref{st:simple_path} restrict the line to a non-branching path. The ordering constraints~\eqref{st:mtz_fwd}--\eqref{st:mtz_bound} eliminate disconnected subtours. Resource constraints~\eqref{st:veh_bounds}--\eqref{st:veh_budget} assign vehicles only to active lines and enforce the global fleet budget.
 
-\rev{zg}{}{The ordering inequality applies to both candidate arc directions for each physical link. The physical edge indicator used in the line-labelled Jaccard objective is $x_{ij}^\ell=e_{ij}^\ell+e_{ji}^\ell$, so reversing the path representation alone does not change overlap. The conference paper defines the three objectives and the induced shortest-path passenger evaluation.}
+\rev{zg}{}{The physical edge indicator used in the line-labelled Jaccard objective is $x_{ij}^\ell=e_{ij}^\ell+e_{ji}^\ell$, so reversing the path representation alone does not change overlap. The conference paper defines the three objectives and the induced shortest-path passenger evaluation.}
 
 
 \section{Additional details of the solution algorithm}\label{sec:alg}
