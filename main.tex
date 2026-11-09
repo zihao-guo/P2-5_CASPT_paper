@@ -107,6 +107,10 @@
   \usepackage[disable]{todonotes}
 \fi
 \usepackage{titlesec}
+\setlength{\textfloatsep}{8pt plus 2pt minus 2pt}
+\setlength{\floatsep}{8pt plus 2pt minus 2pt}
+\titlespacing*{\section}{0pt}{1.5ex plus .3ex minus .2ex}{.7ex plus .2ex}
+\titlespacing*{\subsection}{0pt}{1.2ex plus .2ex minus .2ex}{.5ex plus .1ex}
 \titleformat{\section}{\normalfont\fontsize{14}{17}\bfseries}{\thesection}{1em}{}
 \titleformat{\subsection}{\normalfont\fontsize{12}{14}\bfseries}{\thesubsection}{1em}{}
 \titleformat{\subsubsection}{\normalfont\fontsize{11}{13}\bfseries}{\thesubsubsection}{1em}{}
@@ -329,7 +333,7 @@ Lines & Metric & CV=0 & CV=0.05 & CV=0.25 & CV=0.50 & CV=1.00 \\
 
 
 \subsection{Large-scale validation on the Beijing network}
-For each variability level, we report a central compromise solution from the Pareto set, balancing passenger travel time, operational cost, and network changes. We compare our method against a \emph{stop-skipping} operational baseline on the Beijing network. For each variability level, links whose predicted travel time exceeds the original by more than \rev{zg}{a preset threshold}{a preset percentage} are classified as degraded. The stop-skipping strategy then removes intermediate stops adjacent to degraded links whenever a direct shortcut is available, while leaving the overall line structure and vehicle allocation unchanged. \rev{zg}{The threshold thus controls aggressiveness: a 25\% threshold skips stops whenever a link's predicted time grows by more than a quarter; a 100\% threshold acts only when it doubles.}{} This baseline represents a simple, local response to travel-time disruption, but structurally constrained: it cannot reroute vehicles or reassign fleet, and skipping stops may disconnect part of the demand at a stop from the network entirely, obliging users to walk to different stops. In addition to the previous metrics, we also compute the following: \textbf{Avg. Travel Time Improvement (Avg.TTI):} percentage reduction in aggregate travel time across all OD pairs $k$ relative to the original network.
+For each variability level, we report a central compromise solution from the Pareto set, balancing passenger travel time, operational cost, and network changes. We compare our method against a \emph{stop-skipping} operational baseline on the Beijing network. For each variability level, links whose predicted travel time exceeds the original by more than \rev{zg}{a preset threshold}{a preset percentage} are classified as degraded. The stop-skipping strategy then removes intermediate stops adjacent to degraded links whenever a direct shortcut is available, while leaving the overall line structure and vehicle allocation unchanged. \rev{zg}{The threshold thus controls aggressiveness: a 25\% threshold skips stops whenever a link's predicted time grows by more than a quarter; a 100\% threshold acts only when it doubles.}{} \rev{zg}{This baseline represents a simple, local response to travel-time disruption, but structurally constrained: it cannot reroute vehicles or reassign fleet, and skipping stops may disconnect part of the demand at a stop from the network entirely, obliging users to walk to different stops.}{This baseline adjusts service locally without rerouting vehicles or reallocating the fleet, and may leave some OD pairs disconnected.} In addition to the previous metrics, we also compute the following: \textbf{Avg. Travel Time Improvement (Avg.TTI):} percentage reduction in aggregate travel time across all OD pairs $k$ relative to the original network.
 
 
 
@@ -349,7 +353,7 @@ Average travel-time improvement (\%) & 11.40 & 11.60 & 16.99 & 18.44 & 25.78 \\
 \end{table}
 
 \begin{samepage}
-The results in Table~\ref{tab:beijing_cvs} show that the original network exhibits some inefficiencies: the solution of our optimization yields an 11.40\% \rev{zg}{Avg.\ TTI even at $cv = 0$}{average travel-time improvement even at $cv=0$}. \rev{zg}{This gain at $cv=0$ does not stem from prediction-driven adaptation: with no travel-time variability, there is nothing to forecast or to adapt to.}{This reflects static re-optimisation of the incumbent network rather than prediction-driven adaptation.} The benefit grows with variability\rev{zg}{: at higher $cv$, the algorithm produces designs increasingly different from the static original, achieving both travel-time improvements and line shortening, which in turn lowers operational cost}{.} Figure~\ref{fig:beijing_networks} illustrates the corresponding line changes for representative redesigns at $cv=0$ and $cv=1$. Table~\ref{tab:beijing} exposes a basic tension in stop-skipping: operational benefit comes at the cost of connectivity. \rev{zg}{Aggressive thresholds improve travel time on the reachable network but disconnect a large share of OD pairs as variability grows, whereas conservative thresholds keep connectivity yet act too rarely to help and still lose connectivity at high variability.}{Aggressive thresholds improve travel time on the reachable network but disconnect a large share of OD pairs as variability grows.} \rev{zg}{Because no stops are removed, all OD pairs stay reachable and the reported TTI covers the full demand, making the gains comparable across variability levels without the connectivity issues of every stop-skipping variant.}{Because no stops are removed, all OD pairs stay reachable under the redesign.} \rev{zg}{}{Travel-time improvements for stop-skipping and redesign are calculated on different reachable OD sets and should therefore be interpreted alongside the connectivity figures.}
+The results in Table~\ref{tab:beijing_cvs} show that the original network exhibits some inefficiencies: the solution of our optimization yields an 11.40\% \rev{zg}{Avg.\ TTI even at $cv = 0$}{average travel-time improvement even at $cv=0$}. \rev{zg}{This gain at $cv=0$ does not stem from prediction-driven adaptation: with no travel-time variability, there is nothing to forecast or to adapt to.}{At $cv=0$, this gain reflects static re-optimisation of the incumbent network under nominal conditions rather than prediction-driven adaptation.} The benefit grows with variability\rev{zg}{: at higher $cv$, the algorithm produces designs increasingly different from the static original, achieving both travel-time improvements and line shortening, which in turn lowers operational cost}{.} Figure~\ref{fig:beijing_networks} illustrates the corresponding line changes for representative redesigns at $cv=0$ and $cv=1$. Table~\ref{tab:beijing} exposes a basic tension in stop-skipping: operational benefit comes at the cost of connectivity. \rev{zg}{Aggressive thresholds improve travel time on the reachable network but disconnect a large share of OD pairs as variability grows, whereas conservative thresholds keep connectivity yet act too rarely to help and still lose connectivity at high variability.}{At $cv=1$, all stop-skipping thresholds leave a substantial share of OD pairs disconnected, while redesign preserves full connectivity.} \rev{zg}{Because no stops are removed, all OD pairs stay reachable and the reported TTI covers the full demand, making the gains comparable across variability levels without the connectivity issues of every stop-skipping variant.}{} \rev{zg}{}{Travel-time improvements for stop-skipping and redesign are calculated on different reachable OD sets and should therefore be interpreted alongside the connectivity figures.}
 \end{samepage}
 
 
@@ -375,10 +379,10 @@ Redesign & 85.42 & 22.56 & 25.78 & \rev{zg}{--}{0} \\
 
 \begin{figure}[htbp]
 \centering
-\begin{minipage}[t]{.43\textwidth}\centering
+\begin{minipage}[t]{.35\textwidth}\centering
 \includegraphics[width=\linewidth]{fig/beijing_cv0.png}\\(a) $cv=0$
 \end{minipage}\hfill
-\begin{minipage}[t]{.43\textwidth}\centering
+\begin{minipage}[t]{.35\textwidth}\centering
 \includegraphics[width=\linewidth]{fig/beijing_cv1.png}\\(b) $cv=1$
 \end{minipage}
 \caption{\rev{zg}{}{Beijing redesigns at $cv=0$ and $cv=1$. Blue: removed links; red: added links.}}
@@ -403,5 +407,5 @@ A further direction is to
 incorporate in-vehicle crowding, for instance through a capacitated or congestion-dependent (frequency-based common-line) passenger assignment; this would let the redesign account for the load it induces on each line and report crowding-aware rather than purely uncongested travel-time gains.
 
 \setlength{\bibitemsep}{0pt}
-\printbibliography
+\begingroup\small\printbibliography\endgroup
 \end{document}
