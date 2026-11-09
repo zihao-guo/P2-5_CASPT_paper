@@ -255,7 +255,7 @@ Mandl's Swiss network, initially used by~\citet{mandl1980evaluation}, consisting
 \subsection{\rev{zg}{Main performance results on Mandl's benchmark\quad}{Small-scale validation on Mandl's benchmark}}
 We use predicted travel times $\hat{t}_{ij}$ as input to the optimization problem, and we evaluate the resulting adaptive network against realized link travel times and prediction errors across multiple scenarios. Table~\ref{tab:mandl} compares redesigned networks with the static route-frequency solutions of \citet{ahern2022approximate}. As shown in the table, 20\% Improvement Share (IS$_{20}$) and Operational Cost Reduction (OCR) increase with travel-time variability, reflecting the increasing value of adaptive redesign under highly fluctuating conditions. Line Overlap (LO) remains high: even at $cv=1$, its mean ranges from 77.26\% to 81.14\% across the three line counts, indicating that the redesigns retain much of the original line structure.
 
-The frequency-only baseline $\pazocal{G}_{\text{PT}}^{\text{freq}}$ improves service under variability, but it captures substantially less of the OD-level improvement than full redesign; for example, at $cv=1$, its 20\%-improvement share is roughly half that of our method. \rev{zg}{The results suggest topology change is beneficial when congestion patterns create larger spatial mismatches in the original network.}{} While frequency-only adjustment keeps the line topology fixed, the proposed line redesign can reroute service away from deteriorated links. \rev{zg}{}{Forecast-error sensitivity is reported in \suppref{I.1}.}
+Figure~\ref{fig:frontiers} compares the passenger travel-time objective $Z_1$ and operational cost $Z_2$ for the 4-line Mandl instance. Across the four variability levels, the redesign solutions generally achieve lower operational costs than frequency-only solutions over comparable ranges of passenger cost. The fronts also show the trade-off between the two objectives: reducing operational cost can require accepting higher passenger cost. Forecast-error sensitivity is reported in \suppref{I.1}.
 
 
 \begin{figure}[htbp]
@@ -318,9 +318,7 @@ Lines & Metric & CV=0 & CV=0.05 & CV=0.25 & CV=0.50 & CV=1.00 \\
 
 
 
-\begin{samepage}
-Fig.~\ref{fig:frontiers} plots the 2D projection of the Pareto front, highlighting the trade-off between passenger travel-time $Z_1$ (which in the figure is normalized between~$0$ and~$1$) and operator cost in vehicle-hours ($Z_2$). Each point maps to a specific network design, with the lower-left corner representing the ideal direction for both minimization objectives.
-\end{samepage}
+
 
 
 \rev{zg}{}{Trip-time distributions are provided in \suppref{H.2}.}
