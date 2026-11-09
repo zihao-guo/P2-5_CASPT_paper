@@ -373,7 +373,7 @@ Given a fixed PT network design, including line structures $(e_{ij}^\ell,a_i^\el
 \caption{Proactive Line Redesign Framework.}\label{fig:supp_framework}
 \end{figure}
 
-\rev{zg}{}{The conference paper presents a compact version of the design constraints. The following formulation retains the more detailed line-structure constraints from the original manuscript. Let $\pazocal N$ be the set of stops, $\pazocal E$ the candidate physical links, and $\pazocal L$ the lines; $\overrightarrow{\pazocal E}$ contains both directed arcs for each physical link. Binary variables $y^\ell$, $a_i^\ell$, $b_i^\ell$, and $e_{ij}^\ell$ encode line activation, terminals, and directed path arcs. The integer $n^\ell$ is the number of vehicles on line $\ell$, $\bar n$ is its upper bound, and $V_{\max}$ is the total fleet budget. The order variable $u_i^\ell$ eliminates subtours.}
+\rev{zg}{}{The conference paper presents a compact version of the design constraints. The following formulation retains the more detailed line-structure constraints from the original manuscript. Let $\pazocal N$ be the set of stops, $\pazocal E$ the candidate physical links, and $\pazocal L$ the lines. Binary variables $y^\ell$, $a_i^\ell$, $b_i^\ell$, and $e_{ij}^\ell$ encode line activation, terminals, and directed path arcs. The integer $n^\ell$ is the number of vehicles on line $\ell$, $\bar n$ is its upper bound, and $V_{\max}$ is the total fleet budget. The order variable $u_i^\ell$ eliminates subtours.}
 
 \begin{align}
 %-------------------- 1. Activation & Terminal Control --------------------
@@ -401,7 +401,7 @@ Given a fixed PT network design, including line structures $(e_{ij}^\ell,a_i^\el
 % MTZ constraint applied to both potential directions of an undirected edge
 & u_i^\ell - u_j^\ell + 1
 \le |\pazocal{N}| \big(1-e_{ij}^\ell\big)
-&& \rev{zg}{\forall \{i,j\} \in \pazocal{E}}{\forall (i,j) \in \overrightarrow{\pazocal E}},\ \forall \ell \in \pazocal{L} \label{st:mtz_fwd}
+&& \forall i,j\in\pazocal{N}:\ \{i,j\}\in\pazocal{E},\ \forall \ell \in \pazocal{L} \label{st:mtz_fwd}
 \\
 % MTZ Bounds
 & 1 \le u_i^\ell \le |\pazocal{N}|
