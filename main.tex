@@ -255,7 +255,7 @@ Mandl's Swiss network, initially used by~\citet{mandl1980evaluation}, consisting
 \subsection{\rev{zg}{Main performance results on Mandl's benchmark\quad}{Small-scale validation on Mandl's benchmark}}
 We use predicted travel times $\hat{t}_{ij}$ as input to the optimization problem, and we evaluate the resulting adaptive network against realized link travel times and prediction errors across multiple scenarios. Table~\ref{tab:mandl} compares redesigned networks with the static route-frequency solutions of \citet{ahern2022approximate}. As shown in the table, IS$_{20}$ and OCR increase with travel-time variability, reflecting the increasing value of adaptive redesign under highly fluctuating conditions. LO remains high: even at $cv=1$, its mean ranges from 77.26\% to 81.14\% across the three line counts, indicating that the redesigns retain much of the original line structure.
 
-Figure~\ref{fig:frontiers} compares the passenger travel-time objective $Z_1$ and operational cost $Z_2$ for the 4-line Mandl instance. Across the four variability levels, the redesign solutions generally achieve lower operational costs than frequency-only solutions over comparable ranges of passenger cost. The fronts also show the trade-off between the two objectives: reducing operational cost can require accepting higher passenger cost. Forecast-error sensitivity is reported in \suppref{I.1}.
+Figure~\ref{fig:frontiers} compares the passenger travel-time objective $Z_1$ and operational cost $Z_2$ for the 4-line Mandl instance. Across the four variability levels, the redesign solutions generally achieve lower operational costs than frequency-only solutions over comparable ranges of passenger cost. The fronts also show the trade-off between the two objectives: reducing operational cost can require accepting higher passenger cost.\footnote{Additional results on trip-time distributions and forecast-error sensitivity are provided in \suppref{H.2} and \suppref{I.1}, respectively.}
 
 
 \begin{figure}[htbp]
@@ -321,7 +321,7 @@ Lines & Metric & CV=0 & CV=0.05 & CV=0.25 & CV=0.50 & CV=1.00 \\
 
 
 
-\rev{zg}{}{Trip-time distributions are provided in \suppref{H.2}.}
+
 
 \subsection{Large-scale validation on the Beijing network}
 For each variability level, we report a central compromise solution from the Pareto set, balancing passenger travel time, operational cost, and network changes. We compare our method against a \emph{stop-skipping} operational baseline on the Beijing network. For each variability level, links whose predicted travel time exceeds the original by more than \rev{zg}{a preset threshold}{a preset percentage} are classified as degraded. The stop-skipping strategy then removes intermediate stops adjacent to degraded links whenever a direct shortcut is available, while leaving the overall line structure and vehicle allocation unchanged. \rev{zg}{The threshold thus controls aggressiveness: a 25\% threshold skips stops whenever a link's predicted time grows by more than a quarter; a 100\% threshold acts only when it doubles.}{} This baseline represents a simple, local response to travel-time disruption, but structurally constrained: it cannot reroute vehicles or reassign fleet, and skipping stops may disconnect part of the demand at a stop from the network entirely, obliging users to walk to different stops. In addition to the previous metrics, we also compute the following: \textbf{Avg. Travel Time Improvement (Avg.TTI):} percentage reduction in aggregate travel time across all OD pairs $k$ relative to the original network.
