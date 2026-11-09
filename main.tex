@@ -332,17 +332,14 @@ For each variability level, we report a central compromise solution from the Par
 
 
 \begin{table}[htbp]
-\caption{\rev{zg}{}{Beijing results at $cv=1$ compared with the original network. Travel-time improvement for stop-skipping is calculated on reachable OD pairs.}}\label{tab:beijing}
+\caption{\rev{zg}{}{Redesign results on the Beijing network across traffic variability levels, compared with the original network.}}\label{tab:beijing_cvs}
 \centering
-\setlength{\tabcolsep}{3pt}
-\begin{tabular}{lrrrr}\toprule
-Method & Overlap & Cost reduction & Travel-time improvement & Unreachable OD \\
- & (\%) & (\%) & (\%) & (\%) \\
+\begin{tabular}{lrrrrr}\toprule
+Coefficient of variation & 0 & 0.05 & 0.25 & 0.50 & 1.00 \\
 \midrule
-Stop-skipping, 25\% threshold & 42.18 & 12.71 & 14.71 & 38.93 \\
-Stop-skipping, 50\% threshold & 47.83 & 12.39 & 19.71 & 35.28 \\
-Stop-skipping, 100\% threshold & 55.88 & 13.49 & 15.11 & 28.05 \\
-Redesign & 85.42 & 22.56 & 25.78 & \rev{zg}{--}{0} \\
+Line overlap (\%) & 90.08 & 87.34 & 86.51 & 86.39 & 85.42 \\
+Operational cost reduction (\%) & 0.50 & 1.53 & 3.85 & 12.02 & 22.56 \\
+Average travel-time improvement (\%) & 11.40 & 11.60 & 16.99 & 18.44 & 25.78 \\
 \bottomrule\end{tabular}
 \end{table}
 
@@ -355,14 +352,17 @@ The results in Table~\ref{tab:beijing_cvs} show that the original network exhibi
 
 
 \begin{table}[htbp]
-\caption{\rev{zg}{}{Redesign results on the Beijing network across traffic variability levels, compared with the original network.}}\label{tab:beijing_cvs}
+\caption{\rev{zg}{}{Beijing results at $cv=1$ compared with the original network. Travel-time improvement for stop-skipping is calculated on reachable OD pairs.}}\label{tab:beijing}
 \centering
-\begin{tabular}{lrrrrr}\toprule
-Coefficient of variation & 0 & 0.05 & 0.25 & 0.50 & 1.00 \\
+\setlength{\tabcolsep}{3pt}
+\begin{tabular}{lrrrr}\toprule
+Method & Overlap & Cost reduction & Travel-time improvement & Unreachable OD \\
+ & (\%) & (\%) & (\%) & (\%) \\
 \midrule
-Line overlap (\%) & 90.08 & 87.34 & 86.51 & 86.39 & 85.42 \\
-Operational cost reduction (\%) & 0.50 & 1.53 & 3.85 & 12.02 & 22.56 \\
-Average travel-time improvement (\%) & 11.40 & 11.60 & 16.99 & 18.44 & 25.78 \\
+Stop-skipping, 25\% threshold & 42.18 & 12.71 & 14.71 & 38.93 \\
+Stop-skipping, 50\% threshold & 47.83 & 12.39 & 19.71 & 35.28 \\
+Stop-skipping, 100\% threshold & 55.88 & 13.49 & 15.11 & 28.05 \\
+Redesign & 85.42 & 22.56 & 25.78 & \rev{zg}{--}{0} \\
 \bottomrule\end{tabular}
 \end{table}
 
