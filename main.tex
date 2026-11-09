@@ -242,14 +242,12 @@ Due to the absence of historical traffic data for Mandl's Swiss network, the DCR
 Mandl's Swiss network, initially used by~\citet{mandl1980evaluation}, consisting of 15 nodes, 21 links, and a symmetric demand of 15,570 passenger trips, is employed as a canonical benchmark for comparison with existing PT network design methods~\citep{liang2025novel,ahern2022approximate}. To further assess the method's applicability under realistic operating conditions, we consider a real-world urban public transport network in a region in Beijing, China, recently analyzed by~\citet{wu2024multi}, which comprises 301 bus stops, 3,758 road sections, and 29 bus lines. Its origin--destination demand matrix is constructed from smart card data collected during peak hours by aggregating trips between boarding station $i$ and alighting station $j$. Key parameters are set as follows: a fixed dwell time of $d=1$ min per stop is assumed following~\citet{chen2022TRSC}. For Mandl's network, the maximum fleet size ($V_{\max}$) is capped at 40, following the service-frequency setting of~\citet{ahern2022approximate} to maintain comparable headways. For the Beijing network, $V_{\max}$ is set to 150 to accommodate a constant 12-minute headway across this large PT system. \rev{zg}{}{We consider coefficients of variation $cv=0,0.05,0.25,0.50,1.00$; algorithm parameters are in \suppref{G.1}.}
 
 
-\rev{zg}{}{Mandl redesigns are compared with static and frequency-only solutions; Beijing redesigns with the original network and stop-skipping. Computation is limited to one hour per instance.} \rev{zg}{}{We use three indicators:}
+\rev{zg}{}{We benchmark the Mandl redesigns against static and frequency-only baselines, and the Beijing redesigns against the original network and a stop-skipping strategy. Computation time is capped at one hour per instance. We evaluate performance using three key indicators:}
 \begin{enumerate}[nosep,leftmargin=*]
 \item \rev{zg}{}{20\% Improvement Share (IS$_{20}$): percentage of OD pairs with travel time at least 20\% lower than the reference; each pair counts equally.}
-\item \rev{zg}{}{Operational Cost Reduction (OCR): percentage reduction in the vehicle-time cost proxy $\sum_\ell n^\ell 2t^\ell$ relative to the reference.}
-\item \rev{zg}{}{Line Overlap (LO): percentage of shared line-labelled edges in the union of the two networks; 100\% means no edge change.}
+\item \rev{zg}{}{Operational Cost Reduction (OCR): percentage reduction in the vehicle-time cost relative to the reference.}
+\item \rev{zg}{}{Line Overlap (LO): the percentage of shared route segments across both networks, where 100\% indicates an unchanged network structure.}
 \end{enumerate}
-\rev{zg}{}{IS$_{20}$ and OCR compare networks under the same realized link times.}
-
 
 
 
