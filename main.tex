@@ -158,7 +158,8 @@ In the Beijing network under high variability, average travel time improves by u
 
 \section{\rev{zg}{Model and Problem Formulation\quad}{Methodology}}
 \subsection{\rev{zg}{}{Predict-then-optimize framework}}
-As illustrated in Fig.~\ref{fig:time_window}, our methodology follows a predict-then-optimize framework that explicitly integrates current observations into prediction. The prediction model is first trained offline on historical data to learn travel times on road links. During operation, it receives current observations from the latest time steps and outputs a short-term prediction of link travel times $\hat t_{ij}$, which are then supplied to the optimization model for potential network redesign. Adaptation is triggered only when forecasted conditions severely deviate from the nominal ones. The resulting network design is then evaluated against realized travel times $t_{ij}$ to assess the actual performance of our adaptive network under realistic conditions. To ensure timely responsiveness, this procedure is repeated periodically, i.e., once per hour. At the start of each time slot, the new network is announced in advance (e.g., 1h), so passengers can plan a route that remains valid for their entire trip and is never changed mid-journey; we assume here that the longest trip is shorter than one time slot (1h). The experiments in this paper, however, evaluate the redesign step itself: namely, the quality of a single forecast-conditioned redesign under varying travel-time variability.
+As illustrated in Fig.~\ref{fig:time_window}, our methodology follows a predict-then-optimize framework that explicitly integrates current observations into prediction. The prediction model is first trained offline on historical data to learn travel times on road links. During operation, it receives current observations from the latest time steps and outputs a short-term prediction of link travel times $\hat t_{ij}$, which are then supplied to the optimization model for potential network redesign. \rev{zg}{}{End-to-end alternatives such as smart predict-then-optimize~\citep{elmachtoub2022smart} must re-solve and differentiate through the optimization at every training step, which is impractical for slow, multi-objective network design. Instead, as established traffic predictors show comparable error statistics~\citep{jiang2021dl}, we optimize on forecasts carrying the empirical errors of one such predictor.} Adaptation is triggered only when forecasted conditions severely deviate from the nominal ones. The resulting network design is then evaluated against realized travel times $t_{ij}$ to assess the actual performance of our adaptive network under realistic conditions. To ensure timely responsiveness, this procedure is repeated periodically, i.e., once per hour. At the start of each time slot, the new network is announced in advance (e.g., 1h), so passengers can plan a route that remains valid for their entire trip and is never changed mid-journey; we assume here that the longest trip is shorter than one time slot (1h). The experiments in this paper, however, evaluate the redesign step itself: namely, the quality of a single forecast-conditioned redesign under varying travel-time variability.
+
 
 
 \begin{figure}[!t]
@@ -181,7 +182,7 @@ We formulate our public transport network adaptation problem as a three-objectiv
 \end{equation}
 Here $\hat t_k$ is the predicted shortest travel time for OD pair $k$ on the redesigned network; $t_k^0$ is its travel time on the original network under nominal link times. For the Jaccard term, $x_{ij}^\ell$ denotes use of physical link $\{i,j\}$ by line $\ell$, and $x_{ij}^{\ell,0}$ its original value. Here $n^\ell$ is the vehicle allocation and $\hat t^\ell$ the predicted one-way line travel time.  
 %
-The predicted and realized link travel times are related by $\hat t_{ij}=t_{ij}+\epsilon_{ij}$, where $\epsilon_{ij}=\hat t_{ij}-t_{ij}$ is the prediction error. The realized times $t_{ij}$ and errors $\epsilon_{ij}$ are unknown when the decision is made: the optimization uses only $\hat t_{ij}$. In the experiments, the resulting design is then evaluated ex post using the realized times $t_{ij}$.
+\rev{zg}{The predicted and realized link travel times are related by $\hat t_{ij}=t_{ij}+\epsilon_{ij}$, where $\epsilon_{ij}=\hat t_{ij}-t_{ij}$ is the prediction error. The realized times $t_{ij}$ and errors $\epsilon_{ij}$ are unknown when the decision is made: the optimization uses only $\hat t_{ij}$. In the experiments, the resulting design is then evaluated ex post using the realized times $t_{ij}$.}{When the decision is made, the realized time $t_{ij}$ is unknown: only its prediction $\hat t_{ij}=t_{ij}+\epsilon_{ij}$, affected by the error $\epsilon_{ij}$, is available. The design is optimized on $\hat t_{ij}$ and evaluated ex post on $t_{ij}$.}
 
 
 We now report the constraints that, together with the objective~\eqref{eq:objectives}, formalize the upper-level network design problem. Passenger route variables are treated as induced (follower) variables and are discussed separately. $\pazocal{N}$: Set of nodes, indexed by $i,j \in \pazocal{N}$; $\pazocal{E}$: Set of feasible edges in the network; $y^\ell$: 1 if line $\ell$ is activated (operated); $e_{ij}^\ell$: 1 if edge $(i,j)$ is used by line $\ell$ in new network; $a_i^\ell, b_i^\ell$: 1 if node $i$ is the start/end terminal of line $\ell$; $n^\ell$: Number of vehicles on line $\ell$ (fleet size); $u_i^\ell$: Auxiliary variable for subtour elimination (MTZ): it denotes the order in which stop~$i$ appears in line $\ell$. Variables $y,e,a,b$ are binary, $n,u$ integer, and $\bar n$ is the per-line vehicle upper bound.
@@ -262,7 +263,7 @@ We benchmark the Mandl redesigns against static and frequency-only baselines, an
 \subsection{\rev{zg}{Main performance results on Mandl's benchmark\quad}{Small-scale validation on Mandl's benchmark}}
 
 %
-Table~\ref{tab:mandl} compares redesigned networks with the static route-frequency solutions of \citet{ahern2022approximate}. As shown, IS$_{20}$ and OCR increase with travel-time variability, reflecting the growing value of adaptive redesigns under highly fluctuating conditions. Meanwhile, structural overlap (LO) remains high: even at $cv=1$, its mean ranges from 77.26\% to 81.14\% across the three line counts, indicating that the redesigns retain much of the original line structure.
+Table~\ref{tab:mandl} compares redesigned networks with the static route-frequency solutions of \citet{ahern2022approximate}. As shown, IS$_{20}$ and OCR increase with travel-time variability, reflecting the growing value of adaptive redesigns under highly fluctuating conditions. Meanwhile, structural overlap (LO) remains high: even at $cv=1$, its mean ranges from 77.26\% to \rev{zg}{81.14\% across the three line counts}{80.77\% across the two line counts}, indicating that the redesigns retain much of the original line structure.
 
 While Table~\ref{tab:mandl} aggregates overall performance and structural stability, Figure~\ref{fig:frontiers} details the explicit trade-offs between the two core objectives. Specifically, it compares the Pareto fronts of the redesign and frequency-only approaches for the 4-line Mandl instance, plotting passenger travel time ($Z_1$) against operational cost ($Z_2$), as defined in \eqref{eq:objectives}. Across all four variability levels, the redesign solutions consistently yield lower operational costs for comparable passenger travel times. Furthermore, the smooth and broadly distributed fronts highlight a clear trade-off between the two objectives, demonstrating our algorithm's ability to find diverse solutions that balance operator and passenger priorities.\footnote{For an illustration of trip travel times compared to static designs in a single realization, see \suppref{H.2}. A forecast-error sensitivity analysis is provided in \suppref{I.1}.}
 
@@ -294,18 +295,19 @@ Lines & Metric & CV=0 & CV=0.05 & CV=0.25 & CV=0.50 & CV=1.00 \\
 
 \midrule
 
-\multirow{3}{*}{\textbf{8}}
-& IS$_{20}$ (\%)
-& \meanstd{11.52}{2.67} & \meanstd{13.99}{3.90} & \meanstd{18.62}{5.64}
-& \meanstd{26.84}{8.76} & \meanstd{35.71}{11.53} \\
-& OCR (\%)
-& \meanstd{26.97}{4.45} & \meanstd{29.92}{3.84} & \meanstd{31.51}{5.27}
-& \meanstd{35.35}{7.98} & \meanstd{45.35}{9.23} \\
-& LO (\%)
-& \meanstd{83.58}{4.07} & \meanstd{84.95}{3.07} & \meanstd{82.51}{4.03}
-& \meanstd{80.80}{5.25} & \meanstd{81.14}{4.23} \\
+% zg: 8-line Mandl block removed from Table 1 to save space (values kept here)
+% \multirow{3}{*}{\textbf{8}}
+% & IS$_{20}$ (\%)
+% & \meanstd{11.52}{2.67} & \meanstd{13.99}{3.90} & \meanstd{18.62}{5.64}
+% & \meanstd{26.84}{8.76} & \meanstd{35.71}{11.53} \\
+% & OCR (\%)
+% & \meanstd{26.97}{4.45} & \meanstd{29.92}{3.84} & \meanstd{31.51}{5.27}
+% & \meanstd{35.35}{7.98} & \meanstd{45.35}{9.23} \\
+% & LO (\%)
+% & \meanstd{83.58}{4.07} & \meanstd{84.95}{3.07} & \meanstd{82.51}{4.03}
+% & \meanstd{80.80}{5.25} & \meanstd{81.14}{4.23} \\
 
-\midrule
+% \midrule
 
 \multirow{3}{*}{\textbf{12}}
 & IS$_{20}$ (\%)
@@ -376,10 +378,10 @@ Redesign & 85.42 & 22.56 & 25.78 & 0 \\
 
 \begin{figure}[htbp]
 \centering
-\begin{minipage}[t]{.45\textwidth}\centering
+\begin{minipage}[t]{.43\textwidth}\centering
 \includegraphics[width=\linewidth]{fig/beijing_cv0.png}\\(a) $cv=0$
 \end{minipage}\hfill
-\begin{minipage}[t]{.45\textwidth}\centering
+\begin{minipage}[t]{.43\textwidth}\centering
 \includegraphics[width=\linewidth]{fig/beijing_cv1.png}\\(b) $cv=1$
 \end{minipage}
 \caption{Beijing redesigns at $cv=0$ and $cv=1$. Blue: removed links; red: added links.}
