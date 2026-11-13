@@ -18,7 +18,7 @@ Bus lines are usually designed for nominal traffic and then left as they are. We
 
 - `main.tex`: LaTeX source of the condensed conference version.
 - [`suppl/suppl.pdf`](suppl/suppl.pdf): supplementary material, compiled separately from `suppl/main.tex`.
-- [`code/`](code/): artifacts, to be released upon acceptance.
+- [`code/`](code/): artifacts, to be released upon publication.
 
 ## Data
 

@@ -1,3 +1,3 @@
 # Code
 
-Artifacts will be publicly released here upon acceptance.
+Artifacts will be publicly released here upon publication.
