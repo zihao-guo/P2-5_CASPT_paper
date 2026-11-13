@@ -1,9 +1,18 @@
-# CASPT & TransitData 2027 research-track paper
+# Predict-then-Optimize Framework for Public Transport Line Redesign under Fluctuating Traffic Conditions
 
-`main.tex` is the conference manuscript in the official template. `main.pdf` and `build/main.pdf` show revisions by default; `submission.pdf` is the clean, eight-page submission version. The eight-page limit includes references and any appendix. The separately compiled `suppl/main.tex` is supplementary material drawn from selected sections and appendices of the original paper: additional related work and its comparison table, headway and waiting-time assumptions, virtual-node passenger routing, full line-structure and fleet constraints, NSGA-III pseudocode, line encoding, initialization, evolutionary operators, decode-and-assign evaluation, proofs, metrics, multi-line Mandl, frequency-only, and Beijing skip-threshold result tables, sensitivity analyses, and additional figures. It is not part of the submission PDF. It uses the original Elsevier template and adapts cross-references to be self-contained; the original complete source remains in the archive under `res/`. The provided `suppl/appendix-in-papers.docx` describes an external extended-version workflow; it does not establish permission to submit or link supplementary material at this conference.
+Submission to The 17th International Conference on Advanced Systems in Public Transport (CASPT2027).
 
-Open this directory in VS Code with LaTeX Workshop and select the desired root (`main.tex` or `suppl/main.tex`). The workspace configuration invokes `scripts/latex-workshop-build.sh`: it runs latexmk on local temporary storage, then copies the completed output and intermediates into the corresponding `build/` directory, which Git ignores. TeX Live with latexmk, pdfLaTeX, Biber and BibTeX is required. Both sources have `\keepcomment` set to `1` to display revisions. Run `./scripts/build-clean.sh all` to refresh both clean PDFs without changing that setting (`main` or `supplement` builds just one). The script checks that the conference PDF is at most eight pages and places clean-build intermediates in the relevant `build/clean/` directory. `submission.pdf` and `suppl/clean.pdf` are the clean versions; `suppl/main.pdf` displays supplementary revisions. The clean build requires `pdfinfo` in addition to the TeX tools. The original full text remains available in the source archive; passages omitted during condensation are not all represented as deletions in the marked conference file.
+**Authors:** Zihao Guo¹, Andrea Araldo¹\*, Fayçal Touzout², Mounim El-Yacoubi¹
 
-See `REVISION_MAP.md` for the location of principal source material and known limits of the marked conference text.
+¹ Institut Polytechnique de Paris, Palaiseau 91120, France  
+² National School of State Public Works, Marne-la-Vallée 77454, France  
+\* Corresponding author
 
-The temporary build stage avoids intermittent pdfTeX flush failures in this OneDrive workspace. For a command-line build, run `scripts/latex-workshop-build.sh "$PWD/main" "$PWD/build"` from the project root; for the supplement use `scripts/latex-workshop-build.sh "$PWD/suppl/main" "$PWD/suppl/build"`. The PDF used by LaTeX Workshop is in the corresponding `build/` directory.
+## Summary
+
+Bus lines are usually designed for nominal traffic and then left as they are. We study what happens when they are instead redesigned proactively, about one hour ahead, whenever link travel times are forecast to deviate strongly from nominal conditions. The redesign is deliberately limited: lines stay close to those already in service, which preserves operational continuity and keeps the network usable for passengers, while user and operator performance are maintained. The whole procedure is a predict-then-optimize loop. Lines are optimized on noisy forecasts and evaluated on the realized travel times.
+
+## Files
+
+- `main.tex`: conference paper.
+- `suppl/`: supplementary material, compiled separately from `suppl/main.tex`.
